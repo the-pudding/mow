@@ -1,0 +1,10 @@
+{
+	"compilerOptions": {
+		"verbatimModuleSyntax": true,
+		"moduleResolution": "bundler",
+		"module": "ESNext",
+		"target": "ESNext"
+	},
+	"include": ["src/**/*"],
+	"extends": "./.svelte-kit/tsconfig.json"
+}
