@@ -1,14 +1,14 @@
 @import "variables.css";
 @import "normalize.css";
-@import "font.css";
+/* @import "font.css"; */
 @import "reset.css";
 @import "ui.css"; /* optional for bits UI components */
 
 /* colors defined in variables.css */
 :root {
 	/* font */
-	--font-sans: "Atlas Grotesk", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
-	--font-serif: "Tiempos Text", Iowan Old Style, Times New Roman, Times, serif;
+	--font-sans: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+	--font-serif: Iowan Old Style, Times New Roman, Times, serif;
 	--font-mono: Menlo, Consolas, Monaco, monospace;
 
 	/* z-index */
@@ -47,6 +47,9 @@
 
 	/* "1" second duration */
 	--1s: 1ms;
+
+	--grid-width: min(80svw, 80svh);
+	--grid-max-width: 640px;
 }
 
 /* dark theme */
@@ -60,6 +63,15 @@
 	:root {
 		--1s: 1s;
 	}
+}
+
+
+@supports (scrollbar-gutter: stable) {
+  html {
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+		scroll-behavior: smooth;
+  }
 }
 
 h1 {
@@ -90,4 +102,29 @@ svg {
 	display: block;
 	width: 100%;
 	height: auto;
+}
+
+body {
+	min-height: 101svh;
+}
+
+#results {
+	display: none;
+	padding-top: 32px;
+}
+
+#results.visible {
+	display: block;
+}
+
+span.you, span.skip {
+	display: none;
+}
+
+span.you.visible, span.skip.visible {
+	display: inline;
+}
+
+main p:first-of-type {
+	margin-top: 0;
 }
