@@ -5,9 +5,11 @@
 	import localStore from "$runes/localStore.svelte.js";
 	import server from "$utils/server.js";
 	import obstacles from "$data/obstacles.json";
+	import { classify } from "$utils/classifier.js";
 
 	const MAX_LENGTH = 1000;
 	const MAX_MOVES = 200;
+	const PREDICTION_MOVES = 15;
 	const size = 10;
 
 	const targetCount = size * size - obstacles.length;
@@ -111,7 +113,14 @@
 
 <div class="c" class:disable={!game.active}>
 	<div class="inner">
-		<p class="steps">moves: {path.length}</p>
+		<div class="steps">
+			<div>moves: {path.length}</div>
+			{#if path.length > PREDICTION_MOVES}
+				predicted: {classify(path).label}
+			{:else}
+				make at least {PREDICTION_MOVES} moves to get a prediction
+			{/if}
+		</div>
 		<div class="g">
 			<Grid {size} {path} perspective={true} {obstacles} game={true}></Grid>
 		</div>
