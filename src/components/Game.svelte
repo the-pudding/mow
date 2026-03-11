@@ -24,6 +24,7 @@
 	let message = $derived(
 		showMessage ? (complete ? "Good job!" : "Too many moves!") : ""
 	);
+	let classification = $derived(classify(path));
 
 	function reveal(delay = 17) {
 		game.active = false;
@@ -116,7 +117,7 @@
 		<div class="steps">
 			<div>moves: {path.length}</div>
 			{#if path.length > PREDICTION_MOVES}
-				predicted: {classify(path).label}
+				predicted: {classification.label}
 			{:else}
 				make at least {PREDICTION_MOVES} moves to get a prediction
 			{/if}
