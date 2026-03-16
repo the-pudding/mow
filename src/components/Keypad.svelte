@@ -46,7 +46,7 @@
 		margin: 0 auto;
 		width: var(--grid-width);
 		max-width: var(--grid-max-width);
-		margin-top: var(--margin);
+		/* margin-top: var(--margin); */
 	}
 
 	.keypad {
@@ -60,7 +60,7 @@
 		display: none;
 		text-align: center;
 		color: var(--color-fg-light);
-		transform: translateY(-100%);
+		/* transform: translateY(-100%); */
 	}
 
 	.keyboard p {
