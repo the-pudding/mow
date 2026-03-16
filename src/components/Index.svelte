@@ -50,7 +50,7 @@
 	}
 
 	:global(.c figure) {
-		max-width: 800px;
+		max-width: var(--grid-max-width);
 	}
 
 	@media (min-width: 960px) {

@@ -123,7 +123,7 @@
 			{/if}
 		</div>
 		<div class="g">
-			<Grid {size} {path} perspective={true} {obstacles} game={true}></Grid>
+			<Grid {size} {path} perspective={false} {obstacles} game={true}></Grid>
 		</div>
 		{#if game.active}<Keypad {onmove} active={game.active}></Keypad>{/if}
 	</div>
@@ -148,6 +148,8 @@
 	.g {
 		width: var(--grid-width);
 		margin: 0 auto;
+		display: flex;
+		justify-content: center;
 	}
 
 	.disable {

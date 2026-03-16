@@ -148,6 +148,7 @@
 		perspective: calc(var(--grid-width) * 2);
 		transition: all 0.5s ease-in-out;
 		position: relative;
+		margin-top: 2rem;
 	}
 
 	.inner {
@@ -261,13 +262,17 @@
 		width: 90%;
 		height: 90%;
 		backface-visibility: hidden;
-		top: 0%;
+		top: 0;
+		top: 30%;
 		left: 5%;
+		left: 10%;
 	}
 
 	.face.top {
 		width: 90%;
+		width: 80%;
 		height: 90%;
+		height: 65%;
 		transform: translateZ(var(--face));
 		background: var(--color-orange-dark);
 		border-radius: 8px;
@@ -275,7 +280,9 @@
 
 	.face.front {
 		width: 90%;
+		width: 80%;
 		height: 65%;
+		height: 50%;
 		transform: rotateX(-90deg) translateZ(var(--face));
 		border-radius: 8px;
 		background: var(--color-orange-medium);
@@ -286,8 +293,15 @@
 		height: 40%;
 		top: 20%;
 		left: 30%;
+
+		width: 30%;
+		height: 25%;
+		top: 45%;
+		left: 35%;
+
 		transform: rotateX(-90deg) translateZ(var(--face));
 		border-radius: 50%;
+		border-radius: 25%;
 		background: var(--color-orange-dark);
 	}
 
@@ -296,6 +310,11 @@
 		height: 40%;
 		top: 10%;
 		left: 30%;
+
+		width: 30%;
+		height: 20%;
+		top: 45%;
+		left: 35%;
 		transform: rotateX(-90deg) translateZ(var(--face));
 		border-radius: 33%;
 		border: 1px solid var(--color-orange-dark);
