@@ -1,6 +1,8 @@
 <script>
 	import Grid from "$components/Grid.svelte";
 	import Keypad from "$components/Keypad.svelte";
+	import { tick } from "svelte";
+	import { SvelteSet } from "svelte/reactivity";
 	import { game } from "$runes/misc.svelte.js";
 	import localStore from "$runes/localStore.svelte.js";
 	import server from "$utils/server.js";
@@ -14,10 +16,10 @@
 
 	const targetCount = size * size - obstacles.length;
 	let storage = localStore("pudding_mowing", {});
-	let position = $state([0, 0]);
 	let path = $state([[0, 0]]);
-	let visited = $state({ "0,0": true });
-	let visitedCount = $derived(Object.keys(visited).length);
+	let position = $derived(path[path.length - 1]);
+	let visited = new SvelteSet(["0,0"]);
+	let visitedCount = $derived(visited.size);
 	let complete = $derived(visitedCount === targetCount);
 	let exceeded = $derived(path.length >= MAX_MOVES);
 	let showMessage = $derived(complete || exceeded);
@@ -26,7 +28,7 @@
 	);
 	let classification = $derived(classify(path));
 
-	function reveal(delay = 17) {
+	async function reveal(uiDelay = 0) {
 		game.active = false;
 		if (complete)
 			document
@@ -39,9 +41,9 @@
 
 		document.getElementById("results").classList.add("visible");
 
-		setTimeout(() => {
-			document.getElementById("results").scrollIntoView();
-		}, delay);
+		if (uiDelay) await new Promise((r) => setTimeout(r, uiDelay));
+		await tick();
+		document.getElementById("results").scrollIntoView();
 	}
 
 	function skip() {
@@ -67,17 +69,15 @@
 		// don't allow movement over obstacles
 		if (obstacles.includes(tempY * size + tempX)) return;
 
-		position = [tempX, tempY];
-
-		path.push([...position]);
-		visited[position.join(",")] = true;
+		path.push([tempX, tempY]);
+		visited.add(`${tempX},${tempY}`);
 	}
 
 	async function submit(alreadyCompleted) {
 		try {
 			const str = path.map((p) => p.join(",")).join("|");
 			// TODO remove
-			window.russell = JSON.stringify(path);
+			// window.russell = JSON.stringify(path);
 			if (str.length < MAX_LENGTH) {
 				storage.value.path = path;
 				game.path = $state.snapshot(path);

@@ -9,7 +9,6 @@
 		perspective,
 		obstacles = [],
 		game = false,
-		active = true,
 		color
 	} = $props();
 
@@ -31,12 +30,18 @@
 		}));
 
 	let cells = $derived.by(() => {
-		const all = defaultCells.map((c) => ({ ...c }));
+		// const all = defaultCells.map((c) => ({ ...c }));
 
-		path.forEach((p, i) => {
-			const c = all.find((c) => c.pos[0] === p[0] && c.pos[1] === p[1]);
-			c.visited = true;
-		});
+		// path.forEach((p, i) => {
+		// 	const c = all.find((c) => c.pos[0] === p[0] && c.pos[1] === p[1]);
+		// 	c.visited = true;
+		// });
+
+		const visitedSet = new Set(path.map(([x, y]) => `${x},${y}`));
+		const all = defaultCells.map((c) => ({
+			...c,
+			visited: visitedSet.has(c.pos.join(","))
+		}));
 		return all;
 	});
 

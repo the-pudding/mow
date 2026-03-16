@@ -5,7 +5,7 @@
 
 	const hover = new MediaQuery("hover: hover");
 	const pointer = new MediaQuery("pointer: fine");
-	let desktop = $derived(hover && pointer);
+	let desktop = $derived(hover.current && pointer.current);
 
 	function onKeydown(e) {
 		if (!active) return;
