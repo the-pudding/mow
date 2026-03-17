@@ -68,7 +68,8 @@
 </script>
 
 <figure
-	style="--size: {size}; --margin: {offsetWidth * -0.25}px;"
+	style="--size: {size}; --margin: {offsetWidth *
+		-0.25}px; --face: {(offsetWidth / size) * 0.4}px;"
 	class:perspective
 	class:nodes
 	bind:offsetWidth
@@ -135,12 +136,10 @@
 
 		{#if game}
 			<div class="grid mower">
-				<div class="cube" style="--x: {latest[0]}; --y: {latest[1]};">
-					<div class="face top"></div>
-					<div class="face front"></div>
-					<div class="face above"></div>
-					<div class="face above-side"></div>
-				</div>
+				<div
+					class="character"
+					style="--x: {latest[0]}; --y: {latest[1]};"
+				></div>
 			</div>
 		{/if}
 	</div>
@@ -150,21 +149,24 @@
 	figure {
 		width: 100%;
 		max-width: var(--grid-max-width);
-		perspective: calc(var(--grid-width) * 2);
+		/* perspective: calc(var(--grid-width) * 1); */
 		transition: all 0.5s ease-in-out;
 		position: relative;
-		margin-top: 2rem;
+		margin: 2rem auto 0;
 	}
 
 	.inner {
 		position: relative;
-		transform-origin: 0 0;
+		transform-origin: center center;
+		transform-style: preserve-3d;
 	}
 
 	figure.perspective {
-		perspective-origin: 50% 100%;
-		transform: scale(0.75);
-		margin-top: -10%;
+		perspective-origin: 50% 50%;
+	}
+
+	.perspective .inner {
+		transform: rotateX(60deg) scale(0.85);
 	}
 
 	.grid {
@@ -182,10 +184,7 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-	}
-
-	.perspective .inner {
-		transform: rotateX(35deg);
+		transform-style: preserve-3d;
 	}
 
 	.cell {
@@ -219,7 +218,7 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-image: url("/assets/images/texture.png");
+		/* background-image: url("/assets/images/texture.png"); */
 		background-size: cover;
 		background-repeat: no-repeat;
 		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -233,7 +232,7 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-image: url("/assets/images/grass.png");
+		/* background-image: url("/assets/images/grass.png"); */
 		background-size: cover;
 		background-repeat: no-repeat;
 		pointer-events: none;
@@ -241,89 +240,26 @@
 	}
 
 	.visited .fg {
-		background-image: url("/assets/images/grass-cut.png");
+		/* background-image: url("/assets/images/grass-cut.png"); */
 	}
 
 	.obstacle .fg {
-		background-image: url("/assets/images/rock.png");
+		/* background-image: url("/assets/images/rock.png"); */
 		transform: translateY(0%);
 	}
 
 	.obstacle.visited .fg {
-		background-image: url("/assets/images/rock.png");
+		/* background-image: url("/assets/images/rock.png"); */
 	}
 
-	.cube {
-		transform-style: preserve-3d;
-		transform-origin: center bottom;
-		transform: rotateX(30deg) rotateY(0deg) rotateZ(0deg) translateY(0)
-			scale(1, 1.5);
+	.character {
 		grid-row: calc(var(--y) + 1);
 		grid-column: calc(var(--x) + 1);
-	}
-
-	.face {
-		position: absolute;
-		width: 90%;
-		height: 90%;
-		backface-visibility: hidden;
-		top: 0;
-		top: 30%;
-		left: 5%;
-		left: 10%;
-	}
-
-	.face.top {
-		width: 90%;
-		width: 80%;
-		height: 90%;
-		height: 65%;
-		transform: translateZ(var(--face));
-		background: var(--color-orange-dark);
-		border-radius: 8px;
-	}
-
-	.face.front {
-		width: 90%;
-		width: 80%;
-		height: 65%;
-		height: 50%;
-		transform: rotateX(-90deg) translateZ(var(--face));
-		border-radius: 8px;
+		width: 100%;
+		height: 100%;
 		background: var(--color-orange-medium);
-	}
-
-	.face.above {
-		width: 40%;
-		height: 40%;
-		top: 20%;
-		left: 30%;
-
-		width: 30%;
-		height: 25%;
-		top: 45%;
-		left: 35%;
-
-		transform: rotateX(-90deg) translateZ(var(--face));
-		border-radius: 50%;
-		border-radius: 25%;
-		background: var(--color-orange-dark);
-	}
-
-	.face.above-side {
-		width: 40%;
-		height: 40%;
-		top: 10%;
-		left: 30%;
-
-		width: 30%;
-		height: 20%;
-		top: 45%;
-		left: 35%;
-		transform: rotateX(-90deg) translateZ(var(--face));
-		border-radius: 33%;
-		border: 1px solid var(--color-orange-dark);
-		background: var(--color-orange-medium);
+		/* transform-origin: center bottom;
+		transform: rotateX(-60deg) translateZ(1px); */
 	}
 
 	/* nodes mode */

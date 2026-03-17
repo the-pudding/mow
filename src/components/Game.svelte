@@ -146,7 +146,6 @@
 	}
 
 	.g {
-		width: var(--grid-width);
 		margin: 0 auto;
 		display: flex;
 		justify-content: center;
