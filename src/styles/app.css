@@ -19,7 +19,7 @@
 	--z-modal: 1000;
 
 	/* presets (used in reset.css) */
-	--font-body: var(--font-serif);
+	--font-body: var(--font-sans);
 	--font-form: var(--font-sans);
 
 	--radius-xs: 0.125rem;
@@ -50,6 +50,7 @@
 
 	--grid-width: min(80svw, 80svh);
 	--grid-max-width: 640px;
+	--media-max-width: 800px;
 }
 
 /* dark theme */
@@ -115,6 +116,16 @@ body {
 
 #results.visible {
 	display: block;
+}
+
+#intro > *:not(figure), #results > *:not(figure) {
+	margin: 16px auto;
+	max-width: var(--grid-max-width);
+}
+
+#results figure {
+	margin: 32px auto;
+	max-width: var(--media-max-width);
 }
 
 span.you, span.skip {

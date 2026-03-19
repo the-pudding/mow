@@ -44,15 +44,6 @@
 		padding: 0 16px;
 	}
 
-	:global(.c p, .c h1) {
-		margin: 32px auto;
-		max-width: var(--grid-max-width);
-	}
-
-	:global(.c figure) {
-		max-width: var(--grid-max-width);
-	}
-
 	@media (min-width: 960px) {
 		.byline p {
 			font-size: var(--16px);

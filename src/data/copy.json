@@ -1,11 +1,10 @@
 {
-  "aside": "Work in complexity/Big-O and why computers also struggle at scale.",
   "title": "Mow this lawn. Learn about your brain.",
   "description": "Your lawn mowing style says more about you than you think.",
   "byline": "By <a href=https://pudding.cool/author/russell-samora target=_blank rel=noreferrer>Russell Samora</a>",
   "body": [
     {
-      "section": "story",
+      "section": "intro",
       "content": [
         {
           "type": "text",
@@ -25,7 +24,7 @@
         },
         {
           "type": "text",
-          "value": "If we abstract away the mowing, it’s really just a path formed by connecting nodes. <span class=you>You were <strong class=percent-vs-optimal>X%</strong> less efficient than the optimal path, which looks like this:</span><span class=skip>The optimal path looks like this (TODO):</span>"
+          "value": "If we strip away the grass, mowing is really just a path of connected nodes. <span class=you>You were <strong class=percent-vs-optimal>X%</strong> less efficient than the optimal path, which looks like this:</span><span class=skip>The optimal path looks like this (TODO):</span>"
         },
         {
           "type": "Result",
@@ -33,7 +32,100 @@
         },
         {
           "type": "text",
-          "value": "<span class=custom-humans>Surprisingly,</span> most humans are actually really good at finding solutions to pathfinding problems like this. The most popular example is the <a href=https://en.wikipedia.org/wiki/Travelling_salesman_problem target=_blank rel=noreferrer>Traveling Salesman Problem.</a>"
+          "value": "Finding the best path through the nodes is a classic computer science problem. No, don’t leave! I promise this won’t get too wonky. All you need to know is that there are two main ways to tackle a problem like this:"
+        },
+        {
+          "type": "ul",
+          "value": {
+            "li": [
+              "<strong>algorithms</strong> which calculate the optimal path and",
+              "<strong>heuristics</strong> which are simple strategies to complete the path"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "value": "Humans tend to operate like heuristics, and based on your path, you mow most like a __."
+        },
+        {
+          "type": "text",
+          "value": "<mark>Reader’s path vs their matching heuristic</mark>"
+        },
+        {
+          "type": "text",
+          "value": "This isn’t a perfect label though, we used some fancy calculations to find the closest match. You can read more about it in the <a href=#>method section</a>. Your detailed heuristic classification breakdown looks like this:"
+        },
+        {
+          "type": "text",
+          "value": "<mark>small bar chart of similarity scores across all heuristics</mark>"
+        },
+        {
+          "type": "text",
+          "value": "There are many strategies for a problem like mowing the lawn, which is technically known as <strong>Coverage Path Planning</strong>. Here are some common techniques:"
+        },
+        {
+          "type": "text",
+          "value": "<mark>small multiple grid of all heuristics</mark>"
+        },
+        {
+          "type": "text",
+          "value": "On an open grid with few obstacles, most of these techniques (and those performed by other readers) performed almost identically."
+        },
+        {
+          "type": "text",
+          "value": "<mark>bar chart/table of their efficiency scores and how many users fell into each.</mark>"
+        },
+        {
+          "type": "text",
+          "value": "The differences only start to become apparent when things get more complicated. On a small, simple grid your approach doesn’t matter much. But what happens when the grid gets bigger?"
+        },
+        {
+          "type": "text",
+          "value": "Is mowing not your thing? Pick something more familiar to prime your mind."
+        },
+        {
+          "type": "text",
+          "value": "<mark>reader plays a larger grid, 14x14</mark>"
+        },
+        {
+          "type": "text",
+          "value": "<mark>[their new path animated and its scoring</mark>"
+        },
+        {
+          "type": "text",
+          "value": "On the small grid you were a __. On the big grid you shifted to a __."
+        },
+        {
+          "type": "text",
+          "value": "Or"
+        },
+        {
+          "type": "text",
+          "value": "You stuck with the __ technique, even as complexity grew. That’s [common/common] like % of others."
+        },
+        {
+          "type": "text",
+          "value": "Why does this matter? When different obstacles appear, some strategies hold up better than others."
+        },
+        {
+          "type": "text",
+          "value": "<mark>slope chart of small vs. large for each heuristic</mark>"
+        },
+        {
+          "type": "text",
+          "value": "Here is how everyone performed across both grids."
+        },
+        {
+          "type": "text",
+          "value": "<mark>[slope chart again with internet and you</mark>"
+        },
+        {
+          "type": "text",
+          "value": "This is why heuristics exist. When problems get complex enough that finding the perfect answer is impractical, we fall back on good-enough strategies. So do computers."
+        },
+        {
+          "type": "text",
+          "value": "The Coverage Path Planning is related to one of the most famous problems in computer science: The Traveling Salesman Problem."
         },
         {
           "type": "Video",
@@ -48,11 +140,11 @@
         },
         {
           "type": "text",
-          "value": "The premise is simple: a salesperson must visit a set of cities exactly once and return to their starting point, all while taking the shortest possible route. We see this all the time in the real world. From a pizza delivery driver planning their stops to a trick-or-treater maximizing their candy haul, finding the most efficient routes would be solving a version of this problem."
+          "value": "The premise is simple: a salesman must visit a set of cities exactly once and return to their starting point, all while taking the shortest possible route. We see this all the time in the real world. From a pizza delivery driver planning their stops to a trick-or-treater maximizing their candy haul, finding the most efficient routes would be solving a version of this problem."
         },
         {
           "type": "text",
-          "value": "I <a href=https://docs.lib.purdue.edu/jps/vol1/iss1/4/ target=_blank rel=noreferrer>read a study</a> that found humans come impressively close to computer-calculated optimal solutions to this problem with fewer stops, and even do pretty good &mdash; just 11% less efficient than optimal &mdash; for 70+ stops."
+          "value": "I wanted to create this mowing experiment after I <a href=https://docs.lib.purdue.edu/jps/vol1/iss1/4/ target=_blank rel=noreferrer>read a study</a> that found humans come impressively close to computer-calculated optimal solutions to this problem with fewer stops, and even do pretty good &mdash; just 11% less efficient than optimal &mdash; for 70+ stops. But as the stops increase, humans’ ability decreases."
         },
         {
           "type": "Img",
@@ -61,94 +153,6 @@
             "alt": "A chart depicting how people perform on the Traveling Salesman Problem compared to the optimal path, which shows that people perform near-ideal at fewer nodes, with a slow increasing deviation as more nodes are added",
             "figcaption": "Chart of findings from <a href=https://docs.lib.purdue.edu/jps/vol1/iss1/4/ target=_blank rel=noreferrer>this study</a>"
           }
-        },
-        {
-          "type": "text",
-          "value": "<strong>I was curious; how well might humans perform on a similar optimization problem?</strong>"
-        },
-        {
-          "type": "text",
-          "value": "But first, a <em>very quick</em> computer science primer. There are two main ways to tackle problems like these: <strong>algorithms</strong> that calculate the optimal path and <strong>heuristics</strong>—simple strategies for completing the task."
-        },
-        {
-          "type": "text",
-          "value": "<strong>Algorithms</strong> solve the problem with an estimated optimal solution. But that can come at a cost as complexity grows. For example, brute force calculations for a salesperson visiting <strong>just 10 cities</strong> requires testing <strong>3.6 million</strong> possible routes, and that number explodes exponentially as more cities are added."
-        },
-        {
-          "type": "text",
-          "value": "<strong>15 cities</strong> and we’re at <strong>1.3 trillion</strong> possible routes. 😱"
-        },
-        {
-          "type": "text",
-          "value": "<strong>20 cities</strong> balloons to <strong>2.4 quintillion</strong> possible routes. 🤯"
-        },
-        {
-          "type": "text",
-          "value": "<strong>Heuristics</strong> are a lot like human problem-solving; they aim for a good-enough strategy that solves the problem quickly. For example, choosing the closest city at each step isn’t perfect, but it’s much faster and usually close to the optimal route."
-        },
-        {
-          "type": "text",
-          "value": "For our experiment, we’ll stick with heuristics."
-        },
-        {
-          "type": "text",
-          "value": "<span class=you><strong>What type of computer-y brain do you have?</strong>  Our sorting hat determined that your mowing style is most similar to the <strong class=sorting-hat>X</strong> heuristic.</span><span class=skip>So what type of computer-brain do most people have?</span>"
-        },
-        {
-          "type": "text",
-          "value": "<mark>(graphic breakdown of all users and the most similar heuristic types)</mark>"
-        },
-        {
-          "type": "text",
-          "value": "We chose to look at seven different heuristics for our lawn mower game, which is a problem more formally called <strong>Coverage Path Planning.</strong> To focus on your path planning vs. driving skills, we simplified the world into a grid of cells."
-        },
-        {
-          "type": "text",
-          "value": "Each heuristic follows a different approach to visit each cell on the grid. To get a sense of their general style, here are all seven heuristics on an empty grid with no obstacles."
-        },
-        {
-          "type": "text",
-          "value": "<mark>(graphic  animate all 7, rate efficiency)</mark>"
-        },
-        {
-          "type": "text",
-          "value": "But an open lawn or an empty grid isn’t that interesting. Things get more fun—and complex—when we introduce obstacles."
-        },
-        {
-          "type": "text",
-          "value": "<mark>(graphic animate all 7, rate efficiency)</mark>"
-        },
-        {
-          "type": "text",
-          "value": "But this is just one layout. We gave each heuristic 100 different layouts to see how they handled various situations."
-        },
-        {
-          "type": "text",
-          "value": "<mark>(graphic some other viz, maybe high level results)</mark>"
-        },
-        {
-          "type": "text",
-          "value": "Tk talk about complexity scores and Big-O notation. Why not."
-        },
-        {
-          "type": "text",
-          "value": "Okay so that is the heuristics. Let’s get back to the humans. Here is a distribution of how well people did compared to the optimal solution."
-        },
-        {
-          "type": "text",
-          "value": "<mark>(graphic breakdown of how optimal everyone performed / you)</mark>"
-        },
-        {
-          "type": "text",
-          "value": "Tk explanation of why humans are good at this."
-        },
-        {
-          "type": "text",
-          "value": "Tk wrap things up."
-        },
-        {
-          "type": "text",
-          "value": "<mark>(graphic maybe a situation changer so they can go up against all 100 layouts from earlier)</mark>"
         }
       ]
     }
