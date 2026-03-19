@@ -39,11 +39,11 @@
 				.querySelectorAll("span.skip")
 				.forEach((el) => el.classList.add("visible"));
 
-		document.getElementById("results").classList.add("visible");
+		document.getElementById("post").classList.add("visible");
 
 		if (uiDelay) await new Promise((r) => setTimeout(r, uiDelay));
 		await tick();
-		document.getElementById("results").scrollIntoView();
+		document.getElementById("post").scrollIntoView();
 	}
 
 	function skip() {

@@ -109,21 +109,21 @@ body {
 	min-height: 101svh;
 }
 
-#results {
+#post {
 	display: none;
 	padding-top: 32px;
 }
 
-#results.visible {
+#post.visible {
 	display: block;
 }
 
-#intro > *:not(figure), #results > *:not(figure) {
+#intro > *:not(figure), #post > *:not(figure) {
 	margin: 16px auto;
 	max-width: var(--grid-max-width);
 }
 
-#results figure {
+#post figure {
 	margin: 32px auto;
 	max-width: var(--media-max-width);
 }
