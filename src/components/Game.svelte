@@ -69,6 +69,8 @@
 		// don't allow movement over obstacles
 		if (obstacles.includes(tempY * size + tempX)) return;
 
+		// don't allow movement if it doesn't change position
+		if (tempX === position[0] && tempY === position[1]) return;
 		path.push([tempX, tempY]);
 		visited.add(`${tempX},${tempY}`);
 	}
