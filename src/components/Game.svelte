@@ -4,7 +4,7 @@
 	import { SvelteSet } from "svelte/reactivity";
 	import { classify } from "$utils/classifier.js";
 
-	// obstacles is an array of [[x,y]]
+	// obstacles is an array of [{x,y}]
 	let {
 		obstacles = [],
 		size = 10,
@@ -62,7 +62,7 @@
 		tempY = Math.max(0, Math.min(size - 1, tempY));
 
 		// don't allow movement over obstacles
-		if (obstacles.some(([x, y]) => x === tempX && y === tempY)) return;
+		if (obstacles.some(({ x, y }) => x === tempX && y === tempY)) return;
 
 		// don't allow movement if it doesn't change position
 		if (tempX === position.x && tempY === position.y) return;

@@ -3,7 +3,7 @@
 	import { scaleLinear, interpolateRgb, interpolateHcl } from "d3";
 	import { draw, fade } from "svelte/transition";
 
-	// obstacles is an array of [[x,y]]
+	// obstacles is an array of [{x,y}]
 	let {
 		size,
 		path = [],
@@ -28,12 +28,12 @@
 		Array(size ** 2)
 			.fill()
 			.map((_, i) => ({
-				pos: [i % size, Math.floor(i / size)],
+				pos: { x: i % size, y: Math.floor(i / size) },
 				visited: false
 			}))
 			.map((c) => ({
 				...c,
-				obstacle: obstacles.some(([x, y]) => x === c.pos[0] && y === c.pos[1])
+				obstacle: obstacles.some(({ x, y }) => x === c.pos.x && y === c.pos.y)
 			}))
 	);
 
@@ -41,7 +41,7 @@
 		const visitedSet = new Set(path.map(({ x, y }) => `${x},${y}`));
 		const all = defaultCells.map((c) => ({
 			...c,
-			visited: visitedSet.has(c.pos.join(","))
+			visited: visitedSet.has(`${c.pos.x},${c.pos.y}`)
 		}));
 		return all;
 	});
@@ -116,10 +116,7 @@
 
 		{#if game}
 			<div class="grid mower">
-				<div
-					class="character"
-					style="--x: {latest.x}; --y: {latest.y};"
-				></div>
+				<div class="character" style="--x: {latest.x}; --y: {latest.y};"></div>
 			</div>
 		{/if}
 	</div>
