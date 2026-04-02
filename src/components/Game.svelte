@@ -1,57 +1,52 @@
 <script>
 	import Grid from "$components/Grid.svelte";
 	import Keypad from "$components/Keypad.svelte";
-	import { tick } from "svelte";
 	import { SvelteSet } from "svelte/reactivity";
-	import { game } from "$runes/misc.svelte.js";
-	import localStore from "$runes/localStore.svelte.js";
-	import server from "$utils/server.js";
-	import obstacles from "$data/obstacles.json";
 	import { classify } from "$utils/classifier.js";
 
-	const MAX_LENGTH = 1000;
-	const MAX_MOVES = 200;
-	const PREDICTION_MOVES = 15;
-	const size = 10;
+	// obstacles is an array of [[x,y]]
+	let {
+		obstacles = [],
+		size = 10,
+		classifier = false,
+		onComplete,
+		onExceed
+	} = $props();
 
-	const targetCount = size * size - obstacles.length;
-	let storage = localStore("pudding_mowing", {});
-	let path = $state([[0, 0]]);
+	const predictionMoves = 15;
+
+	let maxMoves = $derived(size * size * 2);
+	let targetCount = $derived(size * size - obstacles.length);
+	let startTime = $state(null);
+	let path = $state([{ x: 0, y: 0, t: 0 }]);
 	let position = $derived(path[path.length - 1]);
 	let visited = new SvelteSet(["0,0"]);
+
+	function onStart() {
+		startTime = Date.now();
+	}
+
 	let visitedCount = $derived(visited.size);
-	let complete = $derived(visitedCount === targetCount);
-	let exceeded = $derived(path.length >= MAX_MOVES);
-	let showMessage = $derived(complete || exceeded);
+	let completed = $derived(visitedCount === targetCount);
+	let exceeded = $derived(path.length >= maxMoves);
+	let active = $derived(!completed && !exceeded);
+	let showMessage = $derived(!active);
 	let message = $derived(
-		showMessage ? (complete ? "Good job!" : "Too many moves!") : ""
+		showMessage ? (completed ? "Complete!" : "Too many moves!") : ""
 	);
 	let classification = $derived(classify(path));
 
-	async function reveal(uiDelay = 0) {
-		game.active = false;
-		if (complete)
-			document
-				.querySelectorAll("span.you")
-				.forEach((el) => el.classList.add("visible"));
-		else
-			document
-				.querySelectorAll("span.skip")
-				.forEach((el) => el.classList.add("visible"));
+	$effect(() => {
+		if (completed) onComplete(path);
+	});
 
-		document.getElementById("post").classList.add("visible");
-
-		if (uiDelay) await new Promise((r) => setTimeout(r, uiDelay));
-		await tick();
-		document.getElementById("post").scrollIntoView();
-	}
-
-	function skip() {
-		storage.value.skipped = true;
-		reveal();
-	}
+	$effect(() => {
+		if (exceeded) onExceed();
+	});
 
 	function onmove(key) {
+		if (!startTime) return;
+
 		let dir;
 
 		if (key === "ArrowUp") dir = [0, -1];
@@ -59,95 +54,63 @@
 		else if (key === "ArrowLeft") dir = [-1, 0];
 		else if (key === "ArrowRight") dir = [1, 0];
 
-		let tempX = position[0] + dir[0];
-		let tempY = position[1] + dir[1];
+		let tempX = position.x + dir[0];
+		let tempY = position.y + dir[1];
 
 		// boundaries
 		tempX = Math.max(0, Math.min(size - 1, tempX));
 		tempY = Math.max(0, Math.min(size - 1, tempY));
 
 		// don't allow movement over obstacles
-		if (obstacles.includes(tempY * size + tempX)) return;
+		if (obstacles.some(([x, y]) => x === tempX && y === tempY)) return;
 
 		// don't allow movement if it doesn't change position
-		if (tempX === position[0] && tempY === position[1]) return;
-		path.push([tempX, tempY]);
+		if (tempX === position.x && tempY === position.y) return;
+
+		const t = Date.now() - startTime;
+		path.push({ x: tempX, y: tempY, t });
 		visited.add(`${tempX},${tempY}`);
 	}
-
-	async function submit(alreadyCompleted) {
-		try {
-			const str = path.map((p) => p.join(",")).join("|");
-			// TODO remove
-			// window.russell = JSON.stringify(path);
-			if (str.length < MAX_LENGTH) {
-				storage.value.path = path;
-				game.path = $state.snapshot(path);
-				if (!alreadyCompleted) {
-					// TODO if we can do heuristic on front end, only submit if not already completed
-					// const response = await server("submit", str);
-					// storage.value.heuristic = response?.heuristic;
-				}
-			} else {
-				// TODO handle too long
-			}
-		} catch (err) {
-			console.error(err);
-			// TODO handle err submission (only matters if heuristic on back end)
-		}
-	}
-
-	$effect(() => {
-		if (showMessage) {
-			const alreadyCompleted = storage.value.completed;
-			game.completed = true;
-			storage.value.completed = true;
-			if (complete) submit(alreadyCompleted);
-			reveal(500);
-		}
-	});
 </script>
 
-<p class="skip">
-	<small>
-		<button class="link" onclick={skip}>just skip to results please</button>
-	</small>
-</p>
-
-<div class="c" class:disable={!game.active}>
+<div class="c" class:disable={!active}>
 	<div class="inner">
 		<div class="steps">
-			<div>moves: {path.length}</div>
-			{#if path.length > PREDICTION_MOVES}
-				predicted: {classification.label}
-			{:else}
-				make at least {PREDICTION_MOVES} moves to get a prediction
+			<span>moves: {path.length}</span>
+			{#if classifier}
+				<span>
+					{#if path.length > predictionMoves}
+						predicted: {classification.label}
+					{:else}
+						make at least {predictionMoves} moves to get a prediction
+					{/if}
+				</span>
 			{/if}
 		</div>
 		<div class="g">
 			<Grid {size} {path} perspective={false} {obstacles} game={true}></Grid>
 		</div>
-		{#if game.active}<Keypad {onmove} active={game.active}></Keypad>{/if}
+		{#if active}<Keypad {onmove} {active}></Keypad>{/if}
 	</div>
 	{#if showMessage}
 		<p class="message"><strong>{message}</strong></p>
 	{/if}
+	{#if !startTime}
+		<div class="start">
+			<button onclick={onStart}>Start</button>
+		</div>
+	{/if}
 </div>
 
 <style>
-	.skip {
-		text-align: center;
-		position: relative;
-		z-index: var(--z-top);
-		margin: 0 auto;
-		margin-top: -24px;
-	}
-
 	.c {
 		position: relative;
+		margin: 2rem auto;
 	}
 
 	.g {
+		max-width: var(--grid-max-width);
+		width: var(--grid-width);
 		margin: 0 auto;
 		display: flex;
 		justify-content: center;
@@ -163,24 +126,28 @@
 
 	.message {
 		position: absolute;
-		top: 33%;
+		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
 	}
 
+	.start {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background: rgba(255, 255, 255, 0.9);
+	}
+
 	.steps {
-		margin: 32px auto 0 auto;
+		margin: 2rem auto 0 auto;
 		max-width: var(--grid-max-width);
 		text-align: center;
 		font-size: var(--14px);
 		color: var(--color-fg-light);
-	}
-
-	button.link {
-		background: none;
-		border: none;
-		color: var(--color-fg-light);
-		text-transform: lowercase;
-		font-weight: normal;
 	}
 </style>

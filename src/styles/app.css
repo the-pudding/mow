@@ -49,7 +49,7 @@
 	--1s: 1ms;
 
 	--grid-width: min(80svw, 80svh);
-	--grid-max-width: 640px;
+	--grid-max-width: 600px;
 	--media-max-width: 800px;
 }
 

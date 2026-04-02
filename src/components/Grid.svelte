@@ -3,14 +3,17 @@
 	import { scaleLinear, interpolateRgb, interpolateHcl } from "d3";
 	import { draw, fade } from "svelte/transition";
 
+	// obstacles is an array of [[x,y]]
 	let {
-		size = 10,
+		size,
 		path = [],
 		perspective,
 		obstacles = [],
 		game = false,
 		color
 	} = $props();
+
+	const MAX_GRID_SIZE = 14;
 
 	const colorScale = $state({
 		user: scaleLinear()
@@ -21,23 +24,21 @@
 			.range(["#4ca658", "#265c42"])
 	});
 
-	const defaultCells = Array(size ** 2)
-		.fill()
-		.map((_, i) => ({
-			pos: [i % size, Math.floor(i / size)],
-			obstacle: obstacles.includes(i),
-			visited: false
-		}));
+	let defaultCells = $derived(
+		Array(size ** 2)
+			.fill()
+			.map((_, i) => ({
+				pos: [i % size, Math.floor(i / size)],
+				visited: false
+			}))
+			.map((c) => ({
+				...c,
+				obstacle: obstacles.some(([x, y]) => x === c.pos[0] && y === c.pos[1])
+			}))
+	);
 
 	let cells = $derived.by(() => {
-		// const all = defaultCells.map((c) => ({ ...c }));
-
-		// path.forEach((p, i) => {
-		// 	const c = all.find((c) => c.pos[0] === p[0] && c.pos[1] === p[1]);
-		// 	c.visited = true;
-		// });
-
-		const visitedSet = new Set(path.map(([x, y]) => `${x},${y}`));
+		const visitedSet = new Set(path.map(({ x, y }) => `${x},${y}`));
 		const all = defaultCells.map((c) => ({
 			...c,
 			visited: visitedSet.has(c.pos.join(","))
@@ -45,17 +46,17 @@
 		return all;
 	});
 
-	let latest = $derived(path[path.length - 1] || [0, 0]);
+	let latest = $derived(path[path.length - 1] || { x: 0, y: 0 });
 	let offsetWidth = $state(0);
 	let nodes = $derived(!game);
 	let animating = $state(false);
 
 	let pathD = $derived.by(() => {
-		const str = path.map(([x, y], i) => {
+		const str = path.map(({ x, y }, i) => {
 			const x1 = x + 0.5;
 			const y1 = y + 0.5;
-			const x2 = (path[i + 1] ? path[i + 1][0] : x) + 0.5;
-			const y2 = (path[i + 1] ? path[i + 1][1] : y) + 0.5;
+			const x2 = (path[i + 1] ? path[i + 1].x : x) + 0.5;
+			const y2 = (path[i + 1] ? path[i + 1].y : y) + 0.5;
 			return `M ${x1} ${y1} L ${x2} ${y2}`;
 		});
 
@@ -68,7 +69,7 @@
 </script>
 
 <figure
-	style="--size: {size}; --margin: {offsetWidth *
+	style="--size: {size}; --max-size: {MAX_GRID_SIZE}; --margin: {offsetWidth *
 		-0.25}px; --face: {(offsetWidth / size) * 0.4}px;"
 	class:perspective
 	class:nodes
@@ -78,40 +79,19 @@
 		{#if !game && path.length > 1}
 			<svg viewbox="0 0 10 10">
 				{#if animating}
-					{#each path as [x, y], i (i)}
+					{#each path as { x, y }, i (i)}
 						{@const x1 = x + 0.5}
 						{@const y1 = y + 0.5}
-						{@const x2 = (path[i + 1] ? path[i + 1][0] : x) + 0.5}
-						{@const y2 = (path[i + 1] ? path[i + 1][1] : y) + 0.5}
+						{@const x2 = (path[i + 1] ? path[i + 1].x : x) + 0.5}
+						{@const y2 = (path[i + 1] ? path[i + 1].y : y) + 0.5}
 						<path
 							transition:fade|global={{ delay: 500 + i * 50, duration: 50 }}
 							class="line"
 							d={`M ${x1} ${y1} L ${x2} ${y2}`}
 							style:stroke={colorScale[color](i / path.length)}
 						></path>
-						<!-- {#if i < path.length - 1}
-						{@const angle = Math.atan2(y2 - y1, x2 - x1)}
-						{@const size = 0.15}
-						{@const xTip = x1 + size * Math.cos(angle) * 2}
-						{@const yTip = y1 + size * Math.sin(angle) * 2}
-						{@const xLeft = x1 + size * Math.cos(angle + Math.PI * 0.2)}
-						{@const yLeft = y1 + size * Math.sin(angle + Math.PI * 0.2)}
-						{@const xRight = x1 + size * Math.cos(angle - Math.PI * 0.2)}
-						{@const yRight = y1 + size * Math.sin(angle - Math.PI * 0.2)}
-						<path
-							class="arrow"
-							d={`M ${xLeft} ${yLeft} L ${xTip} ${yTip} L ${xRight} ${yRight}`}
-						></path>
-					{/if} -->
 					{/each}
 				{/if}
-				<!-- {#if pathD && mounted}
-					<path
-						transition:draw|global={{ delay: 1000, duration: 1000 }}
-						class="line"
-						d={pathD}
-					></path>
-				{/if} -->
 			</svg>
 		{/if}
 
@@ -119,7 +99,7 @@
 			{#each cells as { obstacle, visited, pos }}
 				{@const x = pos[0]}
 				{@const y = pos[1]}
-				{@const active = x === latest[0] && y === latest[1]}
+				{@const active = x === latest.x && y === latest.y}
 				<div
 					class="cell"
 					class:obstacle
@@ -138,7 +118,7 @@
 			<div class="grid mower">
 				<div
 					class="character"
-					style="--x: {latest[0]}; --y: {latest[1]};"
+					style="--x: {latest.x}; --y: {latest.y};"
 				></div>
 			</div>
 		{/if}
@@ -147,12 +127,11 @@
 
 <style>
 	figure {
-		width: 100%;
-		max-width: var(--grid-max-width);
+		width: calc(var(--size) / var(--max-size) * 100%);
 		/* perspective: calc(var(--grid-width) * 1); */
 		transition: all 0.5s ease-in-out;
 		position: relative;
-		margin: 2rem auto 0;
+		margin: 1rem auto;
 	}
 
 	.inner {
@@ -189,26 +168,22 @@
 
 	.cell {
 		position: relative;
-		background: linear-gradient(
-			135deg,
-			var(--color-green-medium),
-			var(--color-green-dark)
-		);
+		background: linear-gradient(135deg, var(--color-green), var(--color-green));
 	}
 
 	.cell.visited {
 		background: linear-gradient(
 			135deg,
-			var(--color-green-light),
-			var(--color-green-medium)
+			var(--color-yellow),
+			var(--color-yellow)
 		);
 	}
 
 	.cell.obstacle {
 		background: linear-gradient(
 			135deg,
-			var(--color-brown-medium),
-			var(--color-brown-dark)
+			var(--color-gray-700),
+			var(--color-gray-700)
 		);
 	}
 
@@ -257,7 +232,7 @@
 		grid-column: calc(var(--x) + 1);
 		width: 100%;
 		height: 100%;
-		background: var(--color-orange-medium);
+		background: var(--color-purple);
 		/* transform-origin: center bottom;
 		transform: rotateX(-60deg) translateZ(1px); */
 	}

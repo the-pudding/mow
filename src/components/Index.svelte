@@ -1,7 +1,6 @@
 <script>
 	import { getContext } from "svelte";
-	import Game from "$components/Game.svelte";
-	import Video from "$components/Video.svelte";
+	import Hero from "$components/Hero.svelte";
 	import Img from "$components/Img.svelte";
 	import Result from "$components/Result.svelte";
 	import CMS from "$components/helpers/CMS.svelte";
@@ -9,7 +8,7 @@
 
 	const copy = getContext("copy");
 	const { body } = copy;
-	const components = { Game, Video, Result, Img };
+	const components = { Hero, Video, Result, Img };
 </script>
 
 <div class="byline">

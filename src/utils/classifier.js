@@ -10,7 +10,7 @@ const pathToAlphabet = new Map([
 function pathToAlphabetString(path) {
 	let prev = [0, 0];
 	let pathString = "";
-	for (const [x, y] of path) {
+	for (const { x, y } of path) {
 		const [dx, dy] = [x - prev[0], y - prev[1]];
 		if (!(dx === 0 && dy === 0))
 			pathString += pathToAlphabet.get(`${x - prev[0]}, ${y - prev[1]}`);

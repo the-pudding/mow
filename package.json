@@ -13,6 +13,7 @@
 	"devDependencies": {
 		"@lucide/svelte": "^0.575.0",
 		"@rollup/plugin-dsv": "^3.0.5",
+		"@supabase/supabase-js": "^2.101.1",
 		"@sveltejs/adapter-cloudflare": "^7.2.6",
 		"@sveltejs/adapter-static": "^3.0.9",
 		"@sveltejs/kit": "^2.50.1",
