@@ -10,7 +10,8 @@
 		size = 10,
 		classifier = false,
 		onComplete,
-		onExceed
+		onExceed,
+		startMessage
 	} = $props();
 
 	const predictionMoves = 15;
@@ -98,6 +99,7 @@
 	{#if !startTime}
 		<div class="start">
 			<button onclick={onStart}>Start</button>
+			{#if startMessage}<p>{startMessage}</p>{/if}
 		</div>
 	{/if}
 </div>
@@ -138,9 +140,14 @@
 		top: 0;
 		left: 0;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		background: rgba(255, 255, 255, 0.9);
+	}
+
+	.start p {
+		margin-top: 0.5rem;
 	}
 
 	.steps {

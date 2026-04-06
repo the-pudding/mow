@@ -19,6 +19,13 @@
 
 	let completed = $state(false);
 
+	let startMessage = $derived.by(() => {
+		if (config === 0) return "Warm up round.";
+		if (config === 1) return "Same lawn, but now we're recording.";
+		if (config === 2) return "A little bigger now.";
+		if (config === 3) return "Last one!";
+	});
+
 	async function onComplete(path) {
 		try {
 			await db.insert({
@@ -65,10 +72,12 @@
 				<em> You've completed all the tests! Thanks for participating. </em>
 			</p>
 		{:else}
-			<p><em>Test {config + 1} of {tests.length}</em></p>
 			<p><strong>How efficiently can you mow this lawn?</strong></p>
+			<p class="test">
+				<em>Test {config + 1} of {tests.length}</em>
+			</p>
 			{#key config}
-				<Game {size} {obstacles} {onComplete}></Game>
+				<Game {size} {obstacles} {onComplete} {startMessage}></Game>
 			{/key}
 		{/if}
 	</div>
@@ -77,10 +86,15 @@
 <style>
 	.c {
 		margin-bottom: 4rem;
+		padding: 1rem;
 	}
 
 	.intro {
 		max-width: var(--grid-max-width);
 		margin: 1rem auto;
+	}
+
+	.test span {
+		color: var(--color-purple);
 	}
 </style>
