@@ -2,14 +2,9 @@
 	import Button from "$components/ui/Button.svelte";
 	import { session } from "$runes/misc.svelte.js";
 	import generateId from "$utils/generateId.js";
-	import { MediaQuery } from "svelte/reactivity";
-
-	const hover = new MediaQuery("hover: hover");
-	const pointer = new MediaQuery("pointer: fine");
 
 	function start() {
 		if (!session.userId) session.userId = generateId();
-		session.platform = hover.current && pointer.current ? "desktop" : "mobile";
 		session.phase = "tutorial";
 	}
 </script>

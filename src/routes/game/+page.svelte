@@ -1,5 +1,6 @@
 <script>
-	import { browser, dev } from "$app/environment";
+	import { browser } from "$app/environment";
+	import { page } from "$app/state";
 	import Meta from "$components/Meta.svelte";
 	import Intro from "$components/game/Intro.svelte";
 	import Tutorial from "$components/game/Tutorial.svelte";
@@ -17,6 +18,8 @@
 		"Mow a series of lawns as efficiently as you can. We will publish the analysis in two-ish weeks.";
 
 	let hydrated = $state(false);
+	// is not pudding.cool
+	let dev = !page.url.hostname.includes("pudding.cool");
 
 	$effect(() => {
 		if (!browser) return;

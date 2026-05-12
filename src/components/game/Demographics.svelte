@@ -56,10 +56,9 @@
 
 <div class="c">
 	<h2>
-		Answer these quick questions, then see how you did compared to others. <em
-			>All optional.</em
-		>
+		Answer these quick questions, then see how you did compared to others.
 	</h2>
+	<p><em>All optional.</em></p>
 
 	{#each questions as q}
 		<fieldset>

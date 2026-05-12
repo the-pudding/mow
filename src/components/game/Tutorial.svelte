@@ -5,6 +5,10 @@
 
 	const level = levels.find((l) => l.id === "tutorial");
 
+	let instructions = $derived(
+		session.platform === "desktop" ? "arrow keys" : "on-screen keyboard"
+	);
+
 	function onComplete() {
 		session.phase = "round1";
 	}
@@ -14,8 +18,7 @@
 	<h2>Tutorial</h2>
 	<p>
 		The goal: Mow every green tile in as few moves as possible. Time doesn’t
-		matter. Gray tiles are obstacles you can’t cross. Use the arrow keys (or the
-		on-screen keypad) to move.
+		matter. Gray tiles are obstacles you can’t cross. Use the {instructions} to move.
 	</p>
 	<p class="meta"><em>Warm-up — this round isn't recorded.</em></p>
 	<Game

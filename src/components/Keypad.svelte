@@ -1,11 +1,5 @@
 <script>
-	import { MediaQuery } from "svelte/reactivity";
-
 	let { onmove, active } = $props();
-
-	const hover = new MediaQuery("hover: hover");
-	const pointer = new MediaQuery("pointer: fine");
-	let desktop = $derived(hover.current && pointer.current);
 
 	function onKeydown(e) {
 		if (!active) return;

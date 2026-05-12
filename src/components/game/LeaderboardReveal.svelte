@@ -4,7 +4,7 @@
 </script>
 
 <div class="c">
-	<h2>Nice mowing.</h2>
+	<h2>Thanks for mowing!</h2>
 	<p class="big">
 		You’re <strong>{placeholderMoves} moves</strong> behind the leader.
 	</p>

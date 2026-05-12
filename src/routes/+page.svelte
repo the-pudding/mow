@@ -23,4 +23,27 @@
 </script>
 
 <Meta {title} {description} {url} {preloadFont} {keywords} />
+
 <!-- <Index /> -->
+
+<div class="coming-soon">
+	<p>
+		Nothing to see here, yet...<br />The full story drops in about two weeks.
+		Until then you can <a href="/game">play the experiment here</a>.
+	</p>
+</div>
+
+<style>
+	.coming-soon {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 100vh;
+		padding: 1rem;
+		text-align: center;
+	}
+
+	.coming-soon a {
+		text-decoration: underline;
+	}
+</style>

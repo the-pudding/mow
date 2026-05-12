@@ -46,8 +46,8 @@
 	{:else if step === "reveal"}
 		<LeaderboardReveal />
 		<div class="pitch">
-			<h2>Want to try harder levels?</h2>
-			<p>A few bonus rounds for the truly committed.</p>
+			<h2>Can you top the leaderboard?</h2>
+			<p>A few harder bonus rounds for the adventurous.</p>
 			<div class="actions">
 				<Button variant="primary" onclick={tryBonus}>Yes, more</Button>
 				<Button variant="ghost" onclick={exit}>No, I'm done</Button>

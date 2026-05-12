@@ -1,28 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
-import { dev } from "$app/environment";
-
-// TODO migration — run in Supabase SQL editor:
-//
-// alter table mow_test
-//   add column if not exists level text,
-//   add column if not exists platform text;
-//
-// create table if not exists mow_users (
-//   id text primary key,
-//   email text,
-//   age text,
-//   mowing_style text,
-//   gaming_frequency text,
-//   handedness text,
-//   optimization_frequency text,
-//   created_at timestamptz default now(),
-//   updated_at timestamptz default now()
-// );
+import { page } from "$app/state";
+import { browser } from "$app/environment";
 
 let supabase;
 
+const dev = browser && !page.url.hostname.includes("pudding.cool");
+
 function init() {
-	if (supabase) return;
+	if (supabase || !browser) return;
 	supabase = createClient(
 		"https://dbmtysppmiwwjwaeneex.supabase.co",
 		"sb_publishable_FI1g75Q3gDIw-HXVxx_hGA_p8mXjVkz"
