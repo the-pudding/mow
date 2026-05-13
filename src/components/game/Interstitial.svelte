@@ -5,7 +5,7 @@
 	import db from "$utils/supabase.js";
 	import { session } from "$runes/misc.svelte.js";
 
-	let step = $state("survey");
+	let step = $state(session.demographics ? "reveal" : "survey");
 
 	async function persistUser() {
 		try {

@@ -12,10 +12,11 @@
 		classifier = false,
 		onComplete,
 		onExceed,
+		onStart: onStartProp,
 		startMessage
 	} = $props();
 
-	const predictionMoves = 15;
+	// const predictionMoves = 15;
 
 	let maxMoves = $derived(size * size * 2);
 	let targetCount = $derived(size * size - obstacles.length);
@@ -23,9 +24,11 @@
 	let path = $state([{ x: 0, y: 0, t: 0 }]);
 	let position = $derived(path[path.length - 1]);
 	let visited = new SvelteSet(["0,0"]);
+	let revisited = new SvelteSet();
 
 	function onStart() {
 		startTime = Date.now();
+		onStartProp?.();
 	}
 
 	let visitedCount = $derived(visited.size);
@@ -69,9 +72,11 @@
 		// don't allow movement if it doesn't change position
 		if (tempX === position.x && tempY === position.y) return;
 
+		const cellKey = `${tempX},${tempY}`;
 		const t = Date.now() - startTime;
 		path.push({ x: tempX, y: tempY, t });
-		visited.add(`${tempX},${tempY}`);
+		if (visited.has(cellKey)) revisited.add(cellKey);
+		visited.add(cellKey);
 	}
 </script>
 
@@ -79,7 +84,7 @@
 	<div class="inner">
 		<div class="steps">
 			<span>moves: {path.length}</span>
-			{#if classifier}
+			<!-- {#if classifier}
 				<span>
 					{#if path.length > predictionMoves}
 						predicted: {classification.label}
@@ -87,10 +92,17 @@
 						make at least {predictionMoves} moves to get a prediction
 					{/if}
 				</span>
-			{/if}
+			{/if} -->
 		</div>
 		<div class="g">
-			<Grid {size} {path} perspective={false} {obstacles} game={true}></Grid>
+			<Grid
+				{size}
+				{path}
+				{revisited}
+				perspective={false}
+				{obstacles}
+				game={true}
+			></Grid>
 		</div>
 		{#if active}<Keypad {onmove} {active}></Keypad>{/if}
 	</div>

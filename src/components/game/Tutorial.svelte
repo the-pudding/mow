@@ -18,7 +18,8 @@
 	<h2>Tutorial</h2>
 	<p>
 		The goal: Mow every green tile in as few moves as possible. Time doesn’t
-		matter. Gray tiles are obstacles you can’t cross. Use the {instructions} to move.
+		matter. Gray tiles are obstacles you can’t cross. You can retrace your
+		steps, but try to be efficient. Use the {instructions} to move.
 	</p>
 	<p class="meta"><em>Warm-up — this round isn't recorded.</em></p>
 	<Game

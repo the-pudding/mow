@@ -15,11 +15,12 @@
 
 	const title = "Lawn mowing experiment";
 	const description =
-		"Mow a series of lawns as efficiently as you can. We will publish the analysis in two-ish weeks.";
+		"Mow a series of lawns as efficiently as you can. We will publish the analysis in a couple weeks.";
 
 	let hydrated = $state(false);
 	// is not pudding.cool
-	let dev = !page.url.hostname.includes("pudding.cool");
+	// let dev = !page.url.hostname.includes("pudding.cool");
+	let dev = false;
 
 	$effect(() => {
 		if (!browser) return;

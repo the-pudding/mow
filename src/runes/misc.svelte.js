@@ -12,8 +12,13 @@ export const session = $state({
 	userId: null,
 	platform,
 	demographics: null,
-	email: null
+	email: null,
+	startedLevels: {},
+	completedLevels: {}
 });
+
+// Tracks levels started in THIS page load (not persisted)
+export const freshStartedLevels = new Set();
 
 export function resetSession() {
 	session.phase = "intro";
@@ -21,4 +26,7 @@ export function resetSession() {
 	session.userId = null;
 	session.demographics = null;
 	session.email = null;
+	session.startedLevels = {};
+	session.completedLevels = {};
+	freshStartedLevels.clear();
 }

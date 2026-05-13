@@ -5,7 +5,14 @@
 	import levels from "$data/levels.json";
 
 	// obstacles is an array of [{x,y}]
-	let { size, path = [], obstacles = [], game = false, color } = $props();
+	let {
+		size,
+		path = [],
+		obstacles = [],
+		game = false,
+		color,
+		revisited
+	} = $props();
 
 	const MAX_GRID_SIZE = max(levels, (l) => l.size) || 10;
 
@@ -35,7 +42,8 @@
 		const visitedSet = new Set(path.map(({ x, y }) => `${x},${y}`));
 		const all = defaultCells.map((c) => ({
 			...c,
-			visited: visitedSet.has(`${c.pos.x},${c.pos.y}`)
+			visited: visitedSet.has(`${c.pos.x},${c.pos.y}`),
+			revisited: revisited?.has(`${c.pos.x},${c.pos.y}`) ?? false
 		}));
 		return all;
 	});
@@ -86,7 +94,7 @@
 		{/if}
 
 		<div class="grid">
-			{#each cells as { obstacle, visited, pos }}
+			{#each cells as { obstacle, visited, revisited, pos }}
 				{@const x = pos[0]}
 				{@const y = pos[1]}
 				{@const active = x === latest.x && y === latest.y}
@@ -94,6 +102,7 @@
 					class="cell"
 					class:obstacle
 					class:visited
+					class:revisited
 					class:active
 					data-x={x}
 					data-y={y}
@@ -156,6 +165,14 @@
 			135deg,
 			var(--color-yellow),
 			var(--color-yellow)
+		);
+	}
+
+	.cell.revisited {
+		background: linear-gradient(
+			135deg,
+			var(--color-yellow2),
+			var(--color-yellow2)
 		);
 	}
 

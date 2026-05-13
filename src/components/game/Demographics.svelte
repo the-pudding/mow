@@ -10,7 +10,7 @@
 			options: ["Under 18", "18-29", "30-44", "45-59", "60+"]
 		},
 		{
-			key: "mowingStyle",
+			key: "style",
 			label: "How would you describe the way you mow a lawn or vacuum?",
 			options: [
 				"I follow a set pattern",
@@ -25,7 +25,7 @@
 			options: ["Regularly", "Sometimes", "Rarely or never"]
 		},
 		{
-			key: "handedness",
+			key: "hand",
 			label: "Are you left or right handed?",
 			options: ["Left", "Right", "Ambidextrous"]
 		},

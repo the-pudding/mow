@@ -44,14 +44,13 @@ async function upsertUser({ id, email, demographics }) {
 	}
 	init();
 	const row = {
-		id,
+		user: id,
 		email: email ?? null,
 		age: demographics?.age ?? null,
-		mowing_style: demographics?.mowingStyle ?? null,
-		gaming_frequency: demographics?.gaming ?? null,
-		handedness: demographics?.handedness ?? null,
-		optimization_frequency: demographics?.optimization ?? null,
-		updated_at: new Date().toISOString()
+		style: demographics?.style ?? null,
+		gaming: demographics?.gaming ?? null,
+		hand: demographics?.hand ?? null,
+		optimization: demographics?.optimization ?? null
 	};
 	const { error } = await supabase
 		.from("mow_users")

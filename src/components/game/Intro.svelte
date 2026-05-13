@@ -14,7 +14,7 @@
 	<p>
 		This is a game about mowing a lawn as efficiently as possible. And a small
 		experiment. Play through, and we’ll break down the findings when our story
-		drops in two-ish weeks.
+		drops in a couple weeks.
 	</p>
 	<Button variant="primary" size="lg" onclick={start}>Start</Button>
 </section>
