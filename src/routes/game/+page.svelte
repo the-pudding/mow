@@ -19,7 +19,9 @@
 
 	let hydrated = $state(false);
 	// is not pudding.cool
-	let dev = !page.url.hostname.includes("pudding.cool");
+	let dev =
+		!page.url.hostname.includes("pudding.cool") &&
+		!page.url.hostname.includes("citizencodex.com");
 	// let dev = false;
 
 	$effect(() => {
