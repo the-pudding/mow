@@ -2,14 +2,22 @@
 	import Button from "$components/ui/Button.svelte";
 	import { session } from "$runes/misc.svelte.js";
 
-	function done() {
-		session.phase = "end";
+	function start() {
+		session.phase = "bonus1";
+	}
+
+	function exit() {
+		session.phase = "skip_end";
 	}
 </script>
 
 <section class="c">
-	<h2>Coming soon</h2>
-	<Button onclick={done}>Wrap it up</Button>
+	<h2>Bonus rounds</h2>
+	<p>Harder grids, for fun. Your paths are still recorded.</p>
+	<div class="actions">
+		<Button variant="primary" onclick={start}>Let’s go</Button>
+		<Button variant="ghost" onclick={exit}>Actually, I’m done</Button>
+	</div>
 </section>
 
 <style>
@@ -20,9 +28,10 @@
 		text-align: center;
 	}
 
-	button {
-		margin-top: 1rem;
-		padding: 0.5rem 1.25rem;
-		cursor: pointer;
+	.actions {
+		display: flex;
+		gap: 0.75rem;
+		justify-content: center;
+		margin-top: 1.5rem;
 	}
 </style>

@@ -6,7 +6,6 @@
 	import Tutorial from "$components/game/Tutorial.svelte";
 	import Round from "$components/game/Round.svelte";
 	import Interstitial from "$components/game/Interstitial.svelte";
-	import BonusIntro from "$components/game/BonusIntro.svelte";
 	import Bonus from "$components/game/Bonus.svelte";
 	import End from "$components/game/End.svelte";
 	import { session } from "$runes/misc.svelte.js";
@@ -76,9 +75,13 @@
 	{:else if session.phase === "interstitial"}
 		<Interstitial />
 	{:else if session.phase === "bonus_intro"}
-		<BonusIntro />
-	{:else if session.phase === "bonus"}
 		<Bonus />
+	{:else if session.phase === "bonus1"}
+		<Round id="bonus1" label="1 of 3" startMessage="" nextPhase="bonus2" />
+	{:else if session.phase === "bonus2"}
+		<Round id="bonus2" label="2 of 3" startMessage="" nextPhase="bonus3" />
+	{:else if session.phase === "bonus3"}
+		<Round id="bonus3" label="3 of 3" startMessage="" nextPhase="end" />
 	{:else if session.phase === "end" || session.phase === "skip_end"}
 		<End />
 	{/if}
