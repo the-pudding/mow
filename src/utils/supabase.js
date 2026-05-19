@@ -69,13 +69,10 @@ async function upsertUser({ id, email, name, demographics }) {
 
 	// insert email to separate table called "mow_emails" so we can manage our email list without affecting the main user table
 	if (email) {
-		const { error: emailError } = await supabase.from("mow_emails").upsert(
-			{
-				user_id: id,
-				email
-			},
-			{ onConflict: "user_id" }
-		);
+		const { error: emailError } = await supabase.from("mow_emails").insert({
+			user_id: id,
+			email
+		});
 		if (emailError) {
 			console.log(emailError);
 			throw emailError;
