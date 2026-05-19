@@ -10,7 +10,7 @@
 	import End from "$components/game/End.svelte";
 	import { session } from "$runes/misc.svelte.js";
 
-	const STORAGE_KEY = "pudding_mow_session";
+	const STORAGE_KEY = "pudding_mow_game";
 
 	const title = "Lawn mowing experiment";
 	const description =
