@@ -1,6 +1,7 @@
 <script>
 	import db from "$utils/supabase.js";
 	import Button from "$components/ui/Button.svelte";
+	import Leaderboard from "$components/game/Leaderboard.svelte";
 	import { session } from "$runes/misc.svelte.js";
 
 	function tryBonus() {
@@ -9,8 +10,13 @@
 
 	const ROUND_IDS = ["round1", "round2"];
 
+	let leaderboardReady = $state(false);
+
 	$effect(() => {
-		if (!session.name) return;
+		if (!session.name) {
+			leaderboardReady = true;
+			return;
+		}
 		const allEfficiencies = Object.values(session.levelEfficiencies);
 		if (!allEfficiencies.length) return;
 
@@ -27,11 +33,16 @@
 			name: session.name,
 			scoreStart: +scoreStart.toFixed(4),
 			scoreFull: +scoreFull.toFixed(4)
-		}).catch((e) => console.error("Error submitting score:", e));
+		})
+			.catch((e) => console.error("Error submitting score:", e))
+			.finally(() => {
+				leaderboardReady = true;
+			});
 	});
 </script>
 
 <section class="c">
+	<Leaderboard ready={leaderboardReady} mode="full" />
 	<h2>Enjoy the rest of your day.</h2>
 	<p>Your paths are now part of the dataset.</p>
 	{#if session.email}
