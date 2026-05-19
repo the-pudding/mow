@@ -10,9 +10,6 @@
 
 	const levelIds = $derived(mode === "full" ? ALL_IDS : ROUND_IDS);
 	const scoreField = $derived(mode === "full" ? "score_full" : "score_start");
-	const roundsLabel = $derived(
-		mode === "full" ? "rounds 1–2 + bonus" : "rounds 1 & 2"
-	);
 
 	const yourScore = $derived.by(() => {
 		const vals = levelIds
@@ -48,9 +45,9 @@
 		<p class="big">
 			You mowed <strong>{yourScore}% optimally</strong>.
 			{#if topScore !== null && yourScore < topScore}
-				That's {(topScore - yourScore).toFixed(1)}% behind the top player!
+				That’s {(topScore - yourScore).toFixed(1)}% behind the top player.
 			{:else if topScore !== null}
-				That's top of the leaderboard so far!
+				That’s top of the leaderboard so far.
 			{/if}
 		</p>
 	{/if}
@@ -61,9 +58,9 @@
 		<table>
 			<thead>
 				<tr>
-					<th>#</th>
+					<th>Rank</th>
 					<th>Name</th>
-					<th>Score <span class="rounds-note">({roundsLabel})</span></th>
+					<th>% Optimal</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -118,7 +115,6 @@
 
 	tr.you td {
 		font-weight: bold;
-		background: var(--color-highlight, #fffbe6);
 	}
 
 	.rounds-note {

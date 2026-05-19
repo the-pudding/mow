@@ -3,7 +3,7 @@
 
 	import Meta from "$components/Meta.svelte";
 	import Intro from "$components/game/Intro.svelte";
-	import Tutorial from "$components/game/Tutorial.svelte";
+
 	import Round from "$components/game/Round.svelte";
 	import Interstitial from "$components/game/Interstitial.svelte";
 	import Bonus from "$components/game/Bonus.svelte";
@@ -18,10 +18,20 @@
 
 	let hydrated = $state(false);
 	// is not pudding.cool
-	let dev = browser
-		? !window.location.hostname.includes("pudding.cool") &&
-			!window.location.hostname.includes("citizencodex.com")
-		: true;
+	// const dev = browser
+	// 	? !window.location.hostname.includes("pudding.cool") &&
+	// 		!window.location.hostname.includes("citizencodex.com")
+	// 	: true;
+
+	let instructions = $derived(
+		session.platform === "desktop" ? "arrow keys" : "on-screen keyboard"
+	);
+
+	let tutorialText = $derived(
+		`The goal: Mow every green tile in as few moves as possible. Time doesn’t matter. Gray tiles are obstacles you can’t cross. You can retrace your steps, but try to be efficient. Use the ${instructions} to move.`
+	);
+
+	const dev = false;
 
 	$effect(() => {
 		if (dev) console.log("dev mode: skipping hydration and persistence");
@@ -59,7 +69,12 @@
 	{#if session.phase === "intro"}
 		<Intro />
 	{:else if session.phase === "tutorial"}
-		<Tutorial />
+		<Round
+			id="tutorial"
+			label="Tutorial"
+			startMessage={tutorialText}
+			nextPhase="round1"
+		/>
 	{:else if session.phase === "round1"}
 		<Round
 			id="round1"

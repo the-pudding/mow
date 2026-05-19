@@ -54,15 +54,9 @@
 </script>
 
 <section class="c">
-	<p class="label"><em>{label}</em></p>
-	<p><strong>How efficiently can you mow this lawn?</strong></p>
-	<Game
-		size={level.size}
-		obstacles={level.obstacles}
-		{onStart}
-		{onComplete}
-		{startMessage}
-	/>
+	<p class="label"><strong>{label}</strong></p>
+	<p>{startMessage}</p>
+	<Game size={level.size} obstacles={level.obstacles} {onStart} {onComplete} />
 	{#if saving}
 		<p class="saving"><small>Saving...</small></p>
 	{/if}

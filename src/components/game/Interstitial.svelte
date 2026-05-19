@@ -27,10 +27,12 @@
 		session.demographics = answers;
 		session.email = email;
 		step = "name";
+		await persistUser();
 	}
 
 	async function onSkipSurvey() {
 		step = "name";
+		await persistUser();
 	}
 
 	async function onSubmitName(name) {

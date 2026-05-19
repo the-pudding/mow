@@ -112,7 +112,6 @@
 	{#if !startTime}
 		<div class="start">
 			<Button variant="primary" onclick={onStart}>Start</Button>
-			{#if startMessage}<p>{startMessage}</p>{/if}
 		</div>
 	{/if}
 </div>

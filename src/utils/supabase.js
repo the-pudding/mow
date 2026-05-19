@@ -3,10 +3,12 @@ import { browser } from "$app/environment";
 
 let supabase;
 
-const dev = browser
-	? !window.location.hostname.includes("pudding.cool") &&
-		!window.location.hostname.includes("citizencodex.com")
-	: true;
+// const dev = browser
+// 	? !window.location.hostname.includes("pudding.cool") &&
+// 		!window.location.hostname.includes("citizencodex.com")
+// 	: true;
+
+const dev = false;
 
 if (dev) console.log("Supabase dev mode");
 
@@ -21,7 +23,7 @@ function init() {
 async function insertAttempt({ user, level, platform, result }) {
 	if (dev) {
 		console.log("[dev] skipping insertAttempt", {
-			user,
+			user_id: user,
 			level,
 			platform,
 			moves: result.length
@@ -30,7 +32,7 @@ async function insertAttempt({ user, level, platform, result }) {
 	}
 	init();
 	const { error } = await supabase.from("mow_test").insert({
-		user,
+		user_id: user,
 		level,
 		platform,
 		result: JSON.stringify(result)
@@ -48,8 +50,7 @@ async function upsertUser({ id, email, name, demographics }) {
 	}
 	init();
 	const row = {
-		user: id,
-		email: email ?? null,
+		user_id: id,
 		name: name ?? null,
 		age: demographics?.age ?? null,
 		style: demographics?.style ?? null,
@@ -57,12 +58,28 @@ async function upsertUser({ id, email, name, demographics }) {
 		hand: demographics?.hand ?? null,
 		optimization: demographics?.optimization ?? null
 	};
-	const { error } = await supabase
-		.from("mow_users")
-		.upsert(row, { onConflict: "id" });
+	const { error } = await supabase.from("mow_users").upsert(row, {
+		onConflict: "user_id"
+	});
+
 	if (error) {
 		console.log(error);
 		throw error;
+	}
+
+	// insert email to separate table called "mow_emails" so we can manage our email list without affecting the main user table
+	if (email) {
+		const { error: emailError } = await supabase.from("mow_emails").upsert(
+			{
+				user_id: id,
+				email
+			},
+			{ onConflict: "user_id" }
+		);
+		if (emailError) {
+			console.log(emailError);
+			throw emailError;
+		}
 	}
 }
 
@@ -79,12 +96,12 @@ async function submitScore({ userId, name, scoreStart, scoreFull }) {
 	init();
 	const { error } = await supabase.from("mow_leaderboard").upsert(
 		{
-			user: userId,
+			user_id: userId,
 			name,
 			score_start: scoreStart,
 			score_full: scoreFull
 		},
-		{ onConflict: "user" }
+		{ onConflict: "user_id", count: "exact" }
 	);
 	if (error) {
 		console.log(error);
@@ -110,4 +127,10 @@ async function getTopScores(limit = 10) {
 	return data;
 }
 
-export default { init, insertAttempt, upsertUser, submitScore, getTopScores };
+export default {
+	init,
+	insertAttempt,
+	upsertUser,
+	submitScore,
+	getTopScores
+};

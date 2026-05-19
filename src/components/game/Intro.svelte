@@ -3,8 +3,8 @@
 	import { session } from "$runes/misc.svelte.js";
 	import generateId from "$utils/generateId.js";
 
-	function start() {
-		if (!session.userId) session.userId = generateId();
+	async function start() {
+		if (!session.userId) session.userId = generateId(10);
 		session.phase = "tutorial";
 	}
 </script>
