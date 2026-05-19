@@ -23,7 +23,9 @@
 			!window.location.hostname.includes("citizencodex.com")
 		: true;
 
-	$inspect(dev);
+	$effect(() => {
+		if (dev) console.log("dev mode: skipping hydration and persistence");
+	});
 
 	$effect(() => {
 		if (!browser) return;

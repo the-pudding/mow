@@ -8,7 +8,7 @@ const dev = browser
 		!window.location.hostname.includes("citizencodex.com")
 	: true;
 
-console.log("Supabase dev mode:", dev);
+if (dev) console.log("Supabase dev mode");
 
 function init() {
 	if (supabase || !browser) return;
