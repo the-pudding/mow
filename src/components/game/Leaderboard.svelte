@@ -43,7 +43,7 @@
 	<h2>Thanks for mowing!</h2>
 	{#if yourScore !== null}
 		<p>
-			You mowed <strong>{yourScore}% optimally</strong>.
+			You mowed <strong>{yourScore}% optimally</strong>.<br />
 			{#if topScore !== null && yourScore < topScore}
 				That’s {(topScore - yourScore).toFixed(1)}% behind the top player.
 			{:else if topScore !== null}
@@ -53,7 +53,7 @@
 	{/if}
 
 	{#if loading}
-		<p class="loading">Loading leaderboard…</p>
+		<p class="loading">Loading leaderboard...</p>
 	{:else if topScores.length}
 		<table>
 			<thead>
@@ -68,11 +68,16 @@
 					<tr class:you={score.name === session.name}>
 						<td>{i + 1}</td>
 						<td>{score.name}</td>
-						<td>{+(score[scoreField] * 100).toFixed(1)}%</td>
+						<td>{+(score[scoreField] * 100).toFixed(1)}</td>
 					</tr>
 				{/each}
 			</tbody>
 		</table>
+		{#if mode === "start"}
+			<p class="note">
+				<em><small><sup>*</sup>Through first two rounds</small></em>
+			</p>
+		{/if}
 	{/if}
 </div>
 
@@ -81,44 +86,44 @@
 		text-align: center;
 	}
 
-	.big {
-		font-size: var(--20px);
-		margin: 1rem 0;
-	}
-
 	.loading {
-		color: var(--color-fg-light);
 		font-size: var(--14px);
 	}
 
 	table {
-		margin: 1.5rem auto 0;
-		border-collapse: collapse;
+		margin: 1.5rem auto;
+		max-width: 20rem;
 		font-size: var(--14px);
-		min-width: 16rem;
 	}
 
 	th,
 	td {
-		padding: 0.4rem 0.75rem;
+		padding: 0.5rem;
 		text-align: left;
 	}
 
-	th {
-		border-bottom: 2px solid var(--color-gray-300);
-		font-weight: bold;
+	th:last-of-type,
+	td:last-of-type {
+		text-align: right;
+		width: 6rem;
 	}
 
-	tr + tr td {
-		border-top: 1px solid var(--color-gray-200);
+	th:first-of-type,
+	td:first-of-type {
+		text-align: right;
+		width: 3.5rem;
+	}
+
+	th {
+		font-weight: 700;
+		text-transform: uppercase;
+	}
+
+	tr td {
+		border-top: 1px solid var(--color-fg);
 	}
 
 	tr.you td {
-		font-weight: bold;
-	}
-
-	.rounds-note {
-		font-weight: normal;
-		color: var(--color-fg-light);
+		font-weight: 700;
 	}
 </style>

@@ -8,6 +8,8 @@ const dev = browser
 		!window.location.hostname.includes("citizencodex.com")
 	: true;
 
+// const dev = false;
+
 if (dev) console.log("Supabase dev mode");
 
 function init() {
