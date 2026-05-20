@@ -22,11 +22,11 @@
 		"Mow a series of lawns as efficiently as you can. We will publish the analysis in a couple weeks.";
 
 	let hydrated = $state(false);
-	// is not pudding.cool
-	// const dev = browser
-	// 	? !window.location.hostname.includes("pudding.cool") &&
-	// 		!window.location.hostname.includes("citizencodex.com")
-	// 	: true;
+
+	const dev = browser
+		? !window.location.hostname.includes("pudding.cool") &&
+			!window.location.hostname.includes("citizencodex.com")
+		: true;
 
 	let instructions = $derived(
 		session.platform === "desktop" ? "arrow keys" : "on-screen keyboard"
@@ -35,8 +35,6 @@
 	let tutorialText = $derived(
 		`The goal: Mow every green tile in as few moves as possible. Time doesn’t matter. Gray tiles are obstacles you can’t cross. You can retrace your steps, but try to be efficient. Use the ${instructions} to move.`
 	);
-
-	const dev = false;
 
 	$effect(() => {
 		if (dev) console.log("dev mode: skipping hydration and persistence");
@@ -96,8 +94,6 @@
 		/>
 	{:else if session.phase === "interstitial"}
 		<Interstitial />
-	{:else if session.phase === "bonus_intro"}
-		<Bonus />
 	{:else if session.phase === "bonus1"}
 		<Round
 			id="bonus1"

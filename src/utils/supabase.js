@@ -3,12 +3,10 @@ import { browser } from "$app/environment";
 
 let supabase;
 
-// const dev = browser
-// 	? !window.location.hostname.includes("pudding.cool") &&
-// 		!window.location.hostname.includes("citizencodex.com")
-// 	: true;
-
-const dev = false;
+const dev = browser
+	? !window.location.hostname.includes("pudding.cool") &&
+		!window.location.hostname.includes("citizencodex.com")
+	: true;
 
 if (dev) console.log("Supabase dev mode");
 
