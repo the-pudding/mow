@@ -22,12 +22,10 @@
     "gray-800": "oklch(26.9% 0 0)",
     "gray-900": "oklch(20.5% 0 0)",
     "gray-950": "oklch(14.5% 0 0)",
-    "purple": "oklch(0.5581 0.2208 314.87)",
-    "blue": "oklch(0.4759 0.2842 276.25)",
-    "green": "oklch(0.6506 0.0971 191.52)",
-    "red": "oklch(0.677 0.2117 30.54)",
-    "yellow": "oklch(0.8897 0.1781 108.83)",
-    "yellow2": "oklch(0.7897 0.1781 108.83)"
+    "green-lighter": "#63c74d",
+    "green-light": "#3e8948",
+    "green-dark": "#265c42",
+    "green-darker": "#193c3e"
   },
   "": {
     "12px": "0.75rem",

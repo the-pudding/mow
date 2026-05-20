@@ -51,7 +51,7 @@
 	}
 
 	function tryBonus() {
-		session.phase = "bonus_intro";
+		session.phase = "bonus1";
 	}
 
 	function exit() {
@@ -68,7 +68,7 @@
 		<LeaderboardReveal />
 		<div class="pitch">
 			<h2>Can you top the leaderboard?</h2>
-			<p>A few harder bonus rounds for the adventurous.</p>
+			<p>Play a few harder bonus rounds to test your skills.</p>
 			<div class="actions">
 				<Button variant="primary" onclick={tryBonus}>Yes, more</Button>
 				<Button variant="ghost" onclick={exit}>No, I’m done</Button>

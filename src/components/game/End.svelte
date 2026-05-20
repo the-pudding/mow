@@ -5,7 +5,7 @@
 	import { session } from "$runes/misc.svelte.js";
 
 	function tryBonus() {
-		session.phase = "bonus_intro";
+		session.phase = "bonus1";
 	}
 
 	const ROUND_IDS = ["round1", "round2"];

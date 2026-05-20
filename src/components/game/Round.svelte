@@ -22,6 +22,13 @@
 	}
 
 	async function onComplete(path) {
+		if (path == null) {
+			session.completedLevels[id] = 0;
+			setTimeout(() => {
+				session.phase = nextPhase;
+			}, 1500);
+			return;
+		}
 		const isReturnVisitor =
 			session.startedLevels[id] && !freshStartedLevels.has(id);
 		const alreadyCompleted = session.completedLevels[id];

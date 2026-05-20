@@ -39,23 +39,17 @@
 		"gray-950": {
 			"value": "oklch(14.5% 0 0)"
 		},
-		"purple": {
-			"value": "oklch(0.5581 0.2208 314.87)"
+		"green-lighter": {
+			"value": "#63c74d"
 		},
-		"blue": {
-			"value": "oklch(0.4759 0.2842 276.25)"
+		"green-light": {
+			"value": "#3e8948"
 		},
-		"green": {
-			"value": "oklch(0.6506 0.0971 191.52)"
+		"green-dark": {
+			"value": "#265c42"
 		},
-		"red": {
-			"value": "oklch(0.677 0.2117 30.54)"
-		},
-		"yellow": {
-			"value": "oklch(0.8897 0.1781 108.83)"
-		},
-		"yellow2": {
-			"value": "oklch(0.7897 0.1781 108.83)"
+		"green-darker": {
+			"value": "#193c3e"
 		}
 	}
 }

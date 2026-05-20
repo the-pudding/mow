@@ -11,7 +11,8 @@
 		obstacles = [],
 		game = false,
 		color,
-		revisited
+		revisited,
+		flipCharacter
 	} = $props();
 
 	const MAX_GRID_SIZE = max(levels, (l) => l.size) || 10;
@@ -115,7 +116,11 @@
 
 		{#if game}
 			<div class="grid mower">
-				<div class="character" style="--x: {latest.x}; --y: {latest.y};"></div>
+				<div
+					class="character"
+					style="--x: {latest.x}; --y: {latest.y};"
+					class:flip={flipCharacter}
+				></div>
 			</div>
 		{/if}
 	</div>
@@ -152,36 +157,23 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		transform-style: preserve-3d;
 	}
 
 	.cell {
 		position: relative;
-		background: linear-gradient(135deg, var(--color-green), var(--color-green));
+		background: var(--color-green-dark);
 	}
 
 	.cell.visited {
-		background: linear-gradient(
-			135deg,
-			var(--color-yellow),
-			var(--color-yellow)
-		);
+		background: var(--color-green-light);
 	}
 
 	.cell.revisited {
-		background: linear-gradient(
-			135deg,
-			var(--color-yellow2),
-			var(--color-yellow2)
-		);
+		background: var(--color-green-lighter);
 	}
 
 	.cell.obstacle {
-		background: linear-gradient(
-			135deg,
-			var(--color-gray-700),
-			var(--color-gray-700)
-		);
+		background: gray;
 	}
 
 	.texture {
@@ -210,22 +202,22 @@
 		transform: translateY(-10%);
 	}
 
-	.visited .fg {
-	}
-
-	.obstacle .fg {
-		transform: translateY(0%);
-	}
-
-	.obstacle.visited .fg {
-	}
-
 	.character {
-		grid-row: calc(var(--y) + 1);
-		grid-column: calc(var(--x) + 1);
-		width: 100%;
-		height: 100%;
-		background: var(--color-purple);
+		position: absolute;
+		left: calc(var(--x) / var(--size) * 100%);
+		top: calc(var(--y) / var(--size) * 100%);
+		width: calc(100% / var(--size));
+		height: calc(100% / var(--size));
+		transition:
+			left 0.125s ease,
+			top 0.125s ease;
+		background-image: url("/assets/images/mower.png");
+		background-size: cover;
+		background-repeat: no-repeat;
+	}
+
+	.character.flip {
+		transform: scaleX(-1);
 	}
 
 	/* nodes mode */

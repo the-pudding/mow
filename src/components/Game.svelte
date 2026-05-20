@@ -11,7 +11,6 @@
 		size = 10,
 		classifier = false,
 		onComplete,
-		onExceed,
 		onStart: onStartProp,
 		startMessage
 	} = $props();
@@ -25,6 +24,7 @@
 	let position = $derived(path[path.length - 1]);
 	let visited = new SvelteSet(["0,0"]);
 	let revisited = new SvelteSet();
+	let flipCharacter = $state(true);
 
 	function onStart() {
 		startTime = Date.now();
@@ -46,7 +46,7 @@
 	});
 
 	$effect(() => {
-		if (exceeded) onExceed();
+		if (exceeded) onComplete();
 	});
 
 	function onmove(key) {
@@ -56,8 +56,13 @@
 
 		if (key === "ArrowUp") dir = [0, -1];
 		else if (key === "ArrowDown") dir = [0, 1];
-		else if (key === "ArrowLeft") dir = [-1, 0];
-		else if (key === "ArrowRight") dir = [1, 0];
+		else if (key === "ArrowLeft") {
+			dir = [-1, 0];
+			flipCharacter = false;
+		} else if (key === "ArrowRight") {
+			dir = [1, 0];
+			flipCharacter = true;
+		}
 
 		let tempX = position.x + dir[0];
 		let tempY = position.y + dir[1];
@@ -102,6 +107,7 @@
 				perspective={false}
 				{obstacles}
 				game={true}
+				{flipCharacter}
 			></Grid>
 		</div>
 		{#if active}<Keypad {onmove} {active}></Keypad>{/if}
