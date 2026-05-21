@@ -141,7 +141,7 @@
 	figure {
 		position: relative;
 		margin: 1rem auto;
-		outline: 2px solid var(--color-fg);
+		background: var(--color-green-dark);
 	}
 
 	.inner {
