@@ -3,6 +3,8 @@
 
 	import Meta from "$components/Meta.svelte";
 	import Intro from "$components/game/Intro.svelte";
+	import Footer from "$components/Footer.svelte";
+	import FooterCC from "$components/Footer.CC.svelte";
 
 	import Round from "$components/game/Round.svelte";
 	import Interstitial from "$components/game/Interstitial.svelte";
@@ -14,6 +16,21 @@
 		"https://pudding.cool/assets/fonts/inconsolata/inconsolata-v32-latin-regular.woff2",
 		"https://pudding.cool/assets/fonts/inconsolata/inconsolata-v32-latin-700.woff2"
 	];
+
+	const metaObj =
+		import.meta.env.VITE_SITE == "citizencodex"
+			? {
+					url: "https://citizencodex.com/our-stories/mow",
+					author: "Citizen Codex",
+					website: "https://citizencodex.com",
+					handle: "citizencodex"
+				}
+			: {
+					url: "https://pudding.cool/2026/06/mow",
+					author: "The Pudding",
+					website: "https://pudding.cool",
+					handle: "puddingviz"
+				};
 
 	const STORAGE_KEY = "pudding_mow_game";
 
@@ -66,7 +83,7 @@
 	});
 </script>
 
-<Meta {title} {description} {preloadFont} />
+<Meta {title} {description} {preloadFont} {...metaObj} />
 
 <div class="page">
 	{#if session.phase === "intro"}
@@ -115,8 +132,17 @@
 	{/if}
 </div>
 
+<svelte:boundary onerror={(e) => console.error(e)}>
+	{#if import.meta.env.VITE_SITE == "citizencodex"}
+		<FooterCC />
+	{:else}
+		<Footer recirc={true} />
+	{/if}
+</svelte:boundary>
+
 <style>
 	.page {
 		margin-bottom: 4rem;
+		min-height: 80svh;
 	}
 </style>

@@ -5,6 +5,7 @@
 	import Result from "$components/Result.svelte";
 	import CMS from "$components/helpers/CMS.svelte";
 	import Footer from "$components/Footer.svelte";
+	import FooterCC from "$components/Footer.CC.svelte";
 
 	const copy = getContext("copy");
 	const { body } = copy;
@@ -20,7 +21,11 @@
 </div>
 
 <svelte:boundary onerror={(e) => console.error(e)}>
-	<!-- <Footer recirc={true} /> -->
+	{#if import.meta.env.VITE_SITE == "citizencodex"}
+		<FooterCC />
+	{:else}
+		<Footer recirc={true} />
+	{/if}
 </svelte:boundary>
 
 <style>
