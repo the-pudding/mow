@@ -132,9 +132,14 @@
 					data-y={y}
 					style={`--grass-x: ${(grassFrame / (numGrassFrames - 1)) * 100}%${obstacle ? `; --sprite-x: ${(spriteFrame / (numObstacleFrames - 1)) * 100}%` : ""}`}
 				>
-					<!-- <div class="texture"></div> -->
 					<div class="fg"></div>
 				</div>
+			{/each}
+		</div>
+
+		<div class="grid gridlines" aria-hidden="true">
+			{#each cells as { pos }}
+				<div class="cell"></div>
 			{/each}
 		</div>
 
@@ -181,12 +186,23 @@
 		transition: all 0.5s ease-in-out;
 	}
 
-	.grid.mower {
+	.grid.mower,
+	.grid.gridlines {
 		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
+	}
+
+	.grid.gridlines {
+		pointer-events: none;
+	}
+
+	.grid.gridlines .cell {
+		/* border: 0.5px solid rgba(0, 0, 0, 0.15); */
+		box-shadow: inset 0 0 2px 2px rgba(0, 0, 0, 0.1);
+		background: none;
 	}
 
 	.cell {
@@ -215,12 +231,10 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		/* background-image: url("/assets/images/texture.png"); */
 		background-size: cover;
 		background-repeat: no-repeat;
-		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+		box-shadow: inset 0 2px 2px red;
 		pointer-events: none;
-		opacity: 0.75;
 	}
 
 	.fg {
