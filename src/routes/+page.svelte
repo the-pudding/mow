@@ -42,8 +42,8 @@
 
 <div class="coming-soon">
 	<p>
-		Nothing to see here, yet...<br />The full story drops in a couple weeks.
-		Until then you can <a href="game">play the experiment here</a>.
+		Nothing to see here, yet...<br />The full story drops in a few weeks. Until
+		then you can <a href="game">play the experiment here</a>.
 	</p>
 </div>
 

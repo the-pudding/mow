@@ -36,7 +36,7 @@
 
 	const title = "Lawn mowing experiment";
 	const description =
-		"Mow a series of lawns as efficiently as you can. We will publish the analysis in a couple weeks.";
+		"Mow a series of lawns as efficiently as you can. We will publish the analysis in a few weeks.";
 
 	let hydrated = $state(false);
 
