@@ -1,1 +1,32 @@
-[17, 27, 36, 37, 63, 64, 73, 74, 75, 84, 85]
+{
+	"frames": {
+		"obstacles 0.aseprite": {
+			"frame": { "x": 0, "y": 0, "w": 64, "h": 64 }
+		},
+		"obstacles 1.aseprite": {
+			"frame": { "x": 64, "y": 0, "w": 64, "h": 64 }
+		},
+		"obstacles 2.aseprite": {
+			"frame": { "x": 128, "y": 0, "w": 64, "h": 64 }
+		},
+		"obstacles 3.aseprite": {
+			"frame": { "x": 192, "y": 0, "w": 64, "h": 64 }
+		},
+		"obstacles 4.aseprite": {
+			"frame": { "x": 256, "y": 0, "w": 64, "h": 64 }
+		},
+		"obstacles 5.aseprite": {
+			"frame": { "x": 320, "y": 0, "w": 64, "h": 64 }
+		},
+		"obstacles 6.aseprite": {
+			"frame": { "x": 384, "y": 0, "w": 64, "h": 64 }
+		},
+		"obstacles 7.aseprite": {
+			"frame": { "x": 448, "y": 0, "w": 64, "h": 64 }
+		}
+	},
+	"meta": {
+		"image": "obstacles.png",
+		"size": { "w": 512, "h": 64 }
+	}
+}

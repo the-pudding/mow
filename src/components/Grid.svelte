@@ -3,6 +3,8 @@
 	import { scaleLinear, interpolateRgb, interpolateHcl, max } from "d3";
 	import { draw, fade } from "svelte/transition";
 	import levels from "$data/levels.json";
+	import obstacleSpriteData from "$data/obstacles.json";
+	import grassSpriteData from "$data/grass.json";
 
 	// obstacles is an array of [{x,y}]
 	let {
@@ -17,6 +19,15 @@
 	} = $props();
 
 	const MAX_GRID_SIZE = max(levels, (l) => l.size) || 10;
+
+	const obstacleFrames = Object.values(obstacleSpriteData.frames);
+	const numObstacleFrames = obstacleFrames.length;
+
+	const grassTags = Object.fromEntries(
+		grassSpriteData.meta.frameTags.map((t) => [t.name, t])
+	);
+	const numGrassFrames = Object.keys(grassSpriteData.frames).length;
+	const grassVariants = grassTags.long.to - grassTags.long.from + 1;
 
 	const colorScale = $state({
 		user: scaleLinear()
@@ -36,7 +47,9 @@
 			}))
 			.map((c) => ({
 				...c,
-				obstacle: obstacles.some(({ x, y }) => x === c.pos.x && y === c.pos.y)
+				obstacle: obstacles.some(({ x, y }) => x === c.pos.x && y === c.pos.y),
+				spriteFrame: Math.floor(Math.random() * numObstacleFrames),
+				grassVariant: Math.floor(Math.random() * grassVariants)
 			}))
 	);
 
@@ -75,7 +88,8 @@
 
 <div class="measure" bind:offsetWidth aria-hidden="true"></div>
 <figure
-	style="--size: {size}; width: {figureWidth}px;"
+	style="--size: {size}; width: {figureWidth}px; --grass-bg-size: {numGrassFrames *
+		100}% 100%; --obstacle-bg-size: {numObstacleFrames * 100}% 100%;"
 	class:nodes
 	class:started
 >
@@ -100,10 +114,14 @@
 		{/if}
 
 		<div class="grid">
-			{#each cells as { obstacle, visited, revisited, pos }}
+			{#each cells as { obstacle, visited, revisited, pos, spriteFrame, grassVariant }}
 				{@const x = pos[0]}
 				{@const y = pos[1]}
 				{@const active = x === latest.x && y === latest.y}
+				{@const grassFrame =
+					visited || revisited
+						? grassTags.short.from + grassVariant
+						: grassTags.long.from + grassVariant}
 				<div
 					class="cell"
 					class:obstacle
@@ -112,8 +130,9 @@
 					class:active
 					data-x={x}
 					data-y={y}
+					style={`--grass-x: ${(grassFrame / (numGrassFrames - 1)) * 100}%${obstacle ? `; --sprite-x: ${(spriteFrame / (numObstacleFrames - 1)) * 100}%` : ""}`}
 				>
-					<div class="texture"></div>
+					<!-- <div class="texture"></div> -->
 					<div class="fg"></div>
 				</div>
 			{/each}
@@ -141,7 +160,7 @@
 	figure {
 		position: relative;
 		margin: 1rem auto;
-		background: var(--color-green-dark);
+		background: var(--color-green-medium);
 	}
 
 	.inner {
@@ -172,19 +191,22 @@
 
 	.cell {
 		position: relative;
-		background: var(--color-green-dark);
-	}
-
-	.cell.visited {
-		background: var(--color-green-medium);
-	}
-
-	.cell.revisited {
-		background: var(--color-green-light);
+		background-image: url("/assets/images/grass.png");
+		background-size: var(--grass-bg-size);
+		background-position: var(--grass-x, 0%) 0%;
 	}
 
 	.cell.obstacle {
-		background: gray;
+		background-image:
+			url("/assets/images/obstacles.png"), url("/assets/images/grass.png");
+		background-size: var(--obstacle-bg-size), var(--grass-bg-size);
+		background-position:
+			var(--sprite-x) 0%,
+			var(--grass-x) 0%;
+	}
+
+	.cell.visited {
+		opacity: 0.4;
 	}
 
 	.texture {

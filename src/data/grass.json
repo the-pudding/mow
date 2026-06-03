@@ -1,0 +1,42 @@
+{
+	"frames": {
+		"grass 0.aseprite": {
+			"frame": { "x": 0, "y": 0, "w": 64, "h": 64 }
+		},
+		"grass 1.aseprite": {
+			"frame": { "x": 64, "y": 0, "w": 64, "h": 64 }
+		},
+		"grass 2.aseprite": {
+			"frame": { "x": 128, "y": 0, "w": 64, "h": 64 }
+		},
+		"grass 3.aseprite": {
+			"frame": { "x": 192, "y": 0, "w": 64, "h": 64 }
+		},
+		"grass 4.aseprite": {
+			"frame": { "x": 256, "y": 0, "w": 64, "h": 64 }
+		},
+		"grass 5.aseprite": {
+			"frame": { "x": 320, "y": 0, "w": 64, "h": 64 }
+		}
+	},
+	"meta": {
+		"image": "grass.png",
+		"size": { "w": 384, "h": 64 },
+		"frameTags": [
+			{
+				"name": "long",
+				"from": 0,
+				"to": 2,
+				"direction": "forward",
+				"color": "#000000ff"
+			},
+			{
+				"name": "short",
+				"from": 3,
+				"to": 5,
+				"direction": "forward",
+				"color": "#000000ff"
+			}
+		]
+	}
+}
