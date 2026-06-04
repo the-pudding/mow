@@ -48,7 +48,7 @@
 			.map((c) => ({
 				...c,
 				obstacle: obstacles.some(({ x, y }) => x === c.pos.x && y === c.pos.y),
-				spriteFrame: Math.floor(Math.random() * 3),
+				spriteFrame: Math.floor(Math.random() * numObstacleFrames),
 				grassVariant: Math.floor(Math.random() * grassVariants)
 			}))
 	);
