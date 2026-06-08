@@ -10,6 +10,11 @@
 		session.demographics ? (session.name ? "reveal" : "name") : "survey"
 	);
 
+	$effect(() => {
+		step;
+		window.scrollTo({ top: 0, behavior: "instant" });
+	});
+
 	async function persistUser() {
 		try {
 			await db.upsertUser({

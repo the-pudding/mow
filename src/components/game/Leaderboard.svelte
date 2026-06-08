@@ -86,6 +86,7 @@
 <style>
 	.c {
 		text-align: center;
+		min-height: 500px;
 	}
 
 	.loading {
@@ -93,9 +94,9 @@
 	}
 
 	table {
-		margin: 1.5rem auto;
+		margin: 1rem auto 0 auto;
 		max-width: 20rem;
-		font-size: var(--14px);
+		font-size: var(--12px);
 	}
 
 	th,
@@ -127,5 +128,9 @@
 
 	tr.you td {
 		font-weight: 700;
+	}
+
+	.note {
+		margin-top: 0;
 	}
 </style>
