@@ -17,7 +17,7 @@
 		when our story drops in a few weeks.
 	</p>
 	<div>
-		<Button variant="primary" size="lg" onclick={start}>Let’s do it</Button>
+		<Button size="lg" onclick={start}>Let’s do it</Button>
 	</div>
 </section>
 

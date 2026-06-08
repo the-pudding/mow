@@ -15,7 +15,7 @@
 	<h2>Bonus rounds</h2>
 	<p>Harder grids, for fun. Your paths are still recorded.</p>
 	<div class="actions">
-		<Button variant="primary" size="lg" onclick={start}>Let’s go</Button>
+		<Button size="lg" onclick={start}>Let’s go</Button>
 		<Button variant="ghost" size="lg" onclick={exit}>Actually, I’m done</Button>
 	</div>
 </section>

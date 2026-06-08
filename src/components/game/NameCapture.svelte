@@ -51,7 +51,7 @@
 	{#if error}<p class="error">{error}</p>{/if}
 
 	<div class="actions">
-		<Button variant="primary" size="lg" onclick={submit}>Add me</Button>
+		<Button size="lg" onclick={submit}>Add me</Button>
 		<Button variant="ghost" size="lg" onclick={onSkip}>Skip</Button>
 	</div>
 </div>

@@ -54,7 +54,8 @@
 }
 
 .bits-button[data-button-root][data-variant="default"]:hover {
-	background: oklch(from var(--bg) calc(l + 0.2) c h);
+	/* background: oklch(from var(--bg) calc(l + 0.1) c h); */
+	color: oklch(from var(--color-button-fg-primary) calc(l + 0.1) c h);
 }
 
 .bits-button[data-button-root][data-variant="outline"] {
@@ -102,4 +103,10 @@
 .bits-button[data-button-root].circle {
 	border-radius: 50%;
 	padding: 0;
+}
+
+/* focus */
+.bits-button[data-button-root]:focus-visible {
+	outline: 2px solid var(--color-focus);
+	outline-offset: 2px;
 }

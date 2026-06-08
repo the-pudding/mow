@@ -70,7 +70,7 @@
 			<h2>Can you top the leaderboard?</h2>
 			<p>Play a few harder bonus rounds to test your skills.</p>
 			<div class="actions">
-				<Button variant="primary" onclick={tryBonus}>Yes, more</Button>
+				<Button onclick={tryBonus}>Yes, more</Button>
 				<Button variant="ghost" onclick={exit}>I’m done</Button>
 			</div>
 		</div>

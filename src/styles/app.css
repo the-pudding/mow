@@ -33,7 +33,7 @@
 	--color-primary: var(--color-black);
 	--color-link: var(--color-black);
 	--color-link-hover: var(--color-black);
-	--color-focus: var(--color-grey-700);
+	--color-focus: var(--color-green-light);
 	--color-mark: var(--color-yellow);
 	--color-selection: var(--color-grey-300);
 	--color-border: var(--color-fg);

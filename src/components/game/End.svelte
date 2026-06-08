@@ -57,7 +57,7 @@
 	{/if}
 	{#if session.phase === "skip_end"}
 		<div class="actions">
-			<Button variant="primary" size="lg" onclick={tryBonus}
+			<Button size="lg" onclick={tryBonus}
 				>Actually, I’ll try the bonus levels</Button
 			>
 		</div>

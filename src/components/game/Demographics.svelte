@@ -101,7 +101,7 @@
 	</fieldset>
 
 	<div class="actions">
-		<Button variant="primary" size="lg" onclick={submit}>Submit</Button>
+		<Button size="lg" onclick={submit}>Submit</Button>
 		<Button variant="ghost" size="lg" onclick={onSkip}>Skip to results</Button>
 	</div>
 </div>

@@ -34,19 +34,33 @@
 	let visitedCount = $derived(visited.size);
 	let completed = $derived(visitedCount === targetCount);
 	let exceeded = $derived(path.length >= maxMoves);
+	// once true, the grid is revealed and the end message + onComplete fire
+	let revealed = $state(false);
+	// no longer accepting input (completed or exceeded)
 	let active = $derived(!completed && !exceeded);
-	let showMessage = $derived(!active);
+	// brief pause showing the finished grid before the message appears
+	let finishing = $derived(completed && !revealed);
+	let showMessage = $derived(revealed);
 	let message = $derived(
 		showMessage ? (completed ? "Complete!" : "Too many moves!") : ""
 	);
 	let classification = $derived(classify(path));
 
+	// pause on the completed grid before revealing the result
 	$effect(() => {
-		if (completed) onComplete(path);
+		if (completed && !revealed) {
+			const id = setTimeout(() => (revealed = true), 500);
+			return () => clearTimeout(id);
+		}
+	});
+
+	// running out of moves ends immediately, no pause
+	$effect(() => {
+		if (exceeded && !revealed) revealed = true;
 	});
 
 	$effect(() => {
-		if (exceeded) onComplete();
+		if (revealed) onComplete(completed ? path : undefined);
 	});
 
 	function onmove(key) {
@@ -85,7 +99,7 @@
 	}
 </script>
 
-<div class="c" class:disable={!active}>
+<div class="c" class:disable={!active} class:dim={showMessage}>
 	<div class="inner">
 		<div class="steps">
 			<span>moves: {path.length}</span>
@@ -118,7 +132,7 @@
 	{/if}
 	{#if !startTime}
 		<div class="start">
-			<Button variant="primary" size="lg" onclick={onStart}>Start</Button>
+			<Button size="lg" onclick={onStart}>Start</Button>
 		</div>
 	{/if}
 </div>
@@ -138,8 +152,9 @@
 		pointer-events: none;
 	}
 
-	.disable .inner {
+	.dim .inner {
 		opacity: 0.2;
+		transition: opacity 0.3s ease;
 	}
 
 	.message {
