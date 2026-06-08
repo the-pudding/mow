@@ -20,13 +20,13 @@
 	const metaObj =
 		import.meta.env.VITE_SITE == "citizencodex"
 			? {
-					url: "https://citizencodex.com/our-stories/mow",
+					url: "https://citizencodex.com/our-stories/mow/game",
 					author: "Citizen Codex",
 					website: "https://citizencodex.com",
 					handle: "citizencodex"
 				}
 			: {
-					url: "https://pudding.cool/2026/06/mow",
+					url: "https://pudding.cool/2026/06/mow/game",
 					author: "The Pudding",
 					website: "https://pudding.cool",
 					handle: "puddingviz"
