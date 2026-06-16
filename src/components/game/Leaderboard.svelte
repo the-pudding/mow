@@ -1,6 +1,7 @@
 <script>
 	import db from "$utils/supabase.js";
 	import { session } from "$runes/misc.svelte.js";
+	import { format } from "d3";
 
 	const ROUND_IDS = ["round1", "round2"];
 	const ALL_IDS = ["round1", "round2", "bonus1", "bonus2", "bonus3"];
@@ -16,7 +17,9 @@
 			.map((id) => session.levelEfficiencies[id])
 			.filter(Boolean);
 		if (!vals.length) return null;
-		return +((vals.reduce((a, b) => a + b, 0) / vals.length) * 100).toFixed(1);
+		return +format(".1f")(
+			(vals.reduce((a, b) => a + b, 0) / vals.length) * 100
+		);
 	});
 
 	let topScores = $state([]);
@@ -35,7 +38,7 @@
 	});
 
 	const topScore = $derived(
-		topScores.length ? +(topScores[0][scoreField] * 100).toFixed(1) : null
+		topScores.length ? format(".1f")(topScores[0][scoreField] * 100) : null
 	);
 </script>
 
@@ -45,7 +48,7 @@
 		<p>
 			You mowed <strong>{yourScore}% optimally</strong>.<br />
 			{#if topScore !== null && yourScore < topScore}
-				That’s {(topScore - yourScore).toFixed(1)}% behind the top player.
+				That’s {format(".1f%")(topScore - yourScore)} behind the leader.
 			{:else if topScore !== null}
 				That’s top of the leaderboard so far.
 			{/if}
@@ -65,10 +68,11 @@
 			</thead>
 			<tbody>
 				{#each topScores as score, i}
+					{@const percent = format(".1f%")(score[scoreField] * 100)}
 					<tr class:you={score.name === session.name}>
 						<td>{i + 1}</td>
 						<td>{score.name}</td>
-						<td>{+(score[scoreField] * 100).toFixed(1)}</td>
+						<td>{percent}</td>
 					</tr>
 				{/each}
 			</tbody>
