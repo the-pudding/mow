@@ -2,6 +2,7 @@
 	import db from "$utils/supabase.js";
 	import Button from "$components/ui/Button.svelte";
 	import Leaderboard from "$components/game/Leaderboard.svelte";
+	import NameCapture from "$components/game/NameCapture.svelte";
 	import { session } from "$runes/misc.svelte.js";
 
 	function tryBonus() {
@@ -10,9 +11,26 @@
 
 	const ROUND_IDS = ["round1", "round2"];
 
+	let step = $state(session.name ? "leaderboard" : "name");
 	let leaderboardReady = $state(false);
 
+	async function onSubmitName(name) {
+		session.name = name;
+		try {
+			await db.upsertUser({ id: session.userId, name: session.name, demographics: session.demographics });
+		} catch (e) {
+			console.error("Error saving name:", e);
+		}
+		step = "leaderboard";
+	}
+
+	async function onSkipName() {
+		step = "leaderboard";
+	}
+
 	$effect(() => {
+		if (step !== "leaderboard") return;
+
 		const allEfficiencies = Object.values(session.levelEfficiencies);
 
 		const completedAllRounds = ROUND_IDS.every((id) => session.completedLevels[id]);
@@ -46,25 +64,29 @@
 </script>
 
 <section class="c">
-	<Leaderboard ready={leaderboardReady} mode="full" />
-	{#if session.email}
-		<p>
-			We’ll email <strong>{session.email}</strong> when the story drops.
-		</p>
+	{#if step === "name"}
+		<NameCapture onSubmit={onSubmitName} onSkip={onSkipName} />
 	{:else}
-		<p>
-			Your paths are now part of the dataset. The story drops here in a couple
-			weeks. Until then, check out more from us on <a
-				href="https://pudding.cool">The Pudding</a
-			>.
-		</p>
-	{/if}
-	{#if session.phase === "skip_end"}
-		<div class="actions">
-			<Button size="lg" onclick={tryBonus}
-				>Actually, I’ll try the bonus levels</Button
-			>
-		</div>
+		<Leaderboard ready={leaderboardReady} mode="full" />
+		{#if session.email}
+			<p>
+				We’ll email <strong>{session.email}</strong> when the story drops.
+			</p>
+		{:else}
+			<p>
+				Your paths are now part of the dataset. The story drops here in a couple
+				weeks. Until then, check out more from us on <a
+					href="https://pudding.cool">The Pudding</a
+				>.
+			</p>
+		{/if}
+		{#if session.phase === "skip_end"}
+			<div class="actions">
+				<Button size="lg" onclick={tryBonus}
+					>Actually, I’ll try the bonus levels</Button
+				>
+			</div>
+		{/if}
 	{/if}
 </section>
 

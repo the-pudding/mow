@@ -2,13 +2,10 @@
 	import Button from "$components/ui/Button.svelte";
 	import Leaderboard from "$components/game/Leaderboard.svelte";
 	import Demographics from "$components/game/Demographics.svelte";
-	import NameCapture from "$components/game/NameCapture.svelte";
-	import db from "$utils/supabase.js";
+import db from "$utils/supabase.js";
 	import { session } from "$runes/misc.svelte.js";
 
-	let step = $state(
-		session.demographics ? (session.name ? "reveal" : "name") : "survey"
-	);
+	let step = $state(session.demographics ? "reveal" : "survey");
 
 	$effect(() => {
 		step;
@@ -30,7 +27,7 @@
 	async function onSubmitSurvey({ answers, email }) {
 		session.demographics = answers;
 		session.email = email;
-		step = "name";
+		step = "reveal";
 		await persistUser();
 		try {
 			await db.insertEmail({ id: session.userId, email: email });
@@ -40,19 +37,8 @@
 	}
 
 	async function onSkipSurvey() {
-		step = "name";
-		await persistUser();
-	}
-
-	async function onSubmitName(name) {
-		session.name = name;
-		await persistUser();
 		step = "reveal";
-	}
-
-	async function onSkipName() {
 		await persistUser();
-		step = "reveal";
 	}
 
 	function tryBonus() {
@@ -67,8 +53,6 @@
 <section class="c">
 	{#if step === "survey"}
 		<Demographics onSubmit={onSubmitSurvey} onSkip={onSkipSurvey} />
-	{:else if step === "name"}
-		<NameCapture onSubmit={onSubmitName} onSkip={onSkipName} />
 	{:else if step === "reveal"}
 		<Leaderboard />
 		<div class="pitch">
