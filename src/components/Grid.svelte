@@ -65,7 +65,8 @@
 
 	let latest = $derived(path[path.length - 1] || { x: 0, y: 0 });
 	let offsetWidth = $state(0);
-	let figureWidth = $derived(Math.round((size / MAX_GRID_SIZE) * offsetWidth));
+	let visualGridSize = $derived(Math.max(size, 8));
+	let figureWidth = $derived(Math.round((size / visualGridSize) * offsetWidth));
 	let nodes = $derived(!game);
 	let animating = $state(false);
 
@@ -227,18 +228,6 @@
 		opacity: 0.4;
 	}
 
-	.texture {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-size: cover;
-		background-repeat: no-repeat;
-		box-shadow: inset 0 2px 2px red;
-		pointer-events: none;
-	}
-
 	.fg {
 		position: absolute;
 		top: 0;
@@ -279,10 +268,6 @@
 		background: none;
 	}
 
-	.nodes .texture {
-		display: none;
-	}
-
 	.nodes .fg {
 		background: none;
 		width: 20%;
@@ -321,9 +306,9 @@
 		stroke: var(--path-start);
 	}
 
-	path.arrow {
+	/* path.arrow {
 		stroke-width: 0.1;
 		fill: none;
 		stroke: var(--path-start);
-	}
+	} */
 </style>

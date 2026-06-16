@@ -1,4 +1,8 @@
 <script>
+	import ArrowLeft from "@lucide/svelte/icons/arrow-left";
+	import ArrowRight from "@lucide/svelte/icons/arrow-right";
+	import ArrowUp from "@lucide/svelte/icons/arrow-up";
+	import ArrowDown from "@lucide/svelte/icons/arrow-down";
 	let { onmove, active } = $props();
 
 	function onKeydown(e) {
@@ -18,15 +22,15 @@
 <div class="c" bind:offsetWidth style="--margin: {offsetWidth * -0.25}px;">
 	<div class="keypad">
 		<div class="row">
-			<button onpointerdown={() => onmove("ArrowUp")}>&uarr;</button>
+			<button onpointerdown={() => onmove("ArrowUp")}><ArrowUp /></button>
 		</div>
 		<div class="row">
-			<button onpointerdown={() => onmove("ArrowLeft")}>&larr;</button>
+			<button onpointerdown={() => onmove("ArrowLeft")}><ArrowLeft /></button>
 			<div class="spacer"></div>
-			<button onpointerdown={() => onmove("ArrowRight")}>&rarr;</button>
+			<button onpointerdown={() => onmove("ArrowRight")}><ArrowRight /></button>
 		</div>
 		<div class="row">
-			<button onpointerdown={() => onmove("ArrowDown")}>&darr;</button>
+			<button onpointerdown={() => onmove("ArrowDown")}><ArrowDown /></button>
 		</div>
 	</div>
 
@@ -57,6 +61,15 @@
 		margin: 0;
 	}
 
+	button {
+		font-weight: bold;
+		line-height: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		/* margin: 0.125rem; */
+	}
+
 	.row {
 		display: flex;
 		justify-content: center;
@@ -64,7 +77,7 @@
 
 	button,
 	.spacer {
-		width: 2em;
+		width: 3rem;
 		aspect-ratio: 1;
 	}
 

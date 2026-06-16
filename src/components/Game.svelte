@@ -52,7 +52,7 @@
 	// pause on the completed grid before revealing the result
 	$effect(() => {
 		if (completed && !revealed) {
-			const id = setTimeout(() => (revealed = true), 250);
+			const id = setTimeout(() => (revealed = true), 100);
 			return () => clearTimeout(id);
 		}
 	});
@@ -124,29 +124,31 @@
 			{/if} -->
 		</div>
 		<div class="g">
-			<Grid
-				{size}
-				{path}
-				{revisited}
-				perspective={false}
-				{obstacles}
-				game={true}
-				{flipCharacter}
-				{started}
-			></Grid>
+			<div class="grid">
+				<Grid
+					{size}
+					{path}
+					{revisited}
+					perspective={false}
+					{obstacles}
+					game={true}
+					{flipCharacter}
+					{started}
+				></Grid>
+			</div>
+			{#if showMessage}
+				<p class="message" transition:fade={{ duration: 100 }}>
+					<strong>{message}</strong>
+				</p>
+			{/if}
+			{#if !startTime}
+				<div class="start">
+					<Button size="lg" onclick={onStart}>Start</Button>
+				</div>
+			{/if}
 		</div>
 		{#if active}<Keypad {onmove} {active}></Keypad>{/if}
 	</div>
-	{#if showMessage}
-		<p class="message" transition:fade={{ duration: 150 }}>
-			<strong>{message}</strong>
-		</p>
-	{/if}
-	{#if !startTime}
-		<div class="start">
-			<Button size="lg" onclick={onStart}>Start</Button>
-		</div>
-	{/if}
 </div>
 
 <style>
@@ -158,13 +160,14 @@
 	.g {
 		max-width: var(--grid-max-width);
 		margin: 0 auto;
+		position: relative;
 	}
 
 	.disable {
 		pointer-events: none;
 	}
 
-	.dim .inner {
+	.dim .grid {
 		opacity: 0.2;
 		transition: opacity 0.3s ease;
 	}
@@ -173,23 +176,19 @@
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		transform: translate(-50%, 50%);
+		transform: translate(-50%, -50%);
 	}
 
 	.start {
 		position: absolute;
 		width: 100%;
-		height: 100%;
-		top: 0;
+		top: 50%;
 		left: 0;
+		transform: translate(0, -50%);
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-	}
-
-	.start p {
-		margin-top: 0.5rem;
 	}
 
 	.steps {

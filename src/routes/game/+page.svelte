@@ -85,7 +85,8 @@
 	$effect(() => {
 		if (!hydrated) return;
 		session.phase;
-		window.scrollTo({ top: 0, behavior: "instant" });
+		if (session.phase !== "intro")
+			document.querySelector("main")?.scrollIntoView({ behavior: "instant" });
 	});
 </script>
 
