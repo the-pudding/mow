@@ -47,10 +47,12 @@
 	{#if yourScore !== null}
 		<p>
 			You mowed <strong>{yourScore}% optimally</strong>.<br />
-			{#if topScore !== null && yourScore < topScore}
-				That’s {format(".1f")(topScore - yourScore)}% behind the leader.
-			{:else if topScore !== null}
-				You are in the lead!
+			{#if mode === "start"}
+				{#if topScore !== null && yourScore < topScore}
+					That’s {format(".1f")(topScore - yourScore)}% behind the leader.
+				{:else if topScore !== null}
+					You are in the lead!
+				{/if}
 			{/if}
 		</p>
 	{/if}
