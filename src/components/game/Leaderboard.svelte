@@ -48,7 +48,7 @@
 		<p>
 			You mowed <strong>{yourScore}% optimally</strong>.<br />
 			{#if topScore !== null && yourScore < topScore}
-				That’s {format(".1f%")(topScore - yourScore)} behind the leader.
+				That’s {format(".1f")(topScore - yourScore)}% behind the leader.
 			{:else if topScore !== null}
 				That’s top of the leaderboard so far.
 			{/if}
@@ -68,7 +68,7 @@
 			</thead>
 			<tbody>
 				{#each topScores as score, i}
-					{@const percent = format(".1f%")(score[scoreField] * 100)}
+					{@const percent = format(".1f")(score[scoreField] * 100)}
 					<tr class:you={score.name === session.name}>
 						<td>{i + 1}</td>
 						<td>{score.name}</td>
