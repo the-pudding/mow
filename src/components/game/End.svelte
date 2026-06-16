@@ -15,8 +15,10 @@
 	$effect(() => {
 		const allEfficiencies = Object.values(session.levelEfficiencies);
 
-		// nothing to submit (no name or no scores) — just show the leaderboard
-		if (!session.name || !allEfficiencies.length) {
+		const completedAllRounds = ROUND_IDS.every((id) => session.completedLevels[id]);
+
+		// nothing to submit (no name, no scores, or didn't finish required rounds)
+		if (!session.name || !allEfficiencies.length || !completedAllRounds) {
 			leaderboardReady = true;
 			return;
 		}
