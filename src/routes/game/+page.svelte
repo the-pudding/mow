@@ -11,6 +11,7 @@
 	import Bonus from "$components/game/Bonus.svelte";
 	import End from "$components/game/End.svelte";
 	import { session } from "$runes/misc.svelte.js";
+	import "$utils/version.js";
 
 	const preloadFont = [
 		"https://pudding.cool/assets/fonts/inconsolata/inconsolata-v32-latin-regular.woff2",

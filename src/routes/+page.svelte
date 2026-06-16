@@ -6,11 +6,9 @@
 	import Footer from "$components/Footer.svelte";
 	import FooterCC from "$components/Footer.CC.svelte";
 	import copy from "$data/copy.json";
-	import version from "$utils/version.js";
+	import "$utils/version.js";
 
 	let { data } = $props();
-
-	version();
 
 	const preloadFont = [
 		"https://pudding.cool/assets/fonts/inconsolata/inconsolata-v32-latin-regular.woff2",
