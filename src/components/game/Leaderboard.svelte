@@ -42,7 +42,7 @@
 	);
 </script>
 
-<div class="c">
+<div class="c" class:full={mode === "full"}>
 	<h2>Thanks for mowing!</h2>
 	{#if yourScore !== null}
 		<p>
@@ -50,37 +50,39 @@
 			{#if topScore !== null && yourScore < topScore}
 				That’s {format(".1f")(topScore - yourScore)}% behind the leader.
 			{:else if topScore !== null}
-				That’s top of the leaderboard so far.
+				You are in the lead!
 			{/if}
 		</p>
 	{/if}
 
-	{#if loading}
-		<p class="loading">Loading leaderboard...</p>
-	{:else if topScores.length}
-		<table>
-			<thead>
-				<tr>
-					<th>Rank</th>
-					<th>Name</th>
-					<th>% Optimal</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each topScores as score, i}
-					{@const percent = format(".1f")(score[scoreField] * 100)}
-					<tr class:you={score.name === session.name}>
-						<td>{i + 1}</td>
-						<td>{score.name}</td>
-						<td>{percent}</td>
+	{#if mode === "full"}
+		{#if loading}
+			<p class="loading">Loading leaderboard...</p>
+		{:else if topScores.length}
+			<table>
+				<thead>
+					<tr>
+						<th>Rank</th>
+						<th>Name</th>
+						<th>% Optimal</th>
 					</tr>
-				{/each}
-			</tbody>
-		</table>
-		{#if mode === "start"}
-			<p class="note">
-				<em><small><sup>*</sup>Through first two rounds</small></em>
-			</p>
+				</thead>
+				<tbody>
+					{#each topScores as score, i}
+						{@const percent = format(".1f")(score[scoreField] * 100)}
+						<tr class:you={score.name === session.name}>
+							<td>{i + 1}</td>
+							<td>{score.name}</td>
+							<td>{percent}</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+			{#if mode === "start"}
+				<p class="note">
+					<em><small><sup>*</sup>Through first two rounds</small></em>
+				</p>
+			{/if}
 		{/if}
 	{/if}
 </div>
@@ -88,6 +90,9 @@
 <style>
 	.c {
 		text-align: center;
+	}
+
+	.c.full {
 		min-height: 500px;
 	}
 

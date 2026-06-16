@@ -112,7 +112,7 @@
 <div class="c" class:disable={!active} class:dim={showMessage}>
 	<div class="inner">
 		<div class="steps">
-			<span>moves: {path.length}</span>
+			<span>move: {path.length}</span>
 			<!-- {#if classifier}
 				<span>
 					{#if path.length > predictionMoves}
