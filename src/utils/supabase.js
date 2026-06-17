@@ -122,6 +122,7 @@ async function getTopScores(limit = 10) {
 	const { data, error } = await supabase
 		.from("mow_leaderboard")
 		.select("name, score_start, score_full")
+		.not("score_full", "is", null)
 		.order("score_full", { ascending: false })
 		.limit(limit);
 	if (error) {
