@@ -10,6 +10,7 @@
 	}
 
 	const ROUND_IDS = ["round1", "round2"];
+	const ALL_LEVEL_IDS = ["round1", "round2", "bonus1", "bonus2", "bonus3"];
 
 	let step = $state(session.name ? "leaderboard" : "name");
 	let leaderboardReady = $state(false);
@@ -46,15 +47,17 @@
 		).filter(Boolean);
 		const scoreStart =
 			roundEfficiencies.reduce((a, b) => a + b, 0) / roundEfficiencies.length;
-		const scoreFull =
-			allEfficiencies.reduce((a, b) => a + b, 0) / allEfficiencies.length;
+		const completedAllLevels = ALL_LEVEL_IDS.every((id) => session.completedLevels[id]);
+		const scoreFull = completedAllLevels
+			? allEfficiencies.reduce((a, b) => a + b, 0) / allEfficiencies.length
+			: null;
 
 		// submit our score first so the fetched leaderboard reflects our rank
 		db.submitScore({
 			userId: session.userId,
 			name: session.name,
 			scoreStart: +scoreStart.toFixed(4),
-			scoreFull: +scoreFull.toFixed(4)
+			scoreFull: scoreFull !== null ? +scoreFull.toFixed(4) : null
 		})
 			.catch((e) => console.error("Error submitting score:", e))
 			.finally(() => {
