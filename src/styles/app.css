@@ -75,6 +75,10 @@
   }
 }
 
+* {
+  touch-action: manipulation;
+}
+
 h1 {
 	font-size: var(--36px, 36px);
 	font-weight: 700;
