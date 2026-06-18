@@ -17,7 +17,7 @@
 			.map((id) => session.levelEfficiencies[id])
 			.filter(Boolean);
 		if (!vals.length) return null;
-		return +format(".1f")(
+		return +format(".2f")(
 			(vals.reduce((a, b) => a + b, 0) / vals.length) * 100
 		);
 	});
@@ -38,7 +38,7 @@
 	});
 
 	const topScore = $derived(
-		topScores.length ? format(".1f")(topScores[0][scoreField] * 100) : null
+		topScores.length ? format(".2f")(topScores[0][scoreField] * 100) : null
 	);
 </script>
 
@@ -49,7 +49,7 @@
 			You mowed <strong>{yourScore}% optimally</strong>.<br />
 			{#if mode === "start"}
 				{#if topScore !== null && yourScore < topScore}
-					That’s {format(".1f")(topScore - yourScore)}% behind the leader.
+					That’s {format(".2f")(topScore - yourScore)}% behind the leader.
 				{:else if topScore !== null}
 					You are in the lead!
 				{/if}
@@ -71,7 +71,7 @@
 				</thead>
 				<tbody>
 					{#each topScores as score, i}
-						{@const percent = format(".1f")(score[scoreField] * 100)}
+						{@const percent = format(".2f")(score[scoreField] * 100)}
 						<tr class:you={score.name === session.name}>
 							<td>{i + 1}</td>
 							<td>{score.name}</td>
