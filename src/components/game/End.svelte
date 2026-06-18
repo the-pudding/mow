@@ -32,6 +32,11 @@
 	$effect(() => {
 		if (step !== "leaderboard") return;
 
+		if (session.scoreSubmitted) {
+			leaderboardReady = true;
+			return;
+		}
+
 		const allEfficiencies = Object.values(session.levelEfficiencies);
 
 		const completedAllRounds = ROUND_IDS.every((id) => session.completedLevels[id]);
@@ -59,6 +64,9 @@
 			scoreStart: +scoreStart.toFixed(4),
 			scoreFull: scoreFull !== null ? +scoreFull.toFixed(4) : null
 		})
+			.then(() => {
+				session.scoreSubmitted = true;
+			})
 			.catch((e) => console.error("Error submitting score:", e))
 			.finally(() => {
 				leaderboardReady = true;

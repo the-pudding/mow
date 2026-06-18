@@ -16,7 +16,8 @@ export const session = $state({
 	name: null,
 	startedLevels: {},
 	completedLevels: {},
-	levelEfficiencies: {}
+	levelEfficiencies: {},
+	scoreSubmitted: false
 });
 
 // Tracks levels started in THIS page load (not persisted)
@@ -31,5 +32,6 @@ export function resetSession() {
 	session.name = null;
 	session.startedLevels = {};
 	session.completedLevels = {};
+	session.scoreSubmitted = false;
 	freshStartedLevels.clear();
 }
