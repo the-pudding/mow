@@ -3,12 +3,12 @@
 	import StoryGame from "$components/StoryGame.svelte";
 	import Img from "$components/Img.svelte";
 	import Video from "$components/Video.svelte";
-	// import Result from "$components/Result.svelte";
+	import YourResult from "$components/YourResult.svelte";
 	import CMS from "$components/helpers/CMS.svelte";
 
 	const copy = getContext("copy");
 	const { body } = copy;
-	const components = { Video, Img, StoryGame };
+	const components = { Video, Img, StoryGame, YourResult };
 </script>
 
 <div class="c">

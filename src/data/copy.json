@@ -12,7 +12,7 @@
           "type": "StoryGame",
           "value": {
             "prompt": "Let’s start with a game: how efficiently can you mow this lawn?",
-            "played": "A little while ago, you mowed this lawn. Here’s the path you took. Now let’s break down what it says about your brain."
+            "played": "A little while ago, you mowed this lawn. Here’s a replay."
           }
         }
       ]
@@ -21,8 +21,9 @@
       "section": "post",
       "content": [
         {
-          "type": "Result",
+          "type": "YourResult",
           "value": {
+            "level": "round2",
             "b1": "You mowed this lawn in",
             "a1": "moves.",
             "b2": "The most efficient path is just",

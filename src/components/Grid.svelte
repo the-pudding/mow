@@ -12,11 +12,40 @@
 		path = [],
 		obstacles = [],
 		game = false,
+		replay = null,
+		xray = false,
 		color,
 		revisited,
 		flipCharacter,
 		started
 	} = $props();
+
+	let replayIndex = $state(0);
+	let replayFlip = $state(true);
+	let intervalId;
+
+	let displayPath = $derived(replay ? replay.slice(0, replayIndex + 1) : path);
+
+	const REPLAY_STEP_MS = 120;
+
+	export const play = () => {
+		if (!replay?.length) return;
+		clearInterval(intervalId);
+		replayIndex = 0;
+		replayFlip = true;
+		intervalId = setInterval(() => {
+			const curr = replay[replayIndex];
+			const next = replay[replayIndex + 1];
+			if (next) {
+				if (next.x > curr.x) replayFlip = true;
+				else if (next.x < curr.x) replayFlip = false;
+			}
+			replayIndex++;
+			if (replayIndex >= replay.length - 1) clearInterval(intervalId);
+		}, REPLAY_STEP_MS);
+	};
+
+	export const stop = () => clearInterval(intervalId);
 
 	const MAX_GRID_SIZE = max(levels, (l) => l.size) || 10;
 
@@ -33,7 +62,7 @@
 		user: scaleLinear()
 			.interpolate(interpolateHcl)
 			.range(["#eb6d72", "#9e2835"]),
-		solution: scaleLinear()
+		optimal: scaleLinear()
 			.interpolate(interpolateHcl)
 			.range(["#4ca658", "#265c42"])
 	});
@@ -54,7 +83,7 @@
 	);
 
 	let cells = $derived.by(() => {
-		const visitedSet = new Set(path.map(({ x, y }) => `${x},${y}`));
+		const visitedSet = new Set(displayPath.map(({ x, y }) => `${x},${y}`));
 		const all = defaultCells.map((c) => ({
 			...c,
 			visited: visitedSet.has(`${c.pos.x},${c.pos.y}`),
@@ -63,7 +92,7 @@
 		return all;
 	});
 
-	let latest = $derived(path[path.length - 1] || { x: 0, y: 0 });
+	let latest = $derived(displayPath[displayPath.length - 1] || { x: 0, y: 0 });
 	let offsetWidth = $state(0);
 	let visualGridSize = $derived(Math.max(size, 8));
 	let figureWidth = $derived(Math.round((size / visualGridSize) * offsetWidth));
@@ -71,11 +100,11 @@
 	let animating = $state(false);
 
 	let pathD = $derived.by(() => {
-		const str = path.map(({ x, y }, i) => {
+		const str = displayPath.map(({ x, y }, i) => {
 			const x1 = x + 0.5;
 			const y1 = y + 0.5;
-			const x2 = (path[i + 1] ? path[i + 1].x : x) + 0.5;
-			const y2 = (path[i + 1] ? path[i + 1].y : y) + 0.5;
+			const x2 = (displayPath[i + 1] ? displayPath[i + 1].x : x) + 0.5;
+			const y2 = (displayPath[i + 1] ? displayPath[i + 1].y : y) + 0.5;
 			return `M ${x1} ${y1} L ${x2} ${y2}`;
 		});
 
@@ -95,8 +124,8 @@
 	class:started
 >
 	<div class="inner">
-		{#if !game && path.length > 1}
-			<svg viewbox="0 0 10 10">
+		{#if xray && path.length > 1}
+			<svg viewBox="0 0 {size} {size}">
 				{#if animating}
 					{#each path as { x, y }, i (i)}
 						{@const x1 = x + 0.5}
@@ -149,7 +178,7 @@
 				<div
 					class="character"
 					style="--x: {latest.x}; --y: {latest.y};"
-					class:flip={flipCharacter}
+					class:flip={replay ? replayFlip : flipCharacter}
 				></div>
 			</div>
 		{/if}
@@ -259,6 +288,10 @@
 	}
 
 	/* nodes mode */
+	.nodes {
+		background: transparent;
+	}
+
 	.nodes .grid {
 		border: 0.5px solid var(--color-gray-500);
 	}

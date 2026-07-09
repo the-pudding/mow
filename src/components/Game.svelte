@@ -113,15 +113,6 @@
 	<div class="inner">
 		<div class="steps">
 			<span>move: {path.length}</span>
-			<!-- {#if classifier}
-				<span>
-					{#if path.length > predictionMoves}
-						predicted: {classification.label}
-					{:else}
-						make at least {predictionMoves} moves to get a prediction
-					{/if}
-				</span>
-			{/if} -->
 		</div>
 		<div class="g">
 			<div class="grid">
@@ -129,7 +120,6 @@
 					{size}
 					{path}
 					{revisited}
-					perspective={false}
 					{obstacles}
 					game={true}
 					{flipCharacter}

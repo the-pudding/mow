@@ -4,6 +4,7 @@
 	"scripts": {
 		"gdoc": "node tasks/fetch-google.js",
 		"style": "node tasks/style-dictionary.js",
+		"users": "node tasks/users.js",
 		"dev": "vite dev --host",
 		"build": "vite build",
 		"preview": "vite preview",
