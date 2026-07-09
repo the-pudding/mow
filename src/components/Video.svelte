@@ -5,7 +5,7 @@
 	const poster = src.replace("videos", "posters").replace("mp4", "jpg");
 </script>
 
-<figure>
+<figure class="figure-media">
 	<video
 		{src}
 		{poster}

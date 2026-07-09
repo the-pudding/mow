@@ -35,12 +35,12 @@
 	--color-link-hover: var(--color-white);
 	--color-focus: var(--color-green-light);
 	--color-mark: var(--color-yellow);
-	--color-selection: var(--color-grey-300);
+	--color-selection: var(--color-gray-300);
 	--color-border: var(--color-fg);
-	--color-button-fg-primary: var(--color-green-light);
-	--color-button-bg-primary: var(--color-grey-900);
+	--color-button-fg-primary: var(--color-green-dark);
+	--color-button-bg-primary: var(--color-green-light);
 	--color-button-fg-secondary: var(--color-white);
-	--color-button-bg-secondary: var(--color-grey-700);
+	--color-button-bg-secondary: var(--color-gray-700);
 	--color-input-bg: var(--color-white);
 	--color-input-fg: var(--color-fg);
 	--color-placeholder: var(--color-fg);
@@ -130,8 +130,12 @@ body {
 } */
 
 #post figure {
-	margin: 32px auto;
+	margin: 1rem auto;
 	max-width: var(--media-max-width);
+}
+
+#post .figure-media {
+	margin: 2rem auto;
 }
 
 span.you, span.skip {

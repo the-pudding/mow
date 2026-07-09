@@ -1,12 +1,15 @@
 <script>
 	import Grid from "$components/Grid.svelte";
 	import Button from "$components/ui/Button.svelte";
-	import optimalPath from "$data/optimal.json";
+	import optimalRaw from "$data/optimal.csv";
 	import inView from "$actions/inview.js";
 	import levels from "$data/levels.json";
 	import { session } from "$runes/misc.svelte.js";
+	import { tick } from "svelte";
 
-	let { level, a1, b1, a2, b2, a3, b3 } = $props();
+	const optimalPath = optimalRaw.map((d) => ({ x: +d.x, y: +d.y }));
+
+	let { level, a1, b1, a2, b2, a3, b3, skip, strip } = $props();
 	let currentLevel = $derived(levels.find((l) => l.id === level));
 	let size = $derived(currentLevel ? currentLevel.size : 10);
 	let obstacles = $derived(currentLevel ? currentLevel.obstacles : []);
@@ -20,26 +23,40 @@
 			: (0).toFixed(2)
 	);
 
+	async function onReplay() {
+		if (gridUser) gridUser.reset();
+		gridOptimal.reset();
+
+		await tick();
+
+		if (gridUser) gridUser.animate();
+		gridOptimal.animate();
+	}
+
 	$effect(() => {
-		if (visible) {
-			if (gridUser) gridUser.animate();
-			gridOptimal.animate();
-		}
+		if (visible) onReplay();
 	});
 </script>
 
 <div class="c" use:inView onenter={() => (visible = true)}>
-	<p>
-		{b1}
-		{userPath.length}
-		{a1}
-		{b2}
-		{optimalPath.length}
-		{a2}
-		{b3}
-		{score}%
-		{a3}
-	</p>
+	{#if userPath.length}
+		<p>
+			{strip}
+			{b1}
+			{userPath.length}
+			{a1}
+			{b2}
+			{optimalPath.length}
+			{a2}
+			{b3}
+			{score}%
+			{a3}
+		</p>
+	{:else}
+		<p>
+			{skip}
+		</p>
+	{/if}
 	<div class="inner">
 		{#if userPath.length}
 			<div class="g">
@@ -77,7 +94,7 @@
 		</div>
 	</div>
 
-	<p class="replay"><Button>Replay</Button></p>
+	<p class="replay"><Button onclick={onReplay}>Replay</Button></p>
 </div>
 
 <style>
@@ -97,6 +114,8 @@
 	.inner p {
 		margin: 0;
 		text-align: center;
+		font-family: var(--font-mono);
+		text-transform: uppercase;
 	}
 
 	p.replay {
@@ -105,11 +124,11 @@
 	}
 
 	.user {
-		color: var(--color-orange-medium);
+		/* color: var(--color-yellow-medium); */
 	}
 
 	.optimal {
-		color: var(--color-green-medium);
+		/* color: var(--color-green-medium); */
 	}
 
 	@media (min-width: 640px) {

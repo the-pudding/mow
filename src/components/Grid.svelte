@@ -15,9 +15,9 @@
 		replay = null,
 		xray = false,
 		color,
-		revisited,
 		flipCharacter,
-		started
+		started,
+		onFinish = null
 	} = $props();
 
 	let replayIndex = $state(0);
@@ -30,10 +30,16 @@
 
 	export const play = () => {
 		if (!replay?.length) return;
-		clearInterval(intervalId);
+		clearTimeout(intervalId);
 		replayIndex = 0;
 		replayFlip = true;
-		intervalId = setInterval(() => {
+
+		if (replay.length === 1) {
+			onFinish?.();
+			return;
+		}
+
+		const step = () => {
 			const curr = replay[replayIndex];
 			const next = replay[replayIndex + 1];
 			if (next) {
@@ -41,11 +47,30 @@
 				else if (next.x < curr.x) replayFlip = false;
 			}
 			replayIndex++;
-			if (replayIndex >= replay.length - 1) clearInterval(intervalId);
-		}, REPLAY_STEP_MS);
+			if (replayIndex >= replay.length - 1) {
+				onFinish?.();
+				return;
+			}
+
+			const stepCurr = replay[replayIndex];
+			const stepNext = replay[replayIndex + 1];
+			const delay =
+				typeof stepCurr?.t === "number" && typeof stepNext?.t === "number"
+					? stepNext.t - stepCurr.t
+					: REPLAY_STEP_MS;
+			intervalId = setTimeout(step, delay);
+		};
+
+		const first = replay[0];
+		const second = replay[1];
+		const delay =
+			typeof first?.t === "number" && typeof second?.t === "number"
+				? second.t - first.t
+				: REPLAY_STEP_MS;
+		intervalId = setTimeout(step, delay);
 	};
 
-	export const stop = () => clearInterval(intervalId);
+	export const stop = () => clearTimeout(intervalId);
 
 	const MAX_GRID_SIZE = max(levels, (l) => l.size) || 10;
 
@@ -59,12 +84,8 @@
 	const grassVariants = grassTags.long.to - grassTags.long.from + 1;
 
 	const colorScale = $state({
-		user: scaleLinear()
-			.interpolate(interpolateHcl)
-			.range(["#eb6d72", "#9e2835"]),
-		optimal: scaleLinear()
-			.interpolate(interpolateHcl)
-			.range(["#4ca658", "#265c42"])
+		user: scaleLinear().interpolate(interpolateHcl).range(["fff", "#fff"]),
+		optimal: scaleLinear().interpolate(interpolateHcl).range(["fff", "#fff"])
 	});
 
 	let defaultCells = $derived(
@@ -86,8 +107,7 @@
 		const visitedSet = new Set(displayPath.map(({ x, y }) => `${x},${y}`));
 		const all = defaultCells.map((c) => ({
 			...c,
-			visited: visitedSet.has(`${c.pos.x},${c.pos.y}`),
-			revisited: revisited?.has(`${c.pos.x},${c.pos.y}`) ?? false
+			visited: visitedSet.has(`${c.pos.x},${c.pos.y}`)
 		}));
 		return all;
 	});
@@ -114,6 +134,10 @@
 	export const animate = () => {
 		animating = true;
 	};
+
+	export const reset = () => {
+		animating = false;
+	};
 </script>
 
 <div class="measure" bind:offsetWidth aria-hidden="true"></div>
@@ -133,7 +157,11 @@
 						{@const x2 = (path[i + 1] ? path[i + 1].x : x) + 0.5}
 						{@const y2 = (path[i + 1] ? path[i + 1].y : y) + 0.5}
 						<path
-							transition:fade|global={{ delay: 500 + i * 50, duration: 50 }}
+							in:fade|global={{
+								delay: i * REPLAY_STEP_MS,
+								duration: REPLAY_STEP_MS
+							}}
+							out:fade|global={{ duration: 0 }}
 							class="line"
 							d={`M ${x1} ${y1} L ${x2} ${y2}`}
 							style:stroke={colorScale[color](i / path.length)}
@@ -144,19 +172,17 @@
 		{/if}
 
 		<div class="grid">
-			{#each cells as { obstacle, visited, revisited, pos, spriteFrame, grassVariant }}
+			{#each cells as { obstacle, visited, pos, spriteFrame, grassVariant }}
 				{@const x = pos[0]}
 				{@const y = pos[1]}
 				{@const active = x === latest.x && y === latest.y}
-				{@const grassFrame =
-					visited || revisited
-						? grassTags.short.from + grassVariant
-						: grassTags.long.from + grassVariant}
+				{@const grassFrame = visited
+					? grassTags.short.from + grassVariant
+					: grassTags.long.from + grassVariant}
 				<div
 					class="cell"
 					class:obstacle
 					class:visited
-					class:revisited
 					class:active
 					data-x={x}
 					data-y={y}
@@ -293,15 +319,20 @@
 	}
 
 	.nodes .grid {
-		border: 0.5px solid var(--color-gray-500);
+		border: 0.5px solid var(--color-gray-700);
 	}
 
 	.nodes .cell {
-		border: 0.5px solid var(--color-gray-100);
+		border: 0.5px solid var(--color-gray-700);
 		background: none;
+		filter: brightness(1);
 	}
 
-	.nodes .fg {
+	.nodes .cell.visited {
+		opacity: 1;
+	}
+
+	/* .nodes .fg {
 		background: none;
 		width: 20%;
 		height: 20%;
@@ -312,7 +343,7 @@
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-	}
+	} */
 
 	.nodes .obstacle {
 		background: var(--color-gray-500);
@@ -333,7 +364,7 @@
 	}
 
 	path.line {
-		stroke-width: 0.4;
+		stroke-width: 0.25;
 		stroke-linecap: round;
 		fill: none;
 		stroke: var(--path-start);

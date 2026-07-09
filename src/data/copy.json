@@ -29,7 +29,9 @@
             "b2": "The most efficient path is just",
             "a2": "moves.",
             "b3": "You were",
-            "a3": "efficient."
+            "a3": "efficient.",
+            "skip": "You skipped the game, so here is just the optimal path. Is this what you would’ve done?",
+            "strip": "If we strip away the grass, mowing is really just a path of connected squares."
           }
         },
         {
@@ -42,7 +44,7 @@
         },
         {
           "type": "text",
-          "value": "Only X squares needed to be covered, but people found X different ways to do it."
+          "value": "Only 49 squares needed to be covered, but people found X different ways to do it."
         },
         {
           "type": "text",
@@ -58,7 +60,7 @@
         },
         {
           "type": "text",
-          "value": "The point: wildly different approaches yield similar outcomes. Humans find a thousand different ways to be good enough. In the case of this lawn, we saw X different perfect solutions."
+          "value": "Many different approaches, yet similar outcomes. For this small lawn, we saw X different perfect solutions."
         },
         {
           "type": "text",
@@ -70,7 +72,7 @@
         },
         {
           "type": "text",
-          "value": "If we strip away the grass, mowing is really just a path of connected squares (nodes). Finding the best path through the nodes is a classic computer science problem. No, don’t leave! We promise this won’t get too wonky."
+          "value": "Finding the best path through the squares is a classic computer science problem. No, don’t leave! We promise this won’t get too wonky."
         },
         {
           "type": "h2",

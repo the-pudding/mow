@@ -6,9 +6,18 @@
 	import Footer from "$components/Footer.svelte";
 	import FooterCC from "$components/Footer.CC.svelte";
 	import copy from "$data/copy.json";
+	import { session } from "$runes/misc.svelte.js";
 	import "$utils/version.js";
 
 	let { data } = $props();
+
+	const dev = true;
+
+	if (browser && dev) {
+		localStorage.removeItem("pudding_mow_game");
+		session.userId = "0a90t5qgq2";
+		session.completedLevels["round2"] = 1;
+	}
 
 	const preloadFont = [
 		"https://pudding.cool/assets/fonts/inconsolata/inconsolata-v32-latin-regular.woff2",

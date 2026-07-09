@@ -19,12 +19,20 @@
 	let fetchedPath = $state(null);
 	let fetchAttempted = $state(false);
 	let replayGrid = $state();
+	let skipped = $state(false);
 
 	let display = $derived(wasDoneOnLoad ? played : prompt);
 	let replayPath = $derived(session.storyGamePath ?? fetchedPath);
 
 	function onStart() {
 		session.startedLevels["round2"] = true;
+	}
+
+	function restartReplay() {
+		if (replayGrid) {
+			replayGrid.stop();
+			setTimeout(replayGrid.play, 1000);
+		}
 	}
 
 	async function onFinish() {
@@ -48,7 +56,7 @@
 		onFinish();
 	}
 
-	async function reveal(uiDelay = 0) {
+	async function reveal(uiDelay = 0, noScroll) {
 		// game.active = false;
 		// if (complete)
 		// 	document
@@ -61,12 +69,15 @@
 
 		document.getElementById("post").classList.add("visible");
 
+		if (noScroll) return;
+
 		if (uiDelay) await new Promise((r) => setTimeout(r, uiDelay));
 		await tick();
 		document.getElementById("post").scrollIntoView();
 	}
 
 	async function onSkip() {
+		skipped = true;
 		await reveal();
 	}
 
@@ -102,6 +113,7 @@
 				t: +row.t
 			}));
 			session.storyGamePath = fetchedPath;
+			reveal(0, true);
 		} catch (err) {
 			console.warn("Could not load stored path", err);
 		}
@@ -138,28 +150,40 @@
 	{/if}
 </div>
 
-{#if hydrated}
-	{#if !wasDoneOnLoad}
-		<Game
-			size={level.size}
-			obstacles={level.obstacles}
-			{onStart}
-			{onComplete}
-		/>
-	{:else if replayPath?.length}
-		<Grid
-			bind:this={replayGrid}
-			size={level.size}
-			obstacles={level.obstacles}
-			game={true}
-			replay={replayPath}
-			started={true}
-		/>
+<div class="lawn" class:skipped>
+	{#if hydrated}
+		{#if !wasDoneOnLoad}
+			<Game
+				size={level.size}
+				obstacles={level.obstacles}
+				{onStart}
+				{onComplete}
+			/>
+		{:else if replayPath?.length}
+			<Grid
+				bind:this={replayGrid}
+				size={level.size}
+				obstacles={level.obstacles}
+				game={true}
+				replay={replayPath}
+				started={true}
+				onFinish={restartReplay}
+			/>
+		{/if}
 	{/if}
-{/if}
+</div>
 
 <style>
 	p {
 		text-align: center;
+	}
+
+	.skipped {
+		visibility: hidden;
+	}
+
+	.lawn {
+		max-width: var(--grid-max-width);
+		margin: 1rem auto;
 	}
 </style>

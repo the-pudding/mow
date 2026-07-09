@@ -2,7 +2,7 @@
 	let { src, alt, figcaption } = $props();
 </script>
 
-<figure>
+<figure class="figure-media">
 	<img {src} {alt} />
 
 	{#if figcaption}
