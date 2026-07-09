@@ -78,7 +78,7 @@
 		<div class="g">
 			<p>
 				<small>
-					<strong class="optimal">Optimal path</strong>
+					<strong class="optimal">An Optimal path</strong>
 				</small>
 			</p>
 			<Grid
