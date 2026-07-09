@@ -36,14 +36,7 @@
 
 <Meta {title} {description} {preloadFont} {keywords} {...metaObj} />
 
-<!-- <Index /> -->
-
-<div class="coming-soon">
-	<p>
-		Nothing to see here, yet...<br />The full story drops in a few weeks.
-		<br />Until then, <a href="game">play the experiment here!</a>
-	</p>
-</div>
+<Index />
 
 <svelte:boundary onerror={(e) => console.error(e)}>
 	{#if import.meta.env.VITE_SITE == "citizencodex"}
@@ -54,21 +47,4 @@
 </svelte:boundary>
 
 <style>
-	.coming-soon {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		height: 80svh;
-		padding: 1rem;
-		text-align: center;
-		position: relative;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: var(--z-middle);
-	}
-
-	.coming-soon a {
-		text-decoration: underline;
-	}
 </style>

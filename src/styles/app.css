@@ -19,7 +19,7 @@
 	--z-modal: 1000;
 
 	/* presets (used in reset.css) */
-	--font-body: var(--font-mono);
+	--font-body: var(--font-sans);
 	--font-form: var(--font-mono);
 
 	--radius-xs: 0.125rem;
@@ -27,12 +27,12 @@
 	--radius-md: 0.5rem;
 	--radius-lg: 1rem;
 	
-	--color-bg: var(--color-green-light);
-	--color-fg: var(--color-grey-900);
+	--color-bg: var(--color-gray-900);
+	--color-fg: var(--color-gray-50);
 	--color-fg-alt: var(--color-green-darker);
 	--color-primary: var(--color-black);
-	--color-link: var(--color-black);
-	--color-link-hover: var(--color-black);
+	--color-link: var(--color-fg);
+	--color-link-hover: var(--color-white);
 	--color-focus: var(--color-green-light);
 	--color-mark: var(--color-yellow);
 	--color-selection: var(--color-grey-300);
@@ -51,6 +51,8 @@
 	--grid-width: min(80svw, 80svh);
 	--grid-max-width: 600px;
 	--media-max-width: 800px;
+
+	--col-width: 40rem;
 }
 
 /* dark theme */
@@ -79,15 +81,11 @@
   touch-action: manipulation;
 }
 
-h1 {
-	font-size: var(--36px, 36px);
-	font-weight: 700;
-}
 
 h2 {
 	font-size: var(--24px, 24px);
 	line-height: 1.2;
-	font-weight: 700;
+	font-weight: 900;
 }
 
 h3 {
@@ -126,10 +124,10 @@ body {
 	display: block;
 }
 
-#intro > *:not(figure), #post > *:not(figure) {
+/* #intro > *:not(figure), #post > *:not(figure) {
 	margin: 16px auto;
 	max-width: var(--grid-max-width);
-}
+} */
 
 #post figure {
 	margin: 32px auto;
@@ -144,6 +142,36 @@ span.you.visible, span.skip.visible {
 	display: inline;
 }
 
-main p:first-of-type {
-	margin-top: 0;
+main h1, main h2, main h3, main .byline {
+	max-width: var(--col-width);
+	margin: 1rem auto;
+	text-align: center;
+}
+
+main h2 {
+	margin: 4rem auto 2rem auto;
+}
+
+main p, main ul {
+	max-width: var(--col-width);
+	margin: 1rem auto;
+	line-height: 1.625;
+	font-size: var(--18px);
+}
+
+main li {
+	line-height: 1.625;
+	font-size: var(--18px);
+}
+
+
+p.big {
+	font-size: clamp(var(--20px, 20px), 5vw, var(--36px, 36px));
+	line-height: 1.2;
+}
+
+@media screen and (min-width: 640px) {
+	main p, main li {
+		font-size: var(--22px);
+	}
 }

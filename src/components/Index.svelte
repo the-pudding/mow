@@ -1,56 +1,51 @@
 <script>
 	import { getContext } from "svelte";
-	import Hero from "$components/Hero.svelte";
+	import StoryGame from "$components/StoryGame.svelte";
 	import Img from "$components/Img.svelte";
-	import Result from "$components/Result.svelte";
+	import Video from "$components/Video.svelte";
+	// import Result from "$components/Result.svelte";
 	import CMS from "$components/helpers/CMS.svelte";
-	import Footer from "$components/Footer.svelte";
-	import FooterCC from "$components/Footer.CC.svelte";
 
 	const copy = getContext("copy");
 	const { body } = copy;
-	const components = { Hero, Video, Result, Img };
+	const components = { Video, Img, StoryGame };
 </script>
 
-<div class="byline">
-	<p>{@html copy.byline}</p>
-</div>
-
 <div class="c">
+	<h1>{@html copy.meta.title}</h1>
+	<div class="byline">
+		<p><small>{@html copy.meta.byline}</small></p>
+		<img src="/assets/images/mower.png" alt="person mowing lawn 8-bit art" />
+	</div>
+
 	<CMS {body} {components}></CMS>
 </div>
 
-<svelte:boundary onerror={(e) => console.error(e)}>
-	{#if import.meta.env.VITE_SITE == "citizencodex"}
-		<FooterCC />
-	{:else}
-		<Footer recirc={true} />
-	{/if}
-</svelte:boundary>
-
 <style>
+	.c {
+		padding: 0 1rem;
+	}
+
+	h1 {
+		font-size: clamp(var(--36px, 36px), 10vw, var(--64px, 64px));
+		font-weight: 900;
+		line-height: 1;
+		text-transform: uppercase;
+	}
+
 	.byline {
-		position: absolute;
-		top: 0;
-		right: 0;
-		padding: 8px;
-		display: none;
+		margin-bottom: 5rem;
 	}
 
 	.byline p {
-		margin: 0;
-		max-width: 10em;
-		text-align: right;
-		font-size: var(--14px);
+		text-align: center;
 	}
 
-	.c {
-		padding: 0 16px;
-	}
-
-	@media (min-width: 960px) {
-		.byline p {
-			font-size: var(--16px);
-		}
+	.byline img {
+		display: block;
+		margin: 0 auto;
+		width: 100%;
+		max-width: 4rem;
+		transform: scaleX(-1);
 	}
 </style>
