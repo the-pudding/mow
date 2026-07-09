@@ -15,7 +15,7 @@
 	<h1>{@html copy.meta.title}</h1>
 	<div class="byline">
 		<p><small>{@html copy.meta.byline}</small></p>
-		<img src="/assets/images/mower.png" alt="person mowing lawn 8-bit art" />
+		<img src="assets/images/mower.png" alt="person mowing lawn 8-bit art" />
 	</div>
 
 	<CMS {body} {components}></CMS>
