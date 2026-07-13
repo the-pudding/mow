@@ -164,7 +164,7 @@
         },
         {
           "type": "text",
-          "value": "Blow the lawn up and the choices pile up faster than working memory can hold. Should you go down? Where does that leave you 20 moves from now? Would left have been better? Since you can’t see it all anymore, your brain does two things:"
+          "value": "Increase the lawn size and the choices build up quicker than working memory can hold. Should you go down? Where does that leave you 20 moves from now? Would left have been better? Since you can’t see it all at once anymore, your brain does two things:"
         },
         {
           "type": "ul",
@@ -185,11 +185,11 @@
         },
         {
           "type": "text",
-          "value": "We recorded the timestamps of every move, so every time they hesitated, changed direction, or doubled back, they left a trace."
+          "value": "We recorded the timestamps of every move, so every time a person hesitated, changed direction, or doubled back, they left a trace."
         },
         {
           "type": "text",
-          "value": "Let’s walk through level X to see these decisions in action. Everyone mows the easy stretch the same way because there is nothing to decide. At the corner, we see a fracture where people make the first major decision; down or left?"
+          "value": "Let’s walk through level X to see these decisions in action. Everyone mows the easy stretch the same way because there is nothing to decide. At the corner, you can see a fork where people make the first major decision; down or left?"
         },
         {
           "type": "text",
@@ -197,7 +197,7 @@
         },
         {
           "type": "text",
-          "value": "If we expand this to the rest of the lawn, you can see hotspots around the hard parts, and agreement and little variation in the open areas."
+          "value": "Expanded to the rest of the lawn, you can see hotspots around the hard parts, and little variation in the open areas."
         },
         {
           "type": "h2",
@@ -217,7 +217,7 @@
         },
         {
           "type": "text",
-          "value": "But the pauses were not random. When we map where people stopped, the hesitation piles up in the same spots: next to obstacles, at corners, along edges, and at those late-stage moments when you realize you have painted yourself toward a dead end. Pauses are a map of difficulty. They mark the forks from the last section, the places where paths diverged."
+          "value": "But the pauses were not random. When we map where people stopped, the hesitation piles up in the same spots: next to obstacles, at corners, along edges, and at those moments when you realize you have painted yourself toward a dead end. Pauses are a map of difficulty that mark the forks from the last section, the places where paths diverged."
         },
         {
           "type": "text",
