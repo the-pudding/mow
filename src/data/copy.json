@@ -36,35 +36,31 @@
         },
         {
           "type": "text",
-          "value": "A few weeks ago, 20,000 people mowed the same lawn. Here is every path they took."
+          "value": "A few weeks ago, 20,274 people mowed the same lawn. Here is every path they took."
         },
         {
           "type": "text",
-          "value": "<mark>visual</mark>"
+          "value": "<mark>visual of all paths</mark>"
         },
         {
           "type": "text",
-          "value": "Only 49 squares needed to be covered, but people found X different ways to do it."
+          "value": "Many came close to the optimal path. 55% came within five moves of the best possible path, and 18% did it perfectly."
         },
         {
           "type": "text",
-          "value": "Many came close to the optimal path. X% came within X moves of the best possible path, and X% did it perfectly."
+          "value": "<mark>histogram of moves</mark>"
         },
         {
           "type": "text",
-          "value": "Despite all that variety, the average person still hit X% efficiency."
+          "value": "Many different approaches, yet similar, pretty good outcomes. Only 49 squares needed to be covered, but people found 9,262 different ways to do it. Despite all that variety, the average person still hit 90% efficiency."
         },
         {
           "type": "text",
-          "value": "<mark>histogram</mark>"
+          "value": "For this small lawn, there were 12 different perfect solutions and people found them all."
         },
         {
           "type": "text",
-          "value": "Many different approaches, yet similar outcomes. For this small lawn, we saw X different perfect solutions."
-        },
-        {
-          "type": "text",
-          "value": "<mark>visual</mark>"
+          "value": "<mark>visual all 12</mark>"
         },
         {
           "type": "text",
@@ -136,11 +132,11 @@
         },
         {
           "type": "text",
-          "value": "When problems are small, approach doesn’t matter much, almost everything works. But as complexity grows, optimal becomes impossible and heuristics become necessary. This is true for both humans <strong>and</strong> computers. We both fall back on good-enough strategies when perfect is impractical."
+          "value": "When problems are small, the approach doesn’t matter much, almost everything works. But as complexity grows, optimal becomes impossible and heuristics become necessary. This is true for both humans <strong>and</strong> computers. We both fall back on good-enough strategies when perfect is impractical."
         },
         {
           "type": "text",
-          "value": "Okay. With the maths out of the way we can get back to the good stuff."
+          "value": "With the maths out of the way we can get back to the good stuff."
         },
         {
           "type": "h2",
