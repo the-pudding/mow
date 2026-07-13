@@ -11,6 +11,7 @@
 
 	let { data } = $props();
 
+	// TODO remove
 	const dev = true;
 
 	if (browser && dev) {
