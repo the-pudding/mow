@@ -13,13 +13,13 @@ usersRaw.forEach((d) => {
 	usersLookup[d.user_id] = d;
 });
 
-const tests = d3
+const exampleTests = d3
 	.csvParse(fs.readFileSync("./tasks/mow_test_rows.csv", "utf-8"))
 	.filter((d) => d.level === level)
 	.filter((d) => d.result !== "[]")
 	.filter((d) => usersLookup[d.user_id]); // only keep users that are in the usersRaw
 
-tests.sort((a, b) => d3.descending(a.created_at, b.created_at));
+exampleTests.sort((a, b) => d3.descending(a.created_at, b.created_at));
 
 // make sure the folder exists
 if (!fs.existsSync("./static/assets/users"))
@@ -33,7 +33,8 @@ fs.readdirSync("./static/assets/users").forEach((file) => {
 const paths = {};
 const pathLengths = {};
 
-tests.forEach(({ user_id, result }) => {
+// log level 2 numbers and save each path
+exampleTests.forEach(({ user_id, result }) => {
 	// write to static
 	const file = `./static/assets/users/${user_id}.csv`;
 	const parsed = JSON.parse(result);
@@ -44,7 +45,7 @@ tests.forEach(({ user_id, result }) => {
 });
 
 // tell me how many users we have, how many unique paths they took on level
-console.log(`Users: ${tests.length}`);
+console.log(`Users: ${exampleTests.length}`);
 console.log(`Unique paths: ${Object.keys(paths).length}`);
 
 const minPathLength = d3.min(Object.values(pathLengths));
@@ -62,23 +63,35 @@ const pathLengthCounts = d3.rollup(
 	(v) => v.length,
 	(d) => d
 );
-const pathLengthCountsSorted = Array.from(pathLengthCounts).sort(
-	(a, b) => a[0] - b[0]
-);
+const pathLengthCountsSorted = Array.from(pathLengthCounts)
+	.sort((a, b) => a[0] - b[0])
+	.slice(0, 20);
 console.log("Path length counts:");
 console.table(pathLengthCountsSorted);
 
 // log how many people came within 3 moves, 4 moves, 5 moves of shortest path
-const allPathLengths = tests.map(({ result }) => JSON.parse(result).length);
+const allPathLengths = exampleTests.map(
+	({ result }) => JSON.parse(result).length
+);
 [0, 1, 2, 3, 4, 5].forEach((within) => {
 	const count = allPathLengths.filter(
 		(length) => length - minPathLength <= within
 	).length;
-	console.log(`Within ${within} moves of shortest: ${count}`);
+	const percent = (count / exampleTests.length).toFixed(4);
+	console.log(`Within ${within} moves of shortest: ${count} (${percent})`);
 });
 
-// average efficiency
-const averageEfficiency =
-	allPathLengths.reduce((sum, length) => sum + minPathLength / length, 0) /
-	allPathLengths.length;
-console.log(`Average efficiency: ${averageEfficiency.toFixed(2)}`);
+// efficiency
+const efficiencies = allPathLengths.map((length) => minPathLength / length);
+const meanEfficiency = d3.mean(efficiencies);
+const medianEfficiency = d3.median(efficiencies);
+console.log(`Mean efficiency: ${meanEfficiency.toFixed(4)}`);
+console.log(`Median efficiency: ${medianEfficiency.toFixed(4)}`);
+
+const allTests = d3
+	.csvParse(fs.readFileSync("./tasks/mow_test_rows.csv", "utf-8"))
+	.filter((d) => d.level === "bonus3")
+	.filter((d) => d.result !== "[]")
+	.filter((d) => usersLookup[d.user_id]);
+
+console.log(`Completed all rounds: ${allTests.length}`);

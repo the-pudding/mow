@@ -36,7 +36,7 @@
         },
         {
           "type": "text",
-          "value": "A few weeks ago, 20,274 people mowed the same lawn. Here is every path they took."
+          "value": "A few weeks ago, 20,305 people mowed the same lawn. Here is every path they took."
         },
         {
           "type": "text",
@@ -44,7 +44,7 @@
         },
         {
           "type": "text",
-          "value": "Many came close to the optimal path. 55% came within five moves of the best possible path, and 18% did it perfectly."
+          "value": "Many came close to the optimal path. 55% of people came within five moves of the best possible path, and 18% did it perfectly."
         },
         {
           "type": "text",
@@ -52,7 +52,7 @@
         },
         {
           "type": "text",
-          "value": "Many different approaches, yet similar, pretty good outcomes. Only 49 squares needed to be covered, but people found 9,262 different ways to do it. Despite all that variety, the average person still hit 90% efficiency."
+          "value": "Many different approaches, yet similar, pretty good outcomes. Only 49 squares needed to be covered, but people found 9,640 different ways to do it. Despite all that variety, the median person still hit 91% efficiency (within 5 moves)."
         },
         {
           "type": "text",
@@ -148,7 +148,7 @@
         },
         {
           "type": "text",
-          "value": "X people completed five increasingly-sized lawns in our experiment. Here is a chart of their efficiency across each."
+          "value": "6,589 people completed all five increasingly-sized lawns in our experiment. Here is a chart of their efficiency across each."
         },
         {
           "type": "text",
