@@ -5,4 +5,4 @@ node_modules
 build
 functions
 .env
-tasks/mow_test_rows.csv
+tasks/*.csv
