@@ -4,11 +4,12 @@
 	import Img from "$components/Img.svelte";
 	import Video from "$components/Video.svelte";
 	import YourResult from "$components/YourResult.svelte";
+	import Tour from "$components/Tour.svelte";
 	import CMS from "$components/helpers/CMS.svelte";
 
 	const copy = getContext("copy");
 	const { body } = copy;
-	const components = { Video, Img, StoryGame, YourResult };
+	const components = { Video, Img, StoryGame, YourResult, Tour };
 </script>
 
 <div class="c">

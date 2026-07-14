@@ -9,9 +9,13 @@
       "section": "intro",
       "content": [
         {
+          "type": "text",
+          "value": "You have probably vacuumed a room or mowed a lawn hundreds of times without thinking much about it. Some part of your brain works out a route, and you never stop to think how good it was. People are actually pretty good at this, and better than you’d guess for a problem that is hard for computers. We wanted to see it for ourselves, so we built a lawn and asked people to mow it."
+        },
+        {
           "type": "StoryGame",
           "value": {
-            "prompt": "Let’s start with a game: how efficiently can you mow this lawn?",
+            "prompt": "Give it a try. How efficiently can you mow this lawn?",
             "played": "A little while ago, you mowed this lawn. Here’s a replay."
           }
         }
@@ -140,112 +144,76 @@
         },
         {
           "type": "h2",
-          "value": "The results"
+          "value": "A guided tour"
         },
         {
-          "type": "text",
-          "value": "Let’s answer the initial driving question: did efficiency decrease as the problem size increased? No!"
-        },
-        {
-          "type": "text",
-          "value": "6,589 people completed all five increasingly-sized lawns in our experiment. Here is a chart of their efficiency across each."
-        },
-        {
-          "type": "text",
-          "value": "<mark>visual</mark>"
-        },
-        {
-          "type": "text",
-          "value": "On a small lawn, most people found a good solution fast, without much effort. That’s because the challenge was simple enough that the working memory could keep the entire problem in view at once."
-        },
-        {
-          "type": "text",
-          "value": "<mark>example/visual proof?</mark>"
-        },
-        {
-          "type": "text",
-          "value": "Increase the lawn size and the choices build up quicker than working memory can hold. Should you go down? Where does that leave you 20 moves from now? Would left have been better? Since you can’t see it all at once anymore, your brain does two things:"
-        },
-        {
-          "type": "ul",
+          "type": "Tour",
           "value": {
-            "li": [
-              "Decomposition: it breaks the problem down into smaller, more manageable chunks. It solves the first one, then moves on to the next.",
-              "Compression: it reuses what worked. Patterns and strategies carried over from smaller to larger lawns, which is why people stayed about as efficient even when the lawn got harder."
+            "steps": [
+              {
+                "type": "text",
+                "value": "Let’s replay a mowing session, director’s-cut style, with some commentary along the way. For this walkthrough, we’ll use a perfectly average run from the player who called themselves <strong>happy unicorn</strong>."
+              },
+              {
+                "type": "text",
+                "value": "We recorded the timestamps of every move, so every time a person hesitated, changed direction, or doubled back, they left a trace."
+              },
+              {
+                "type": "text",
+                "value": "And before happy unicorn even gets started, we’ll make our first stop. Upon seeing the grid revealed, players naturally stopped to survey the situation, perhaps make a plan. The median first-move pause time was three seconds."
+              },
+              {
+                "type": "text",
+                "value": "tk"
+              },
+              {
+                "type": "text",
+                "value": "tk"
+              },
+              {
+                "type": "text",
+                "value": [
+                  {
+                    "type": "text",
+                    "value": "Last but not least, let’s answer the initial driving question: did efficiency decrease as the problem size increased? No!"
+                  },
+                  {
+                    "type": "text",
+                    "value": "6,589 people completed all five increasingly-sized lawns in our experiment. Here is a chart of their efficiency across each."
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "value": "<mark>visual</mark>"
+              },
+              {
+                "type": "text",
+                "value": "On a small lawn, most people found a good solution fast, without much effort. That’s because the challenge was simple enough that the working memory could keep the entire problem in view at once."
+              },
+              {
+                "type": "text",
+                "value": "<mark>example/visual proof?</mark>"
+              },
+              {
+                "type": "text",
+                "value": "Increase the lawn size and the choices build up quicker than working memory can hold. Should you go down? Where does that leave you 20 moves from now? Would left have been better? Since you can’t see it all at once anymore, your brain does two things:"
+              },
+              {
+                "type": "ul",
+                "value": {
+                  "li": [
+                    "Decomposition: it breaks the problem down into smaller, more manageable chunks. It solves the first one, then moves on to the next.",
+                    "Compression: it reuses what worked. Patterns and strategies carried over from smaller to larger lawns, which is why people stayed about as efficient even when the lawn got harder."
+                  ]
+                }
+              },
+              {
+                "type": "text",
+                "value": "An algorithm isn’t bound by a working memory limit. It can follow every possible move to the end and throw out the dead ends. But all this exhaustive work comes at a computational cost."
+              }
             ]
           }
-        },
-        {
-          "type": "text",
-          "value": "An algorithm isn’t bound by a working memory limit. It can follow every possible move to the end and throw out the dead ends. But all this exhaustive work comes at a computational cost."
-        },
-        {
-          "type": "h2",
-          "value": "Seeing people think"
-        },
-        {
-          "type": "text",
-          "value": "We recorded the timestamps of every move, so every time a person hesitated, changed direction, or doubled back, they left a trace."
-        },
-        {
-          "type": "text",
-          "value": "Let’s walk through level X to see these decisions in action. Everyone mows the easy stretch the same way because there is nothing to decide. At the corner, you can see a fork where people make the first major decision; down or left?"
-        },
-        {
-          "type": "text",
-          "value": "<mark>visual branching diagram</mark>"
-        },
-        {
-          "type": "text",
-          "value": "Expanded to the rest of the lawn, you can see hotspots around the hard parts, and little variation in the open areas."
-        },
-        {
-          "type": "h2",
-          "value": "Thinking barely pays off"
-        },
-        {
-          "type": "text",
-          "value": "We expected people who paused the longest to end up with the best paths, but that’s not what happened."
-        },
-        {
-          "type": "text",
-          "value": "If we plot pause time vs. efficiency, you can see that pausing doesn’t improve things. Staring longer at the lawn did not make people meaningfully better at mowing it."
-        },
-        {
-          "type": "text",
-          "value": "<mark>visual scatter, total pause time vs efficiency</mark>"
-        },
-        {
-          "type": "text",
-          "value": "But the pauses were not random. When we map where people stopped, the hesitation piles up in the same spots: next to obstacles, at corners, along edges, and at those moments when you realize you have painted yourself toward a dead end. Pauses are a map of difficulty that mark the forks from the last section, the places where paths diverged."
-        },
-        {
-          "type": "text",
-          "value": "<mark>visual pause heatmap over the grid</mark>"
-        },
-        {
-          "type": "text",
-          "value": "So thinking did not improve people’s score much, but it did happen exactly where the problem got hard. This raised the question: if pausing does not help, why does anyone win?"
-        },
-        {
-          "type": "h2",
-          "value": "Cream of the crop"
-        },
-        {
-          "type": "text",
-          "value": "The best solvers were not the fastest, and they were not the longest thinkers. Speed alone did not predict a good path. Total thinking time did not either. What separated the top solvers was where they spent their attention."
-        },
-        {
-          "type": "text",
-          "value": "The best mowers moved at about the same pace as everyone else, sometimes slower, but they revisited far fewer cells. They were not burning time everywhere. They were spending it at the forks and cruising through the rest."
-        },
-        {
-          "type": "text",
-          "value": "<mark>visual  two ghost mowers side by side, top solver vs average, same clock</mark>"
-        },
-        {
-          "type": "text",
-          "value": "So it mattered more when you think, not thinking more or thinking faster. This is exactly what a good heuristic does. It saves your effort for the decisions that matter and spends nothing on the ones that do not."
         }
       ]
     }

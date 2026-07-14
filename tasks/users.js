@@ -7,14 +7,17 @@ const usersRaw = d3.csvParse(
 	fs.readFileSync("./tasks/mow_users_rows.csv", "utf-8")
 );
 
+const testsRaw = d3.csvParse(
+	fs.readFileSync("./tasks/mow_test_rows.csv", "utf-8")
+);
+
 // make usersRaw a lookup table by user_id
 const usersLookup = {};
 usersRaw.forEach((d) => {
 	usersLookup[d.user_id] = d;
 });
 
-const exampleTests = d3
-	.csvParse(fs.readFileSync("./tasks/mow_test_rows.csv", "utf-8"))
+const exampleTests = testsRaw
 	.filter((d) => d.level === level)
 	.filter((d) => d.result !== "[]")
 	.filter((d) => usersLookup[d.user_id]); // only keep users that are in the usersRaw
@@ -35,7 +38,6 @@ const pathLengths = {};
 
 // log level 2 numbers and save each path
 exampleTests.forEach(({ user_id, result }) => {
-	// write to static
 	const file = `./static/assets/users/${user_id}.csv`;
 	const parsed = JSON.parse(result);
 	const temp = parsed.map(({ x, y }) => `${x},${y}`).join("|");
@@ -81,6 +83,14 @@ const allPathLengths = exampleTests.map(
 	console.log(`Within ${within} moves of shortest: ${count} (${percent})`);
 });
 
+// log the median pause time on the first move, for level 2
+const firstMovePause = exampleTests
+	.map(({ result }) => JSON.parse(result))
+	.filter((parsed) => parsed.length > 1)
+	.map((parsed) => parsed[1].t - parsed[0].t);
+const medianFirstMovePause = d3.median(firstMovePause);
+console.log(`Median pause time on first move: ${medianFirstMovePause}ms`);
+
 // efficiency
 const efficiencies = allPathLengths.map((length) => minPathLength / length);
 const meanEfficiency = d3.mean(efficiencies);
@@ -88,10 +98,19 @@ const medianEfficiency = d3.median(efficiencies);
 console.log(`Mean efficiency: ${meanEfficiency.toFixed(4)}`);
 console.log(`Median efficiency: ${medianEfficiency.toFixed(4)}`);
 
-const allTests = d3
-	.csvParse(fs.readFileSync("./tasks/mow_test_rows.csv", "utf-8"))
+const allTests = testsRaw
 	.filter((d) => d.level === "bonus3")
 	.filter((d) => d.result !== "[]")
 	.filter((d) => usersLookup[d.user_id]);
+
+const medianFirstMovePauseAllLevels = d3.median(
+	allTests
+		.map(({ result }) => JSON.parse(result))
+		.filter((parsed) => parsed.length > 1)
+		.map((parsed) => parsed[1].t - parsed[0].t)
+);
+console.log(
+	`Median pause time on first move (all levels): ${medianFirstMovePauseAllLevels}ms`
+);
 
 console.log(`Completed all rounds: ${allTests.length}`);
