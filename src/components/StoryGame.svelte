@@ -4,6 +4,7 @@
 	import { base } from "$app/paths";
 	import Game from "$components/Game.svelte";
 	import Grid from "$components/Grid.svelte";
+	import GameLayer from "$components/grid/GameLayer.svelte";
 	import Button from "$components/ui/Button.svelte";
 	import { session } from "$runes/misc.svelte.js";
 	import loadCsv from "$utils/loadCsv.js";
@@ -18,7 +19,7 @@
 	let wasDoneOnLoad = $state(false);
 	let fetchedPath = $state(null);
 	let fetchAttempted = $state(false);
-	let replayGrid = $state();
+	let replayLayer = $state();
 	let skipped = $state(false);
 
 	let display = $derived(wasDoneOnLoad ? played : prompt);
@@ -29,9 +30,9 @@
 	}
 
 	function restartReplay() {
-		if (replayGrid) {
-			replayGrid.stop();
-			setTimeout(replayGrid.play, 1000);
+		if (replayLayer) {
+			replayLayer.stop();
+			setTimeout(replayLayer.play, 1000);
 		}
 	}
 
@@ -132,8 +133,8 @@
 	});
 
 	$effect(() => {
-		if (replayGrid && replayPath?.length) replayGrid.play();
-		return () => replayGrid?.stop();
+		if (replayLayer && replayPath?.length) replayLayer.play();
+		return () => replayLayer?.stop();
 	});
 </script>
 
@@ -160,15 +161,13 @@
 				{onComplete}
 			/>
 		{:else if replayPath?.length}
-			<Grid
-				bind:this={replayGrid}
-				size={level.size}
-				obstacles={level.obstacles}
-				game={true}
-				replay={replayPath}
-				started={true}
-				onFinish={restartReplay}
-			/>
+			<Grid size={level.size} obstacles={level.obstacles} started={true}>
+				<GameLayer
+					bind:this={replayLayer}
+					replay={replayPath}
+					onFinish={restartReplay}
+				/>
+			</Grid>
 		{/if}
 	{/if}
 </div>

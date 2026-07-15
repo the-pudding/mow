@@ -129,7 +129,7 @@ body {
 	max-width: var(--grid-max-width);
 } */
 
-#post figure {
+#post figure:not(.figure-grid) {
 	margin: 1rem auto;
 	max-width: var(--media-max-width);
 }

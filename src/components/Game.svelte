@@ -1,5 +1,6 @@
 <script>
 	import Grid from "$components/Grid.svelte";
+	import GameLayer from "$components/grid/GameLayer.svelte";
 	import Keypad from "$components/Keypad.svelte";
 	import Button from "$components/ui/Button.svelte";
 	import { SvelteSet } from "svelte/reactivity";
@@ -116,15 +117,9 @@
 		</div>
 		<div class="g">
 			<div class="grid">
-				<Grid
-					{size}
-					{path}
-					{revisited}
-					{obstacles}
-					game={true}
-					{flipCharacter}
-					{started}
-				></Grid>
+				<Grid {size} {obstacles} {started}>
+					<GameLayer {path} {flipCharacter} />
+				</Grid>
 			</div>
 			{#if showMessage}
 				<p class="message" transition:fade={{ duration: 100 }}>

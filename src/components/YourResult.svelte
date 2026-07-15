@@ -1,5 +1,6 @@
 <script>
 	import Grid from "$components/Grid.svelte";
+	import XrayLayer from "$components/grid/XrayLayer.svelte";
 	import Button from "$components/ui/Button.svelte";
 	import optimalRaw from "$data/optimal.csv";
 	import inView from "$actions/inview.js";
@@ -63,16 +64,9 @@
 				<p>
 					<small><strong class="user">Your path</strong></small>
 				</p>
-				<Grid
-					bind:this={gridUser}
-					{size}
-					{obstacles}
-					path={userPath}
-					game={false}
-					xray={true}
-					started={true}
-					color="user"
-				></Grid>
+				<Grid {size} {obstacles} started={true} variant="wireframe">
+					<XrayLayer bind:this={gridUser} path={userPath} color="user" />
+				</Grid>
 			</div>
 		{/if}
 		<div class="g">
@@ -81,16 +75,13 @@
 					<strong class="optimal">An Optimal path</strong>
 				</small>
 			</p>
-			<Grid
-				bind:this={gridOptimal}
-				{size}
-				{obstacles}
-				path={optimalPath}
-				game={false}
-				xray={true}
-				started={true}
-				color="optimal"
-			></Grid>
+			<Grid {size} {obstacles} started={true} variant="wireframe">
+				<XrayLayer
+					bind:this={gridOptimal}
+					path={optimalPath}
+					color="optimal"
+				/>
+			</Grid>
 		</div>
 	</div>
 
