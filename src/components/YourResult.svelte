@@ -65,7 +65,12 @@
 					<small><strong class="user">Your path</strong></small>
 				</p>
 				<Grid {size} {obstacles} started={true} variant="wireframe">
-					<XrayLayer bind:this={gridUser} path={userPath} color="user" />
+					<XrayLayer
+						bind:this={gridUser}
+						path={userPath}
+						color="user"
+						showBacktracks
+					/>
 				</Grid>
 			</div>
 		{/if}

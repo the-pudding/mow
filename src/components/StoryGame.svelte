@@ -139,8 +139,8 @@
 </script>
 
 <div class="c">
-	<p class="big">
-		{display}
+	<p>
+		<strong>{display}</strong>
 	</p>
 	{#if !wasDoneOnLoad}
 		<p class="skip">
@@ -173,16 +173,16 @@
 </div>
 
 <style>
-	p {
-		text-align: center;
-	}
-
 	.skipped {
 		visibility: hidden;
 	}
 
 	.lawn {
 		max-width: var(--grid-max-width);
-		margin: 1rem auto;
+		margin: 2rem auto;
+	}
+
+	.c :global(strong) {
+		color: var(--color-yellow);
 	}
 </style>

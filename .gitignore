@@ -6,3 +6,4 @@ build
 functions
 .env
 tasks/*.csv
+explore

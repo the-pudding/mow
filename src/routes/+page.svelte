@@ -16,7 +16,8 @@
 
 	if (browser && dev) {
 		localStorage.removeItem("pudding_mow_game");
-		session.userId = "0a78toj0l4";
+		// session.userId = "0a78toj0l4";
+		session.userId = "kqn1v9ezez";
 		session.completedLevels["round2"] = 1;
 	}
 
