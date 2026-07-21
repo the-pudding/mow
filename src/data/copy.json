@@ -40,7 +40,7 @@
         },
         {
           "type": "text",
-          "value": "A few weeks ago, 20,305 people mowed the same lawn. Here is every path they took."
+          "value": "A few weeks ago, 20,305 people mowed the same lawn. Here is what they look like."
         },
         {
           "type": "text",
@@ -184,7 +184,7 @@
                 "note": "show lawn, animate remainder of path"
               },
               {
-                "text": "What differentiated the great players from everyone else comes down to a single critical mistake. We can divide the lawn into two three important sections: left and right. Like most players, <strong>Bones</strong> chose to complete the left section first, forcing an inevitable backtrack because of this one-way corridor.",
+                "text": "What differentiated the great players from everyone else comes down to a single critical mistake. We can divide the lawn into two main sections: left and right. Like most players, <strong>Bones</strong> chose to complete the left section first, forcing an inevitable backtrack because of this one-way corridor.",
                 "step": "sections",
                 "note": "left/right divide graphic and highlight the corridor"
               },
@@ -230,23 +230,11 @@
         },
         {
           "type": "text",
-          "value": "Our results showed that optimality held at ~90% (TKTK fact check) even as the lawn scaled from 25 cells to 196&mdash;almost 8x larger."
+          "value": "Our results showed that optimality held at ~90% (TKTK fact check) even as the lawn scaled from 25 cells to 196&mdash;almost 8x larger! This was surprising to us as we expected human optimality to break down as the problem grew more complicated, based on what we learned from the Traveling Salesman Problem."
         },
         {
           "type": "text",
-          "value": "We think this is because . Unlike the random node-scatter of the Traveling Salesman Problem, the"
-        },
-        {
-          "type": "text",
-          "value": "That being said, we also think we might not have hit the true ceiling with our largest 14x14 grid. Clearly we underestimated how good people are at mowing."
-        },
-        {
-          "type": "text",
-          "value": "This contradicts what the TSP posited. Our theory:"
-        },
-        {
-          "type": "text",
-          "value": "* bonus rounds have 1000+ solutions – they’re more forgiving of mistakes because you have more room to pivot (but this is true in TSP too….)"
+          "value": "We think this is because the consistent visual structure of our game allowed players to more easily draw on common heuristics compared to those who had to deal with the random node-scatter of the TSP. In particular, the game supported two strategies: <strong>decomposition</strong> and <strong>compression</strong>. Players were able to decompose the grid into smaller, more manageable sections and solve them incrementally&mdash;clear this empty space first, then that corner, and finally the cavity between the rocks. As they moved between rounds, they were able to compress"
         },
         {
           "type": "text",
@@ -262,7 +250,7 @@
         },
         {
           "type": "text",
-          "value": "* we capped the grid to 14x14 to ensure buy-in from players, but we’d probably see optimality break down anyway if we scaled the grid much larger, at like 100x100"
+          "value": "That being said, we also think we might not have hit the true ceiling with our largest 14x14 grid. Clearly we underestimated how good people are at mowing. If we had continued to scale the grid, it's unclear whether we'd continue to see the same trend in optimality or whether it would eventually begin to decline."
         },
         {
           "type": "text",

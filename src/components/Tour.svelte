@@ -1,5 +1,6 @@
 <script>
 	import { onMount, tick } from "svelte";
+	import { fade } from "svelte/transition";
 	import { interpolateGreens, interpolateOrRd } from "d3";
 	import { base } from "$app/paths";
 	import Scrolly from "$components/helpers/Scrolly.svelte";
@@ -20,6 +21,8 @@
 	// CONFIG — the featured run. TODO(you): confirm which level the tour lawn is
 	// and the player id whose path we replay.
 	// ---------------------------------------------------------------------------
+	const FADE_IN = 250;
+	const FADE_OUT = 50;
 	const BONES_ID = "yo7m5rr3nl";
 	const TOUR_LEVEL = "round2"; // 8x8 lawn; matches Bones' path extent + obstacles
 	let level = $derived(levels.find((l) => l.id === TOUR_LEVEL));
@@ -175,6 +178,7 @@
 
 	let showFork = $state(false);
 	let forkOrigin = $state({ x: 0, y: 0 });
+	let forkTrunk = $state([]);
 	let forkBranches = $state([]);
 	let forkChosen = $state(null);
 
@@ -238,6 +242,7 @@
 			variant = "wireframe";
 			showFork = true;
 			forkOrigin = { x: 4, y: 0 };
+			forkTrunk = bonesPath.slice(0, 5); // shared opening (0,0)→(4,0)
 			forkBranches = [
 				{ to: { x: 4, y: 1 }, count: 0 },
 				{ to: { x: 5, y: 0 }, count: 0 }
@@ -333,39 +338,79 @@
 					{variant}
 				>
 					{#if showGame}
-						<GameLayer
-							bind:this={gameLayer}
-							replay={gameReplay}
-							startIndex={gameStartIndex}
-						/>
+						<div
+							class="layer"
+							in:fade={{ duration: FADE_IN }}
+							out:fade={{ duration: FADE_OUT }}
+						>
+							<GameLayer
+								bind:this={gameLayer}
+								replay={gameReplay}
+								startIndex={gameStartIndex}
+							/>
+						</div>
 					{/if}
 					{#if showXray}
-						<XrayLayer
-							bind:this={xrayLayer}
-							path={bonesPath}
-							realtime={xrayRealtime}
-							showBacktracks={xrayBacktracks}
-						/>
+						<div
+							class="layer"
+							in:fade={{ duration: FADE_IN }}
+							out:fade={{ duration: FADE_OUT }}
+						>
+							<XrayLayer
+								bind:this={xrayLayer}
+								path={bonesPath}
+								realtime={xrayRealtime}
+								showBacktracks={xrayBacktracks}
+							/>
+						</div>
 					{/if}
 					{#if showHeatmap}
-						<HeatmapLayer data={heatmapData} interpolate={heatmapInterpolate} />
+						<div
+							class="layer"
+							in:fade={{ duration: FADE_IN }}
+							out:fade={{ duration: FADE_OUT }}
+						>
+							<HeatmapLayer
+								data={heatmapData}
+								interpolate={heatmapInterpolate}
+							/>
+						</div>
 					{/if}
 					{#if showSection}
-						<SectionLayer
-							regions={sectionRegions}
-							corridor={sectionCorridor}
-							arrow={sectionArrow}
-						/>
+						<div
+							class="layer"
+							in:fade={{ duration: FADE_IN }}
+							out:fade={{ duration: FADE_OUT }}
+						>
+							<SectionLayer
+								regions={sectionRegions}
+								corridor={sectionCorridor}
+								arrow={sectionArrow}
+							/>
+						</div>
 					{/if}
 					{#if showFork}
-						<ForkLayer
-							origin={forkOrigin}
-							branches={forkBranches}
-							chosen={forkChosen}
-						/>
+						<div
+							class="layer"
+							in:fade={{ duration: FADE_IN }}
+							out:fade={{ duration: FADE_OUT }}
+						>
+							<ForkLayer
+								origin={forkOrigin}
+								trunk={forkTrunk}
+								branches={forkBranches}
+								chosen={forkChosen}
+							/>
+						</div>
 					{/if}
 					{#if showPulse}
-						<PulseLayer cells={pulseCells} />
+						<div
+							class="layer"
+							in:fade={{ duration: FADE_IN }}
+							out:fade={{ duration: FADE_OUT }}
+						>
+							<PulseLayer cells={pulseCells} />
+						</div>
 					{/if}
 				</Grid>
 			</div>
@@ -415,6 +460,13 @@
 		max-width: min(var(--grid-max-width), 80svh);
 		margin: 0 auto;
 		padding: 1rem;
+	}
+
+	/* fade wrapper for each grid layer; fills the grid so the layer's own
+	   absolute positioning resolves against it */
+	.layer {
+		position: absolute;
+		inset: 0;
 	}
 
 	@media screen and (min-width: 640px) {

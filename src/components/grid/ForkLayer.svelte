@@ -10,10 +10,13 @@
 	// origin:  { x, y } — the decision cell.
 	// branches: [{ to: {x,y}, count, label? }] — one per option.
 	// chosen:   index of the branch this player took (accent color); others gray.
+	// trunk:    [{x,y}...] — optional shared approach path leading into the origin,
+	//           drawn as one line that then splits into the branches.
 	let {
 		origin = { x: 0, y: 0 },
 		branches = [],
 		chosen = null,
+		trunk = [],
 		accent = "var(--color-yellow)",
 		muted = "var(--color-gray-700)"
 	} = $props();
@@ -27,6 +30,19 @@
 		scaleLinear()
 			.domain([0, max(branches, (b) => b.count) ?? 1])
 			.range([0.08, 0.5])
+	);
+
+	// the trunk carries everyone, so draw it as wide as the fullest branch
+	let trunkWidth = $derived(widthFor(max(branches, (b) => b.count) ?? 1));
+	let trunkPath = $derived(
+		trunk.length > 1
+			? trunk
+					.map((c, i) => {
+						const { cx, cy } = grid.center(c.x, c.y);
+						return `${i === 0 ? "M" : "L"} ${cx} ${cy}`;
+					})
+					.join(" ")
+			: null
 	);
 
 	// geometry per branch: line endpoints (shortened so the arrowhead sits inside
@@ -77,6 +93,15 @@
 </script>
 
 <svg viewBox="0 0 {grid.size} {grid.size}">
+	{#if trunkPath}
+		<path
+			class="trunk"
+			d={trunkPath}
+			stroke={accent}
+			stroke-width={trunkWidth}
+		/>
+	{/if}
+
 	{#each arrows as a (a.i)}
 		<line
 			x1={a.x1}
@@ -110,6 +135,12 @@
 		left: 0;
 		pointer-events: none;
 		overflow: visible;
+	}
+
+	path.trunk {
+		fill: none;
+		stroke-linecap: round;
+		stroke-linejoin: round;
 	}
 
 	circle.origin {
