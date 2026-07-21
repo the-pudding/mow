@@ -13,7 +13,8 @@
 		path = [],
 		color = "user",
 		showBacktracks = false,
-		realtime = false
+		realtime = false,
+		shouldAnimate = true
 	} = $props();
 
 	const grid = getContext("grid");
@@ -33,7 +34,7 @@
 			.range(["#fee761", "#f77622"]),
 		optimal: scaleLinear()
 			.interpolate(interpolateHcl)
-			.range(["#63c74d", "#265c42"])
+			.range(["#63c74d", "#2e7251"])
 	};
 
 	// count passes per cell → circles for anything visited more than once.
@@ -60,6 +61,15 @@
 
 	let animating = $state(false);
 
+	// when shouldAnimate is false, render the whole path immediately (no reveal).
+	let show = $derived(animating || !shouldAnimate);
+	// transition params: staggered reveal while animating, instant otherwise.
+	let revealIn = $derived((delay) =>
+		shouldAnimate && animating
+			? { delay, duration: REPLAY_STEP_MS }
+			: { duration: 0 }
+	);
+
 	export const animate = () => {
 		animating = true;
 	};
@@ -71,14 +81,14 @@
 
 {#if path.length > 1}
 	<svg viewBox="0 0 {grid.size} {grid.size}">
-		{#if animating}
+		{#if show}
 			{@const start = grid.center(path[0].x, path[0].y)}
 			<circle
 				class="start"
 				cx={start.cx}
 				cy={start.cy}
 				r="0.125"
-				in:fade|global={{ duration: REPLAY_STEP_MS }}
+				in:fade|global={revealIn(0)}
 				out:fade|global={{ duration: 0 }}
 				style:fill={colorScale[color](0)}
 			></circle>
@@ -87,10 +97,7 @@
 				{@const from = grid.center(x, y)}
 				{@const to = grid.center(path[i + 1].x, path[i + 1].y)}
 				<path
-					in:fade|global={{
-						delay: delayFor(i + 1),
-						duration: REPLAY_STEP_MS
-					}}
+					in:fade|global={revealIn(delayFor(i + 1))}
 					out:fade|global={{ duration: 0 }}
 					class="line"
 					d={`M ${from.cx} ${from.cy} L ${to.cx} ${to.cy}`}
@@ -105,10 +112,7 @@
 						{cx}
 						{cy}
 						{r}
-						in:fade|global={{
-							delay: delayFor(lastIndex),
-							duration: REPLAY_STEP_MS
-						}}
+						in:fade|global={revealIn(delayFor(lastIndex))}
 						out:fade|global={{ duration: 0 }}
 						style:stroke={colorScale[color](lastIndex / path.length)}
 						style:fill={colorScale[color](lastIndex / path.length)}

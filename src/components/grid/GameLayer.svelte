@@ -1,22 +1,36 @@
 <script>
-	import { getContext } from "svelte";
+	import { getContext, onDestroy } from "svelte";
 
 	// Lawn-mower sprite layer. Two modes:
 	//   live   — follows `path` (prop-driven, e.g. keyboard input)
 	//   replay — steps through `replay` on its own timer via play()/stop()
-	let { path = [], replay = null, flipCharacter, onFinish = null } = $props();
+	// startIndex: begin the replay partway through — everything up to it renders
+	// as already mowed, and play() animates from there to the end.
+	let {
+		path = [],
+		replay = null,
+		startIndex = 0,
+		flipCharacter,
+		onFinish = null,
+		auto = false
+	} = $props();
 
 	const grid = getContext("grid");
 
-	const REPLAY_STEP_MS = 120;
+	const REPLAY_STEP_MS = 250;
 
 	let replayIndex = $state(0);
 	let replayFlip = $state(true);
 	let intervalId;
 
-	let displayPath = $derived(
-		replay ? replay.slice(0, replayIndex + 1) : path
-	);
+	// park at startIndex whenever the replay source or start point changes, so the
+	// grass reads as mowed up to that point before play() is called.
+	$effect(() => {
+		replay;
+		replayIndex = startIndex;
+	});
+
+	let displayPath = $derived(replay ? replay.slice(0, replayIndex + 1) : path);
 	let latest = $derived(displayPath[displayPath.length - 1] || { x: 0, y: 0 });
 
 	// drive the foundation's cell dimming from whatever path we're showing
@@ -27,10 +41,10 @@
 	export const play = () => {
 		if (!replay?.length) return;
 		clearTimeout(intervalId);
-		replayIndex = 0;
+		replayIndex = startIndex;
 		replayFlip = true;
 
-		if (replay.length === 1) {
+		if (replay.length - startIndex <= 1) {
 			onFinish?.();
 			return;
 		}
@@ -51,22 +65,26 @@
 			const stepCurr = replay[replayIndex];
 			const stepNext = replay[replayIndex + 1];
 			const delay =
-				typeof stepCurr?.t === "number" && typeof stepNext?.t === "number"
+				!auto &&
+				typeof stepCurr?.t === "number" &&
+				typeof stepNext?.t === "number"
 					? stepNext.t - stepCurr.t
 					: REPLAY_STEP_MS;
 			intervalId = setTimeout(step, delay);
 		};
 
-		const first = replay[0];
-		const second = replay[1];
+		const first = replay[startIndex];
+		const second = replay[startIndex + 1];
 		const delay =
-			typeof first?.t === "number" && typeof second?.t === "number"
+			!auto && typeof first?.t === "number" && typeof second?.t === "number"
 				? second.t - first.t
-				: REPLAY_STEP_MS;
+				: REPLAY_STEP_MS * 10;
 		intervalId = setTimeout(step, delay);
 	};
 
 	export const stop = () => clearTimeout(intervalId);
+
+	onDestroy(stop);
 </script>
 
 <div class="mower">

@@ -166,6 +166,7 @@
 					bind:this={replayLayer}
 					replay={replayPath}
 					onFinish={restartReplay}
+					auto={true}
 				/>
 			</Grid>
 		{/if}

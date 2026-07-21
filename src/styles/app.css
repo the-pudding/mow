@@ -51,6 +51,7 @@
 	--grid-width: min(80svw, 80svh);
 	--grid-max-width: 600px;
 	--media-max-width: 800px;
+	--chart-max-width: 1200px;
 
 	--col-width: var(--grid-max-width);
 }

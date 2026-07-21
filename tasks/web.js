@@ -24,9 +24,11 @@ const exampleTests = testsRaw
 
 exampleTests.sort((a, b) => d3.descending(a.created_at, b.created_at));
 
-// make sure the folder exists
+// make sure the folders exist
 if (!fs.existsSync("./static/assets/users"))
 	fs.mkdirSync("./static/assets/users", { recursive: true });
+if (!fs.existsSync("./static/assets/data"))
+	fs.mkdirSync("./static/assets/data", { recursive: true });
 
 // clear out static/assets/users
 fs.readdirSync("./static/assets/users").forEach((file) => {
@@ -90,6 +92,66 @@ const firstMovePause = exampleTests
 	.map((parsed) => parsed[1].t - parsed[0].t);
 const medianFirstMovePause = d3.median(firstMovePause);
 console.log(`Median pause time on first move: ${medianFirstMovePause}ms`);
+
+// use firstMovePause make pause time .1 fix, bin values, output csv (for histogram)
+// filter out pauses over 15 seconds
+const pauseFiltered = firstMovePause.filter((ms) => ms <= 15000);
+console.log(
+	`Filtered out ${firstMovePause.length - pauseFiltered.length} pauses over 15s`
+);
+// convert ms -> seconds rounded to quarter seconds
+const pauseSeconds = pauseFiltered.map((ms) => Math.round(ms / 250) / 4);
+const pauseBinCounts = d3.rollup(
+	pauseSeconds,
+	(v) => v.length,
+	(d) => d
+);
+const pauseHistogram = Array.from(pauseBinCounts, ([seconds, count]) => ({
+	seconds,
+	count
+})).sort((a, b) => d3.ascending(a.seconds, b.seconds));
+
+fs.writeFileSync(
+	"./static/assets/data/first-move-pause-histogram.csv",
+	d3.csvFormat(pauseHistogram)
+);
+console.log(
+	`Wrote ${pauseHistogram.length} bins to ./static/assets/data/first-move-pause-histogram.csv`
+);
+
+// finishing spots: player count per (move-count, last square) — feeds the
+// left/right "where everyone ended up" heatmaps. Counts every attempt.
+const round2Last = exampleTests.map(({ result }) => {
+	const path = JSON.parse(result);
+	const last = path.at(-1);
+	return { moves: path.length, x: last.x, y: last.y };
+});
+
+const lastMove = d3
+	.rollups(
+		round2Last,
+		(v) => v.length,
+		(d) => d.moves,
+		(d) => `${d.x},${d.y}`
+	)
+	.flatMap(([moves, squares]) =>
+		squares.map(([xy, players]) => {
+			const [x, y] = xy.split(",").map(Number);
+			return { moves, x, y, players };
+		})
+	)
+	.sort(
+		(a, b) =>
+			d3.ascending(a.moves, b.moves) || d3.descending(a.players, b.players)
+	);
+
+fs.writeFileSync(
+	"./static/assets/data/round2-last-move.csv",
+	d3.csvFormat(lastMove)
+);
+console.log(
+	`Wrote ${lastMove.length} rows to ./static/assets/data/round2-last-move.csv`
+);
 
 // efficiency
 const efficiencies = allPathLengths.map((length) => minPathLength / length);

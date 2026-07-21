@@ -14,6 +14,7 @@
 	let size = $derived(currentLevel ? currentLevel.size : 10);
 	let obstacles = $derived(currentLevel ? currentLevel.obstacles : []);
 	let visible = $state(false);
+	let color = $derived(count ? "optimal" : "user");
 
 	// one entry per id: { id, path }
 	let items = $state([]);
@@ -32,7 +33,6 @@
 						y: +row.y,
 						t: +row.t
 					}));
-					console.log(id, path);
 					return { id, path };
 				} catch (err) {
 					console.warn(`Could not load path for ${id}`, err);
@@ -61,14 +61,14 @@
 	<div class="inner">
 		{#each items as { id, path }, i (id)}
 			<div class="g">
-				<p><small><strong class="user">{id}</strong></small></p>
+				<!-- <p><small><strong class="user">{id}</strong></small></p> -->
 				<Grid {size} {obstacles} started={true} variant="wireframe">
 					<XrayLayer
 						bind:this={layers[i]}
 						{path}
-						color="user"
+						{color}
 						showBacktracks
-						realtime
+						shouldAnimate={false}
 					/>
 				</Grid>
 				<!-- <p class="moves"><small>{path.length} moves</small></p> -->
@@ -76,15 +76,15 @@
 		{/each}
 	</div>
 
-	<p class="replay"><Button onclick={onReplay}>Replay</Button></p>
+	<!-- <p class="replay"><Button onclick={onReplay}>Replay</Button></p> -->
 </div>
 
 <style>
 	.inner {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-		gap: 1rem;
-		max-width: var(--media-max-width);
+		gap: 0.5rem;
+		max-width: var(--chart-max-width);
 		margin: 0 auto;
 	}
 

@@ -63,8 +63,11 @@
           "value": "For this small lawn, there were 12 different perfect solutions and people found them all."
         },
         {
-          "type": "text",
-          "value": "<mark>visual all 12</mark>"
+          "type": "Compare",
+          "value": {
+            "level": "round2",
+            "count": "12"
+          }
         },
         {
           "type": "text",
@@ -151,129 +154,202 @@
           "value": {
             "steps": [
               {
-                "type": "text",
-                "value": "Let’s replay a mowing session, director’s-cut style, with some commentary along the way. For this walkthrough, we’ll use a perfectly average run from player yo7m5rr3nl, who called themselves <strong>Bones</strong>."
+                "text": "Let’s replay a mowing session, director’s-cut style, with some commentary along the way. For this walkthrough, we’ll use a perfectly average run from player <strong>yo7m5rr3nl</strong>, who called themselves <strong>Bones</strong>. It took them 54 moves–five more than optimal. We recorded the timestamp of each move, so every hesitation or direction change left a data footprint.",
+                "step": "intro",
+                "note": "Just the trace of the path (use xray, not realtime) - path yo7m5rr3nl"
               },
               {
-                "type": "text",
-                "value": "Here is their finished path. We recorded the timestamp of every move, so every hesitation or direction change left a data footprint. We’ll rewind to the start and walk through it."
+                "text": "We’ll rewind to the start and walk through it. Before <strong>Bones</strong> even makes a move, they pause for 2.9 seconds. They were perfectly average here as well; the median first-move pause for all players was three seconds. Upon seeing the grid revealed, they naturally pause to survey the lawn and, perhaps, make a plan.",
+                "step": "rewind",
+                "note": "back to lawn; don’t play inline-mini chart of first-move pause time histogram?"
               },
               {
-                "type": "note",
-                "value": "Just the trace of the path"
+                "text": "Off goes <strong>Bones!</strong> They have nothing to decide in the opening stretch until the fifth square. Continue right, or go down?",
+                "step": "fifth",
+                "note": "play quick animation until fifth square, then overlay grid of blinking square options (5,0 and 4,1)"
               },
               {
-                "type": "text",
-                "value": "Before <strong>Bones</strong> even makes a move, they pause for 2.9 seconds. Like most players, upon seeing the grid revealed, they naturally pause to survey the lawn and, perhaps, make a plan. They were perfectly average here as well; the median first-move pause for all players was three seconds."
+                "text": "This is where players’ paths first diverge. <strong>Bones</strong> barely hesitates (0.7s) and decides to go down, just like X% of players. This is a critical moment that we’ll come back to shortly.",
+                "step": "diverge",
+                "note": "introduce forking; viz tk (maybe fork viz of everyone)"
               },
               {
-                "type": "note",
-                "value": "perhaps introduce the pause cell viz (heatmap cell, node circle size?). potential inline-mini chart of first-move pause time histogram"
+                "text": "They plod along the outside edge until they reach the bottom. Their first real pause (2.4s) comes when they realize they’ve hit a dead end and will have to retrace their steps.",
+                "step": "pause",
+                "note": "animate lawn from this point on, then show heatmap of pause duration (of the player’s path, up to this point) and hide lawn"
               },
               {
-                "type": "text",
-                "value": "Off goes <strong>Bones!</strong> They have nothing to decide in the opening stretch until the fifth square. Continue right, or go down? This is where player paths first split apart. <strong>Bones</strong>–like X% of players–went X."
+                "text": "After realizing their mistake, they turn around and re-mow their first square to finish this section. To get to the other open section they must backtrack through two more squares. Then it is pretty much smooth sailing where they work around the edges first, then fill in the remaining squares in the middle.",
+                "step": "remaining",
+                "note": "show lawn, animate remainder of path"
               },
               {
-                "type": "note",
-                "value": "forking viz of everyone"
+                "text": "What differentiated the great players from everyone else comes down to a single critical mistake. We can divide the lawn into two three important sections: left and right. Like most players, <strong>Bones</strong> chose to complete the left section first, forcing an inevitable backtrack because of this one-way corridor.",
+                "step": "sections",
+                "note": "left/right divide graphic and highlight the corridor"
               },
               {
-                "type": "text",
-                "value": "<strong>Bones</strong> barely hesitates (0.7s) and decides to go down, then plods along the outside edge until they reach the bottom."
+                "text": "If we look at where every player ended up we can see this play out. Players who were three or more moves from optimal finished all over the lawn.",
+                "step": "right",
+                "note": "heatmap of other finishing spots on the right side"
               },
               {
-                "type": "note",
-                "value": "could freeze here and talk about how they employed a generally correct strategy but how many people lost chance at perfect round here?"
+                "text": "While those who were nearly or perfectly optimal chose to mow the right side first so they could end their run on the left side, having anticipated the one-way trap.",
+                "step": "left",
+                "note": "heatmap of other finishing spots on the left side"
               },
               {
-                "type": "text",
-                "value": "Their first real pause (2.4s) comes when they realize they’ve hit a dead end and will have to retrace their steps."
+                "text": "One of those was player X. We tracked them down–discovered their name was X–and asked them, why were they so awesome at this game?"
               },
               {
-                "type": "text",
-                "value": "After realizing their mistake, they turn around and re-mow their first square to finish this section."
-              },
-              {
-                "type": "text",
-                "value": "To get to the other open section they must backtrack through two more squares. After this it is pretty smooth sailing where they work around the edges first then fill in the remaining squares in the middle."
-              },
-              {
-                "type": "note",
-                "value": "Could expand to explaining this pitfall because of the one-way-in-one-way-out bottle neck (all optimal solutions don’t do this, what did most players do?"
-              },
-              {
-                "type": "text",
-                "value": "But X people didn’t make the mistake <strong>Bones</strong> made, nor any others. One of those was player X. We tracked them down–discovered their name was X–and asked them, why were they so awesome at this game?"
-              },
-              {
-                "type": "text",
-                "value": "wrap up, maybe show where they finished vs. most people/optimal? brings closure to the mistake bit"
-              },
-              {
-                "type": "text",
-                "value": "then"
-              },
-              {
-                "type": "text",
-                "value": "open up here to exploring meta topics? we’ve already explained/showed branching and pausing"
-              },
-              {
-                "type": "text",
-                "value": "could be fun to pivot to our interviewee as the optimal path and include quotes from them to give it more humanity"
-              },
-              {
-                "type": "text",
-                "value": "possible other viz - mini multiple of 12 optimals, or side-by-side heatmap of avg person moves vs. heatmap"
-              },
-              {
-                "type": "text",
-                "value": "If we look at the whole lawn you can see these patterns of pausing and branching repeat. Pauses occur and paths fork around the hard parts: the obstacles, corners, and edges. The open stretches stay boringly uniform."
-              },
-              {
-                "type": "note",
-                "value": "pause heatmap over the grid, hard spots hot, open areas cold"
-              },
-              {
-                "type": "text",
-                "value": "This raised a few questions for us. First, if people pause at the hard parts, does that thinking pay off?"
-              },
-              {
-                "type": "text",
-                "value": "We expected the people who paused the longest to end up with the best paths. That is not what happened."
-              },
-              {
-                "type": "note",
-                "value": "Plot total pause time against efficiency and the relationship is flat. Staring at the lawn longer did not make people meaningfully better at mowing it."
-              },
-              {
-                "type": "note",
-                "value": "scatter, total pause time vs efficiency, flat trend, <strong>Bones</strong> highlighted"
-              },
-              {
-                "type": "text",
-                "value": "So thinking did not improve the score much, but it happened exactly where the problem got hard. If pausing does not help, then why does anyone win?"
-              },
-              {
-                "type": "text",
-                "value": "The best solvers were not the fastest, and they were not the longest thinkers. Speed alone did not predict a good path. Neither did total thinking time. What set the top solvers apart was <strong>where</strong> they spent their attention."
-              },
-              {
-                "type": "text",
-                "value": "They moved at about the same pace as everyone else, sometimes slower, but they revisited far fewer squares. They were not burning effort everywhere. They spent it at the forks and cruised through the rest."
-              },
-              {
-                "type": "text",
-                "value": "<mark>two ghost mowers side by side on the same clock, top solver vs average reader</mark>"
-              },
-              {
-                "type": "text",
-                "value": "So it is not about thinking more, or thinking faster. It is about <strong>when</strong> you think. And that is exactly what a good heuristic does: it saves your effort for the decisions that matter and spends nothing on the ones that do not."
+                "text": "TK interview",
+                "note": "question about snaking (required in lots of places which is counterintuitive to natural tendency to follow edges)"
               }
             ]
           }
+        },
+        {
+          "type": "note",
+          "value": "exit scrolly"
+        },
+        {
+          "type": "text",
+          "value": "We learned all of that from just one lawn. In our experiment, we tested players with five other grids at varying difficulty levels, giving us a fuller picture of how people approached pathfinding across larger and increasingly complicated problems."
+        },
+        {
+          "type": "note",
+          "value": "show aggregate heatmap of all grids"
+        },
+        {
+          "type": "text",
+          "value": "To go back to the initial driving question: did optimality decrease as the problem size increased? No!"
+        },
+        {
+          "type": "note",
+          "value": "viz (slopegraph?) of optimality across rounds – all players and popular average"
+        },
+        {
+          "type": "text",
+          "value": "Our results showed that optimality held at ~90% (TKTK fact check) even as the lawn scaled from 25 cells to 196&mdash;almost 8x larger."
+        },
+        {
+          "type": "text",
+          "value": "We think this is because . Unlike the random node-scatter of the Traveling Salesman Problem, the"
+        },
+        {
+          "type": "text",
+          "value": "That being said, we also think we might not have hit the true ceiling with our largest 14x14 grid. Clearly we underestimated how good people are at mowing."
+        },
+        {
+          "type": "text",
+          "value": "This contradicts what the TSP posited. Our theory:"
+        },
+        {
+          "type": "text",
+          "value": "* bonus rounds have 1000+ solutions – they’re more forgiving of mistakes because you have more room to pivot (but this is true in TSP too….)"
+        },
+        {
+          "type": "text",
+          "value": "* the visual structure of the lawn game (square, equally spaced, repetitive grid) lended itself well to common heuristic strategies"
+        },
+        {
+          "type": "text",
+          "value": "* Decomposition – we break the problem down into smaller, more manageable sub-problems, pick the solution that feels most promising, rinse and repeat when we reach the next decision point."
+        },
+        {
+          "type": "text",
+          "value": "* Compression – As players move between the rounds, they carry forward strategies and patterns they’ve recognized, reusing them to solve more complex grids – round 2 warned players that they should watch out for one-way tunnels"
+        },
+        {
+          "type": "text",
+          "value": "* we capped the grid to 14x14 to ensure buy-in from players, but we’d probably see optimality break down anyway if we scaled the grid much larger, at like 100x100"
+        },
+        {
+          "type": "text",
+          "value": "pausing and thinking"
+        },
+        {
+          "type": "text",
+          "value": "* fast/good vs fast/slow"
+        },
+        {
+          "type": "text",
+          "value": "open up here to exploring meta topics? we’ve already explained/showed branching and pausing"
+        },
+        {
+          "type": "text",
+          "value": "* Reinsert stuff about heuristics, working memory, decomposition, compression, etc"
+        },
+        {
+          "type": "text",
+          "value": "* Through the use of heuristics, even a perfectly average player was able to find a pretty good solution in a short/reasonable amount of time"
+        },
+        {
+          "type": "text",
+          "value": "* An algorithm chasing the optimal path would have to weigh a combinatorial explosion of possible routes, burning a lot of computational effort in the process"
+        },
+        {
+          "type": "text",
+          "value": "* [maybe simulate an algorithmic path probing and pruning dead ends]"
+        },
+        {
+          "type": "text",
+          "value": "could be fun to pivot to our interviewee as the optimal path and include quotes from them to give it more humanity"
+        },
+        {
+          "type": "text",
+          "value": "possible other viz - mini multiple of 12 optimals, or side-by-side heatmap of avg person moves vs. heatmap"
+        },
+        {
+          "type": "text",
+          "value": "If we look at the whole lawn you can see these patterns of pausing and branching repeat. Pauses occur and paths fork around the hard parts: the obstacles, corners, and edges. The open stretches stay boringly uniform."
+        },
+        {
+          "type": "note",
+          "value": "pause heatmap over the grid, hard spots hot, open areas cold"
+        },
+        {
+          "type": "text",
+          "value": "This raised a few questions for us. First, if people pause at the hard parts, does that thinking pay off?"
+        },
+        {
+          "type": "text",
+          "value": "We expected the people who paused the longest to end up with the best paths. That is not what happened."
+        },
+        {
+          "type": "note",
+          "value": "Plot total pause time against efficiency and the relationship is flat. Staring at the lawn longer did not make people meaningfully better at mowing it."
+        },
+        {
+          "type": "note",
+          "value": "scatter, total pause time vs efficiency, flat trend, <strong>Bones</strong> highlighted"
+        },
+        {
+          "type": "text",
+          "value": "So thinking did not improve the score much, but it happened exactly where the problem got hard. If pausing does not help, then why does anyone win?"
+        },
+        {
+          "type": "text",
+          "value": "The best solvers were not the fastest, and they were not the longest thinkers. Speed alone did not predict a good path. Neither did total thinking time. What set the top solvers apart was <strong>where</strong> they spent their attention."
+        },
+        {
+          "type": "text",
+          "value": "Some players, like X, planned ahead and were able to roughly anticipate where they should start and end, minimizing backtracking. Others made strategic pauses at ambiguous forks to analyze several moves ahead."
+        },
+        {
+          "type": "text",
+          "value": "They moved at about the same pace as everyone else, sometimes slower, but they revisited far fewer squares. They were not burning effort everywhere. They spent it at the forks and cruised through the rest."
+        },
+        {
+          "type": "text",
+          "value": "<mark>two ghost mowers side by side on the same clock, top solver vs average reader</mark>"
+        },
+        {
+          "type": "text",
+          "value": "So it is not about thinking more, or thinking faster. It is about <strong>when</strong> you think. And that is exactly what a good heuristic does: it saves your effort for the decisions that matter and spends nothing on the ones that do not."
         }
-      ]
+      ],
+      "Final": "we could show the demographic breakdown? Just as interesting data"
     }
   ]
 }
