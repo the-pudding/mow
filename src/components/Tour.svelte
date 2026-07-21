@@ -267,8 +267,18 @@
 			variant = "wireframe";
 			showSection = true;
 			sectionRegions = [
-				{ cells: LEFT_CELLS, label: "left", fill: "rgba(255, 0, 0, 0.33)" },
-				{ cells: RIGHT_CELLS, label: "right", fill: "rgba(0, 255, 0, 0.33)" }
+				{
+					cells: LEFT_CELLS,
+					label: "left",
+					labelAt: { x: 1, y: 6.5 },
+					fill: "rgba(255, 0, 0, 0.33)"
+				},
+				{
+					cells: RIGHT_CELLS,
+					label: "right",
+					labelAt: { x: 5.5, y: 3.5 },
+					fill: "rgba(0, 255, 0, 0.33)"
+				}
 			];
 			sectionCorridor = [{ x: 2, y: 3 }];
 			sectionArrow = { from: { x: 2, y: 3 }, to: { x: 1, y: 3 } };

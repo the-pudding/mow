@@ -5,7 +5,9 @@
 	// right), highlights a one-way corridor of cells, and can draw a directional
 	// arrow to show the forced traversal direction. Use over variant="wireframe".
 	//
-	// regions:  [{ cells: [{x,y}...], label, fill }] — translucent section fills.
+	// regions:  [{ cells: [{x,y}...], label, fill, labelAt? }] — translucent section
+	//           fills. labelAt is an optional {x,y} cell for the label; without it
+	//           the label sits at the region's centroid.
 	// corridor: [{x,y}...] — cells to emphasize as the one-way passage.
 	// arrow:    { from:{x,y}, to:{x,y} } — optional direction indicator.
 	let {
@@ -17,8 +19,11 @@
 
 	const grid = getContext("grid");
 
-	// label anchor = centroid of a region's cells
-	function centroid(cells) {
+	// label anchor: explicit labelAt cell if given, else the region's centroid
+	function labelPos(region) {
+		if (region.labelAt)
+			return { x: region.labelAt.x + 0.5, y: region.labelAt.y + 0.5 };
+		const cells = region.cells;
 		const n = cells.length || 1;
 		const sx = cells.reduce((s, c) => s + c.x + 0.5, 0) / n;
 		const sy = cells.reduce((s, c) => s + c.y + 0.5, 0) / n;
@@ -90,7 +95,7 @@
 
 	<!-- region labels -->
 	{#each regions as region (region.label)}
-		{@const c = centroid(region.cells)}
+		{@const c = labelPos(region)}
 		<text x={c.x} y={c.y} text-anchor="middle" dominant-baseline="middle"
 			>{region.label}</text
 		>
