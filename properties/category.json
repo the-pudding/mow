@@ -3,6 +3,9 @@
 		"green-light": {
 			"value": "#83d372"
 		},
+		"green-medium": {
+			"value": "#3e8948"
+		},
 		"green-dark": {
 			"value": "#2d704f"
 		},
@@ -11,6 +14,18 @@
 		},
 		"orange-dark": {
 			"value": "#a64706"
+		},
+		"yellow-dark": {
+			"value": "#8f5701"
+		},
+		"yellow-light": {
+			"value": "#fee761"
+		},
+		"purple-dark": {
+			"value": "#8c4c92"
+		},
+		"pink-light": {
+			"value": "#f6757a"
 		}
 	}
 }

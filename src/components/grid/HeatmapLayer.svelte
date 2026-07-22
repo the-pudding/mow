@@ -1,21 +1,26 @@
 <script>
 	import { getContext } from "svelte";
-	import { scaleSequential, interpolateGreens, extent } from "d3";
+	import { scaleSequential, scaleQuantize, extent } from "d3";
 
 	// Per-cell heatmap overlay. `data` is an array of { x, y, value }; each grid
-	// cell is filled from a sequential color scale over the value extent.
+	// cell is colored by its value across the data's extent.
 	// Use with the foundation's variant="wireframe" so the fills read cleanly.
-	let { data = [], interpolate = interpolateGreens } = $props();
+	//
+	// `interpolate` takes either:
+	//   - an array of colors → that many discrete, equal-width bins
+	//   - an interpolator fn (e.g. d3.interpolateViridis) → continuous ramp
+	let { data = [], interpolate } = $props();
 
 	const grid = getContext("grid");
 
-	let lookup = $derived(
-		new Map(data.map((d) => [`${d.x},${d.y}`, d.value]))
-	);
+	let lookup = $derived(new Map(data.map((d) => [`${d.x},${d.y}`, d.value])));
 
 	let color = $derived.by(() => {
 		const [lo, hi] = extent(data, (d) => d.value);
-		return scaleSequential(interpolate).domain([lo ?? 0, hi ?? 1]);
+		const domain = [lo ?? 0, hi ?? 1];
+		return Array.isArray(interpolate)
+			? scaleQuantize().domain(domain).range(interpolate)
+			: scaleSequential(interpolate).domain(domain);
 	});
 </script>
 

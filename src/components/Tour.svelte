@@ -1,7 +1,7 @@
 <script>
 	import { onMount, tick } from "svelte";
 	import { fade } from "svelte/transition";
-	import { interpolateGreens, interpolateOrRd } from "d3";
+	import { interpolateHcl, piecewise } from "d3";
 	import Scrolly from "$components/helpers/Scrolly.svelte";
 	import Grid from "$components/Grid.svelte";
 	import GameLayer from "$components/grid/GameLayer.svelte";
@@ -12,9 +12,48 @@
 	import PulseLayer from "$components/grid/PulseLayer.svelte";
 	import loadCsv from "$utils/loadCsv.js";
 	import levels from "$data/levels.json";
+	import variables from "$data/variables.json";
 
 	let { steps } = $props();
 	let stepIndex = $state(0);
+
+	// Heatmap bins: low → high, dark green to light yellow. Add/remove entries to
+	// change how many steps the heatmap quantizes into.
+	const HEAT_COLORS = [
+		"#8c4c92",
+		"#a0678a",
+		"#b38181",
+		"#c59a79",
+		"#d8b471",
+		"#ebcd69",
+		"#fee761"
+	];
+
+	// Heatmap ramp: low = dark categorical green, high = light yellow.
+	const interpolateGr = interpolateHcl(
+		variables.category["green-dark"],
+		variables.category["green-light"]
+	);
+
+	const interpolateGrYe = interpolateHcl(
+		variables.category["green-dark"],
+		variables.category["yellow-light"]
+	);
+
+	const interpolatePuYe = interpolateHcl(
+		variables.category["purple-dark"],
+		variables.category["yellow-light"]
+	);
+
+	const interpolatePu = interpolateHcl(
+		variables.category["purple-dark"],
+		variables.category["pink-light"]
+	);
+
+	const interpolateYe = interpolateHcl(
+		variables.category["yellow-dark"],
+		variables.category["yellow-light"]
+	);
 
 	// ---------------------------------------------------------------------------
 	// CONFIG — the featured run. TODO(you): confirm which level the tour lawn is
@@ -162,6 +201,8 @@
 	// ---------------------------------------------------------------------------
 	let variant = $state("wireframe");
 
+	let heatmapInterpolate = $state(interpolateYe);
+
 	let showXray = $state(false);
 	let xrayRealtime = $state(false);
 	let xrayBacktracks = $state(false);
@@ -183,7 +224,6 @@
 
 	let showHeatmap = $state(false);
 	let heatmapData = $state([]);
-	let heatmapInterpolate = $state(interpolateGreens);
 
 	let showSection = $state(false);
 	let sectionRegions = $state([]);
@@ -199,7 +239,7 @@
 		showSection = false;
 		gameReplay = [];
 		gameStartIndex = 0;
-		heatmapInterpolate = interpolateGreens;
+		// heatmapInterpolate = interpolateGr;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -253,7 +293,7 @@
 		pause() {
 			variant = "wireframe";
 			showHeatmap = true;
-			heatmapInterpolate = interpolateOrRd;
+			// heatmapInterpolate = interpolateGr;
 			heatmapData = dwellHeatmap(bonesPath, PAUSE_THROUGH_INDEX);
 		},
 
@@ -292,7 +332,7 @@
 		right() {
 			variant = "wireframe";
 			showHeatmap = true;
-			heatmapInterpolate = interpolateGreens;
+			// heatmapInterpolate = interpolateGr;
 			heatmapData = finishRightData;
 		},
 
@@ -300,7 +340,7 @@
 		left() {
 			variant = "wireframe";
 			showHeatmap = true;
-			heatmapInterpolate = interpolateGreens;
+			// heatmapInterpolate = interpolateGr;
 			heatmapData = finishLeftData;
 		}
 	};
