@@ -2,6 +2,7 @@
 	import { getContext } from "svelte";
 	import { scaleLinear, interpolateHcl } from "d3";
 	import { fade } from "svelte/transition";
+	import variables from "$data/variables.json";
 
 	// Animated "xray" path overlay: draws each path segment as a colored line,
 	// fading them in one after another when animate() is called.
@@ -30,10 +31,16 @@
 	const colorScale = {
 		user: scaleLinear()
 			.interpolate(interpolateHcl)
-			.range(["#fee761", "#f77622"]),
+			.range([
+				variables.category["orange-light"],
+				variables.category["orange-dark"]
+			]),
 		optimal: scaleLinear()
 			.interpolate(interpolateHcl)
-			.range(["#63c74d", "#2e7251"])
+			.range([
+				variables.category["green-light"],
+				variables.category["green-dark"]
+			])
 	};
 
 	// count passes per cell → circles for anything visited more than once.

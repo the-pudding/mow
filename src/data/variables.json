@@ -1,12 +1,9 @@
 {
   "category": {
-    "blue": "#4477AA",
-    "red": "#EE6677",
-    "green": "#228833",
-    "yellow": "#CCBB44",
-    "cyan": "#66CCEE",
-    "purple": "#AA3377",
-    "gray": "#BBBBBB"
+    "green-light": "#83d372",
+    "green-dark": "#2d704f",
+    "orange-light": "#feae34",
+    "orange-dark": "#a64706"
   },
   "color": {
     "black": "oklch(0 0 0)",

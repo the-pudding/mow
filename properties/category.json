@@ -1,25 +1,16 @@
 {
 	"category": {
-		"blue": {
-			"value": "#4477AA"
+		"green-light": {
+			"value": "#83d372"
 		},
-		"red": {
-			"value": "#EE6677"
+		"green-dark": {
+			"value": "#2d704f"
 		},
-		"green": {
-			"value": "#228833"
+		"orange-light": {
+			"value": "#feae34"
 		},
-		"yellow": {
-			"value": "#CCBB44"
-		},
-		"cyan": {
-			"value": "#66CCEE"
-		},
-		"purple": {
-			"value": "#AA3377"
-		},
-		"gray": {
-			"value": "#BBBBBB"
+		"orange-dark": {
+			"value": "#a64706"
 		}
 	}
 }

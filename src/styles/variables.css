@@ -3,13 +3,10 @@
  */
 
 :root {
-  --category-blue: #4477AA;
-  --category-red: #EE6677;
-  --category-green: #228833;
-  --category-yellow: #CCBB44;
-  --category-cyan: #66CCEE;
-  --category-purple: #AA3377;
-  --category-gray: #BBBBBB;
+  --category-green-light: #83d372;
+  --category-green-dark: #2d704f;
+  --category-orange-light: #feae34;
+  --category-orange-dark: #a64706;
   --color-black: oklch(0 0 0);
   --color-white: oklch(100% 0 0);
   --color-gray-50: oklch(98.5% 0 0);
