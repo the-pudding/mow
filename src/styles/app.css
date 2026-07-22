@@ -37,8 +37,8 @@
 	--color-mark: var(--color-yellow);
 	--color-selection: var(--color-gray-300);
 	--color-border: var(--color-fg);
-	--color-button-fg-primary: var(--color-green-dark);
-	--color-button-bg-primary: var(--color-green-light);
+	--color-button-fg-primary: var(--color-gray-900);
+	--color-button-bg-primary: var(--color-gray-50);
 	--color-button-fg-secondary: var(--color-white);
 	--color-button-bg-secondary: var(--color-gray-700);
 	--color-input-bg: var(--color-white);

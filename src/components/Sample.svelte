@@ -17,13 +17,26 @@
 	// XrayLayer ref for the path currently on screen
 	let layer = $state(null);
 
-	let path = $derived(data.length ? data[index % data.length] : null);
+	let cur = $derived(data.length ? data[index % data.length] : {});
+	let path = $derived(cur.path);
+	let id = $derived(cur.id);
+	let moves = $derived(cur.moves);
 	let stepTime = $derived(path ? (CYCLE_TIMER * 0.9) / path.length : 0);
 
 	async function load() {
 		try {
 			const raw = await loadCsv("assets/data/round2-sample-paths.csv");
-			data = shuffle(raw.map((d) => JSON.parse(d.path)));
+			data = shuffle(
+				raw
+					.map((d) => ({
+						id: d.user_id,
+						path: JSON.parse(d.path)
+					}))
+					.map((d) => ({
+						...d,
+						moves: d.path.length
+					}))
+			);
 		} catch (error) {
 			console.error(error);
 		}
@@ -47,24 +60,36 @@
 </script>
 
 <div class="c">
-	<Grid {size} {obstacles} started={true} variant="wireframe">
-		{#if path}
-			{#key index}
-				<XrayLayer
-					bind:this={layer}
-					{path}
-					shouldAnimate
-					showBacktracks
-					{stepTime}
-				/>
-			{/key}
-		{/if}
-	</Grid>
+	<div class="g">
+		<span class="label"
+			><small><strong>user: {id}</strong> ({moves} moves)</small></span
+		>
+		<Grid {size} {obstacles} started={true} variant="wireframe">
+			{#if path}
+				{#key index}
+					<XrayLayer
+						bind:this={layer}
+						{path}
+						shouldAnimate
+						showBacktracks
+						{stepTime}
+					/>
+				{/key}
+			{/if}
+		</Grid>
+	</div>
 </div>
 
 <style>
 	.c {
 		max-width: calc(var(--media-max-width) * 0.5);
 		margin: 4rem auto;
+	}
+
+	.label {
+		display: block;
+		text-align: center;
+		font-family: var(--font-mono);
+		text-transform: uppercase;
 	}
 </style>

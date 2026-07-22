@@ -44,9 +44,9 @@
 		}))
 	);
 
-	let offsetWidth = $state(0);
 	let visualGridSize = $derived(Math.max(size, 8));
-	let figureWidth = $derived(Math.round((size / visualGridSize) * offsetWidth));
+	// sized in CSS rather than measured, so grids can be skipped when offscreen
+	let widthPercent = $derived((size / visualGridSize) * 100);
 
 	setContext("grid", {
 		get size() {
@@ -70,9 +70,8 @@
 	});
 </script>
 
-<div class="measure" bind:offsetWidth aria-hidden="true"></div>
 <figure
-	style="--size: {size}; width: {figureWidth}px; --grass-bg-size: {numGrassFrames *
+	style="--size: {size}; width: {widthPercent}%; --grass-bg-size: {numGrassFrames *
 		100}% 100%; --obstacle-bg-size: {numObstacleFrames * 100}% 100%;"
 	class="figure-grid"
 	class:wireframe={variant === "wireframe"}
@@ -92,28 +91,24 @@
 					data-y={y}
 					style={`--grass-x: ${(grassFrame / (numGrassFrames - 1)) * 100}%${obstacle ? `; --sprite-x: ${(spriteFrame / (numObstacleFrames - 1)) * 100}%` : ""}`}
 				>
-					<div class="fg"></div>
+					{#if obstacle}<div class="fg"></div>{/if}
 				</div>
 			{/each}
 		</div>
 
-		<div class="grid gridlines" aria-hidden="true">
-			{#each cells as _cell}
-				<div class="cell"></div>
-			{/each}
-		</div>
+		{#if variant !== "wireframe"}
+			<div class="grid gridlines" aria-hidden="true">
+				{#each cells as _cell}
+					<div class="cell"></div>
+				{/each}
+			</div>
+		{/if}
 
 		{@render children?.()}
 	</div>
 </figure>
 
 <style>
-	.measure {
-		width: 100%;
-		height: 0;
-		visibility: hidden;
-	}
-
 	figure {
 		position: relative;
 		margin: 1rem auto;
@@ -135,7 +130,11 @@
 		display: grid;
 		grid-template-columns: repeat(var(--size), 1fr);
 		grid-template-rows: repeat(var(--size), 1fr);
-		transition: all 0.5s ease-in-out;
+		transition:
+			grid-template-columns 0.5s ease-in-out,
+			grid-template-rows 0.5s ease-in-out;
+		/* one filter surface for the whole board instead of one per cell */
+		filter: brightness(1.1);
 	}
 
 	.grid.gridlines {
@@ -157,8 +156,6 @@
 		background-image: url("/assets/images/grass.png");
 		background-size: var(--grass-bg-size);
 		background-position: var(--grass-x, 0%) 0%;
-		/* lighten */
-		filter: brightness(1.1);
 	}
 
 	.cell.obstacle {
@@ -193,12 +190,12 @@
 
 	.wireframe .grid {
 		border: 0.5px solid var(--color-gray-700);
+		filter: none;
 	}
 
 	.wireframe .cell {
 		border: 0.5px solid var(--color-gray-700);
 		background: none;
-		filter: brightness(1);
 	}
 
 	.wireframe .cell.visited {

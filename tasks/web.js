@@ -273,21 +273,21 @@ function writeMoveCounts(exampleTests) {
 // and comes out identical on every run. one column of JSON: [{"x":0,"y":0},...]
 function writeSamplePaths(exampleTests, sampleSize = 50) {
 	const unique = new Map();
-	exampleTests.forEach(({ result }) => {
+	exampleTests.forEach(({ user_id, result }) => {
 		const path = JSON.parse(result).map(({ x, y }) => ({ x, y }));
 		const key = path.map(({ x, y }) => `${x},${y}`).join("|");
-		if (!unique.has(key)) unique.set(key, path);
+		if (!unique.has(key)) unique.set(key, { user_id, path });
 	});
 
 	const paths = Array.from(unique.values()).sort((a, b) =>
-		d3.ascending(a.length, b.length)
+		d3.ascending(a.path.length, b.path.length)
 	);
 	const step = Math.max(1, Math.floor(paths.length / sampleSize));
 	const rows = d3
 		.range(sampleSize)
 		.map((i) => paths[i * step])
 		.filter(Boolean)
-		.map((path) => ({ path: JSON.stringify(path) }));
+		.map(({ user_id, path }) => ({ user_id, path: JSON.stringify(path) }));
 
 	fs.writeFileSync(
 		`./static/assets/data/${level}-sample-paths.csv`,

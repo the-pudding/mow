@@ -2,7 +2,6 @@
 	import Grid from "$components/Grid.svelte";
 	import XrayLayer from "$components/grid/XrayLayer.svelte";
 	import Button from "$components/ui/Button.svelte";
-	import inView from "$actions/inview.js";
 	import loadCsv from "$utils/loadCsv.js";
 	import levels from "$data/levels.json";
 	import { tick } from "svelte";
@@ -121,6 +120,9 @@
 	.g {
 		padding: 0 8px;
 		width: 100%;
+		/* these are static, so skip rendering the ones offscreen */
+		content-visibility: auto;
+		contain-intrinsic-size: auto 16rem;
 	}
 
 	.label {
