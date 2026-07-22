@@ -1,16 +1,27 @@
 <script>
 	import { getContext } from "svelte";
 	import StoryGame from "$components/StoryGame.svelte";
+	import CMS from "$components/helpers/CMS.svelte";
 	import Img from "$components/Img.svelte";
 	import Video from "$components/Video.svelte";
 	import YourResult from "$components/YourResult.svelte";
 	import Compare from "$components/Compare.svelte";
 	import Tour from "$components/Tour.svelte";
-	import CMS from "$components/helpers/CMS.svelte";
+	import Round2Moves from "$components/Round2Moves.svelte";
+	import Sample from "$components/Sample.svelte";
 
 	const copy = getContext("copy");
 	const { body } = copy;
-	const components = { Video, Img, StoryGame, YourResult, Tour, Compare };
+	const components = {
+		Video,
+		Img,
+		StoryGame,
+		YourResult,
+		Tour,
+		Compare,
+		Round2Moves,
+		Sample
+	};
 </script>
 
 <div class="c">

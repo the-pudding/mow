@@ -14,18 +14,17 @@
 		color = "user",
 		showBacktracks = false,
 		realtime = false,
-		shouldAnimate = true
+		shouldAnimate = true,
+		stepTime = 120
 	} = $props();
 
 	const grid = getContext("grid");
-
-	const REPLAY_STEP_MS = 120;
 
 	// reveal delay (ms from start) for the point at index i
 	let delayFor = $derived((i) =>
 		realtime && typeof path[i]?.t === "number" && typeof path[0]?.t === "number"
 			? path[i].t - path[0].t
-			: i * REPLAY_STEP_MS
+			: i * stepTime
 	);
 
 	const colorScale = {
@@ -65,9 +64,7 @@
 	let show = $derived(animating || !shouldAnimate);
 	// transition params: staggered reveal while animating, instant otherwise.
 	let revealIn = $derived((delay) =>
-		shouldAnimate && animating
-			? { delay, duration: REPLAY_STEP_MS }
-			: { duration: 0 }
+		shouldAnimate && animating ? { delay, duration: stepTime } : { duration: 0 }
 	);
 
 	export const animate = () => {

@@ -8,9 +8,9 @@
 	import PulseLayer from "$components/grid/PulseLayer.svelte";
 	import ForkLayer from "$components/grid/ForkLayer.svelte";
 	import SectionLayer from "$components/grid/SectionLayer.svelte";
-	import FirstMovePauseHistogram from "$components/charts/FirstMovePauseHistogram.svelte";
+	import Histogram from "$components/charts/Histogram.svelte";
 	import OptimalitySlopegraph from "$components/charts/OptimalitySlopegraph.svelte";
-	import { range } from "d3";
+	import { range, rollups, ascending } from "d3";
 
 	const size = 8;
 
@@ -39,17 +39,30 @@
 	const corridor = range(size).map((y) => ({ x: 3, y }));
 	const arrow = { from: { x: 3, y: 0 }, to: { x: 3, y: size - 1 } };
 
-	// --- Histogram sample: ~200 first-move pauses (seconds) ---
+	// --- Histogram sample: first-move pauses, binned like the task csv ---
 	let seed = 42;
 	const rand = () => {
 		seed = (seed * 1103515245 + 12345) & 0x7fffffff;
 		return seed / 0x7fffffff;
 	};
-	const pauseValues = range(200).map(() => {
-		// skewed toward ~2-4s, clamp at 0.3
+	const pauseValues = range(2000).map(() => {
+		// skewed toward ~2-4s, rounded to quarter seconds like the real data
 		const v = 1 + (rand() + rand() + rand()) * 1.6;
-		return Math.round(v * 10) / 10;
+		return Math.round(v * 4) / 4;
 	});
+	const pauseCounts = rollups(
+		pauseValues,
+		(v) => v.length,
+		(d) => d
+	)
+		.map(([value, count]) => ({ value, count }))
+		.sort((a, b) => ascending(a.value, b.value));
+
+	// --- Histogram sample: pre-binned move counts (moves, count) ---
+	const moveCounts = range(49, 80).map((moves) => ({
+		value: moves,
+		count: Math.round(400 * Math.exp(-(moves - 49) / 9) + rand() * 60)
+	}));
 
 	// --- Slopegraph sample: optimality across rounds ---
 	const slopeSeries = [
@@ -111,8 +124,28 @@
 	</section>
 
 	<section>
-		<h2>FirstMovePauseHistogram (step <code>rewind</code>)</h2>
-		<FirstMovePauseHistogram values={pauseValues} highlight={2.9} median={3} />
+		<h2>Histogram — first-move pause (step <code>rewind</code>)</h2>
+		<Histogram
+			data={pauseCounts}
+			label="seconds before first move"
+			yLabel="players"
+			unit="s"
+			highlight={2.9}
+			highlightLabel="Bones"
+			median={3}
+		/>
+	</section>
+
+	<section>
+		<h2>Histogram — move counts</h2>
+		<Histogram
+			data={moveCounts}
+			label="moves to finish"
+			yLabel="players"
+			color="var(--color-green-light)"
+			highlight={49}
+			highlightLabel="optimal"
+		/>
 	</section>
 
 	<section>

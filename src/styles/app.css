@@ -131,7 +131,7 @@ body {
 } */
 
 #post figure:not(.figure-grid) {
-	margin: 1rem auto;
+	margin: 2rem auto;
 	max-width: var(--media-max-width);
 }
 
@@ -173,6 +173,11 @@ main li {
 p.big {
 	font-size: clamp(var(--20px, 20px), 5vw, var(--36px, 36px));
 	line-height: 1.2;
+}
+
+mark {
+	box-shadow: -4px 0px 0px var(--color-mark), 4pxm 0px 0px var(--color-mark);
+	box-decoration-break: clone;
 }
 
 @media screen and (min-width: 640px) {

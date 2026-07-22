@@ -2,7 +2,6 @@
 	import { onMount, tick } from "svelte";
 	import { fade } from "svelte/transition";
 	import { interpolateGreens, interpolateOrRd } from "d3";
-	import { base } from "$app/paths";
 	import Scrolly from "$components/helpers/Scrolly.svelte";
 	import Grid from "$components/Grid.svelte";
 	import GameLayer from "$components/grid/GameLayer.svelte";
@@ -138,13 +137,13 @@
 
 	onMount(async () => {
 		try {
-			const rows = await loadCsv(`${base}/assets/users/${BONES_ID}.csv`);
+			const rows = await loadCsv(`assets/users/${BONES_ID}.csv`);
 			bonesPath = rows.map((r) => ({ x: +r.x, y: +r.y, t: +r.t }));
 		} catch (err) {
 			console.warn(`Could not load Bones path (${BONES_ID})`, err);
 		}
 		try {
-			const rows = await loadCsv(`${base}/assets/data/round2-last-move.csv`);
+			const rows = await loadCsv("assets/data/round2-last-move.csv");
 			lastMoveRows = rows.map((r) => ({
 				moves: +r.moves,
 				x: +r.x,

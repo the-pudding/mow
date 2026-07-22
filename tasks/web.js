@@ -166,10 +166,53 @@ function writeFinishingSpots(exampleTests) {
 }
 
 // mean / median efficiency (shortest path length / actual path length)
-function logEfficiency(allPathLengths, minPathLength) {
+function logEfficiency(allPathLengths, minPathLength, testsRaw, usersLookup) {
 	const efficiencies = allPathLengths.map((length) => minPathLength / length);
 	console.log(`Mean efficiency: ${d3.mean(efficiencies).toFixed(4)}`);
 	console.log(`Median efficiency: ${d3.median(efficiencies).toFixed(4)}`);
+
+	// median efficiency per level, for users who completed every level.
+	// efficiency = optimal path length / that user's best (shortest) path
+	const levels = ["tutorial", "round1", "round2", "bonus1", "bonus2", "bonus3"];
+
+	const optimalRaw = d3.csvParse(
+		fs.readFileSync("./tasks/optimal_solutions_multi.csv", "utf-8")
+	);
+	const optLen = d3.rollup(
+		optimalRaw,
+		(v) => d3.min(v, (d) => JSON.parse(d.path_json).length),
+		(d) => d.level
+	);
+
+	// level -> user_id -> shortest path length across their attempts
+	const bestLen = new Map(levels.map((l) => [l, new Map()]));
+	testsRaw
+		.filter((d) => d.result !== "[]")
+		.filter((d) => usersLookup[d.user_id])
+		.filter((d) => bestLen.has(d.level))
+		.forEach((d) => {
+			const len = JSON.parse(d.result).length;
+			const m = bestLen.get(d.level);
+			if (!m.has(d.user_id) || len < m.get(d.user_id))
+				m.set(d.user_id, len);
+		});
+
+	const completedAll = Object.keys(usersLookup).filter((u) =>
+		levels.every((l) => bestLen.get(l).has(u))
+	);
+	console.log(`Users completing all levels: ${completedAll.length}`);
+
+	const perLevel = levels.map((l) => {
+		const effs = completedAll.map((u) => optLen.get(l) / bestLen.get(l).get(u));
+		return {
+			level: l,
+			optimal: optLen.get(l),
+			median: +d3.median(effs).toFixed(4),
+			mean: +d3.mean(effs).toFixed(4)
+		};
+	});
+	console.log("Median efficiency per level (users who completed all levels):");
+	console.table(perLevel);
 }
 
 // stats for players who reached the final level (bonus3)
@@ -203,6 +246,100 @@ function writeLevel2Moves(exampleTests, usersLookup) {
 
 	fs.writeFileSync("./tasks/level2_moves.csv", d3.csvFormat(level2Moves));
 	console.log(`Wrote ${level2Moves.length} rows to ./tasks/level2_moves.csv`);
+}
+
+// distribution of path lengths: how many players took each number of moves
+function writeMoveCounts(exampleTests) {
+	const rows = d3
+		.rollups(
+			exampleTests,
+			(v) => v.length,
+			({ result }) => JSON.parse(result).length
+		)
+		.map(([moves, count]) => ({ moves, count }))
+		.sort((a, b) => d3.ascending(a.moves, b.moves));
+
+	fs.writeFileSync(
+		`./static/assets/data/${level}-move-counts.csv`,
+		d3.csvFormat(rows)
+	);
+	console.log(
+		`Wrote ${rows.length} rows to ./static/assets/data/${level}-move-counts.csv`
+	);
+}
+
+// an evenly-spaced sample of unique paths for drawing on the grid. dedupes,
+// sorts by length, then takes every Nth so the sample spans short -> long runs
+// and comes out identical on every run. one column of JSON: [{"x":0,"y":0},...]
+function writeSamplePaths(exampleTests, sampleSize = 50) {
+	const unique = new Map();
+	exampleTests.forEach(({ result }) => {
+		const path = JSON.parse(result).map(({ x, y }) => ({ x, y }));
+		const key = path.map(({ x, y }) => `${x},${y}`).join("|");
+		if (!unique.has(key)) unique.set(key, path);
+	});
+
+	const paths = Array.from(unique.values()).sort((a, b) =>
+		d3.ascending(a.length, b.length)
+	);
+	const step = Math.max(1, Math.floor(paths.length / sampleSize));
+	const rows = d3
+		.range(sampleSize)
+		.map((i) => paths[i * step])
+		.filter(Boolean)
+		.map((path) => ({ path: JSON.stringify(path) }));
+
+	fs.writeFileSync(
+		`./static/assets/data/${level}-sample-paths.csv`,
+		d3.csvFormat(rows)
+	);
+	console.log(
+		`Wrote ${rows.length} of ${paths.length} unique paths to ./static/assets/data/${level}-sample-paths.csv`
+	);
+}
+
+// how many players matched each optimal solution exactly (12 round2 solutions).
+// writes solution_index + count for every optimal solution of the current level.
+function writeOptimalSolutionCounts(exampleTests) {
+	const optimalRaw = d3.csvParse(
+		fs.readFileSync("./tasks/optimal_solutions_multi.csv", "utf-8")
+	);
+
+	// exact-path lookup: "x,y|x,y|..." -> solution_index (for this level only)
+	const solutionByPath = new Map();
+	optimalRaw
+		.filter((d) => d.level === level)
+		.forEach((d) => {
+			const key = JSON.parse(d.path_json)
+				.map(({ x, y }) => `${x},${y}`)
+				.join("|");
+			solutionByPath.set(key, d.solution_index);
+		});
+
+	const counts = new Map(
+		Array.from(solutionByPath.values(), (idx) => [idx, 0])
+	);
+	exampleTests.forEach(({ result }) => {
+		const key = JSON.parse(result)
+			.map(({ x, y }) => `${x},${y}`)
+			.join("|");
+		const idx = solutionByPath.get(key);
+		if (idx !== undefined) counts.set(idx, counts.get(idx) + 1);
+	});
+
+	const rows = Array.from(counts, ([solution_index, count]) => ({
+		solution_index: +solution_index,
+		count
+	})).sort((a, b) => d3.ascending(a.solution_index, b.solution_index));
+
+	fs.writeFileSync(
+		"./static/assets/data/round2-optimal-solution-counts.csv",
+		d3.csvFormat(rows)
+	);
+	console.log(
+		`Wrote ${rows.length} rows to ./static/assets/data/round2-optimal-solution-counts.csv`
+	);
+	console.table(rows);
 }
 
 // write each optimal solution path out to assets/optimal/[level]-[index].csv
@@ -245,9 +382,12 @@ function main() {
 	logShortestProximity(allPathLengths, minPathLength, exampleTests.length);
 	writeFirstMovePauseHistogram(exampleTests);
 	writeFinishingSpots(exampleTests);
-	logEfficiency(allPathLengths, minPathLength);
+	logEfficiency(allPathLengths, minPathLength, testsRaw, usersLookup);
 	logAllLevels(testsRaw, usersLookup);
 	writeLevel2Moves(exampleTests, usersLookup);
+	writeMoveCounts(exampleTests);
+	writeSamplePaths(exampleTests);
+	writeOptimalSolutionCounts(exampleTests);
 	writeOptimalSolutions();
 }
 

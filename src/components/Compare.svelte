@@ -5,41 +5,65 @@
 	import inView from "$actions/inview.js";
 	import loadCsv from "$utils/loadCsv.js";
 	import levels from "$data/levels.json";
-	import { base } from "$app/paths";
 	import { tick } from "svelte";
-	import { range } from "d3";
+	import { format, range, descending } from "d3";
 
 	let { ids = [], level, count } = $props();
+	let optimal = $derived(count ? true : false);
 	let currentLevel = $derived(levels.find((l) => l.id === level));
 	let size = $derived(currentLevel ? currentLevel.size : 10);
 	let obstacles = $derived(currentLevel ? currentLevel.obstacles : []);
 	let visible = $state(false);
-	let color = $derived(count ? "optimal" : "user");
+	let color = $derived(optimal ? "optimal" : "user");
 
-	// one entry per id: { id, path }
+	// one entry per id: { id, path, label }
 	let items = $state([]);
 	// XrayLayer refs, index-aligned with items
 	let layers = $state([]);
 
+	const formatCount = format(",");
+
+	// solution_index -> number of people who found it
+	async function loadCounts() {
+		if (!optimal) return null;
+		try {
+			const rows = await loadCsv(
+				`assets/data/${level}-optimal-solution-counts.csv`
+			);
+			return new Map(rows.map((row) => [+row.solution_index, +row.count]));
+		} catch (err) {
+			console.warn(`Could not load optimal solution counts for ${level}`, err);
+			return null;
+		}
+	}
+
 	async function loadPaths() {
-		const idsToLoad = count ? range(+count).map((i) => `${level}-${i}`) : ids;
-		const folder = count ? "optimal" : "users";
-		items = await Promise.all(
-			idsToLoad.map(async (id) => {
+		const idsToLoad = optimal ? range(+count).map((i) => `${level}-${i}`) : ids;
+		const folder = optimal ? "optimal" : "users";
+		const counts = await loadCounts();
+		const temp = await Promise.all(
+			idsToLoad.map(async (id, i) => {
+				const count = counts?.get(i);
+				const label =
+					count === undefined
+						? id
+						: `${formatCount(count)} ${count === 1 ? "person" : "people"}`;
 				try {
-					const rows = await loadCsv(`${base}/assets/${folder}/${id}.csv`);
+					const rows = await loadCsv(`assets/${folder}/${id}.csv`);
 					const path = rows.map((row) => ({
 						x: +row.x,
 						y: +row.y,
 						t: +row.t
 					}));
-					return { id, path };
+					return { id, path, label, count };
 				} catch (err) {
 					console.warn(`Could not load path for ${id}`, err);
-					return { id, path: [] };
+					return { id, path: [], label, count: 0 };
 				}
 			})
 		);
+		temp.sort((a, b) => descending(a.count, b.count));
+		items = temp;
 	}
 
 	async function onReplay() {
@@ -53,33 +77,39 @@
 	});
 
 	$effect(() => {
-		if (visible) loadPaths();
+		loadPaths();
 	});
 </script>
 
-<div class="c" use:inView onenter={() => (visible = true)}>
-	<div class="inner">
-		{#each items as { id, path }, i (id)}
-			<div class="g">
-				<!-- <p><small><strong class="user">{id}</strong></small></p> -->
-				<Grid {size} {obstacles} started={true} variant="wireframe">
-					<XrayLayer
-						bind:this={layers[i]}
-						{path}
-						{color}
-						showBacktracks
-						shouldAnimate={false}
-					/>
-				</Grid>
-				<!-- <p class="moves"><small>{path.length} moves</small></p> -->
-			</div>
-		{/each}
-	</div>
+{#if items.length}
+	<div class="c">
+		<div class="inner">
+			{#each items as { id, path, label }, i (id)}
+				<div class="g">
+					<span class="label"><small><strong>{label}</strong></small></span>
+					<Grid {size} {obstacles} started={true} variant="wireframe">
+						<XrayLayer
+							bind:this={layers[i]}
+							{path}
+							{color}
+							showBacktracks
+							shouldAnimate={false}
+						/>
+					</Grid>
+					<!-- <p class="moves"><small>{path.length} moves</small></p> -->
+				</div>
+			{/each}
+		</div>
 
-	<!-- <p class="replay"><Button onclick={onReplay}>Replay</Button></p> -->
-</div>
+		<!-- <p class="replay"><Button onclick={onReplay}>Replay</Button></p> -->
+	</div>
+{/if}
 
 <style>
+	.c {
+		margin: 4rem auto;
+	}
+
 	.inner {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
@@ -93,19 +123,10 @@
 		width: 100%;
 	}
 
-	.inner p {
-		margin: 0;
+	.label {
+		display: block;
 		text-align: center;
 		font-family: var(--font-mono);
 		text-transform: uppercase;
-	}
-
-	/* p.moves {
-		margin-top: 0.25rem;
-	} */
-
-	p.replay {
-		text-align: center;
-		margin-top: 1rem;
 	}
 </style>

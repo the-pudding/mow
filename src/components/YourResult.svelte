@@ -59,56 +59,60 @@
 		</p>
 	{/if}
 	<div class="inner">
-		{#if userPath.length}
+		<div class="lawns">
+			{#if userPath.length}
+				<div class="g">
+					<p>
+						<small><strong class="user">Your path</strong></small>
+					</p>
+					<Grid {size} {obstacles} started={true} variant="wireframe">
+						<XrayLayer
+							bind:this={gridUser}
+							path={userPath}
+							color="user"
+							showBacktracks
+						/>
+					</Grid>
+				</div>
+			{/if}
 			<div class="g">
 				<p>
-					<small><strong class="user">Your path</strong></small>
+					<small>
+						<strong class="optimal">An Optimal path</strong>
+					</small>
 				</p>
 				<Grid {size} {obstacles} started={true} variant="wireframe">
 					<XrayLayer
-						bind:this={gridUser}
-						path={userPath}
-						color="user"
-						showBacktracks
+						bind:this={gridOptimal}
+						path={optimalPath}
+						color="optimal"
 					/>
 				</Grid>
 			</div>
-		{/if}
-		<div class="g">
-			<p>
-				<small>
-					<strong class="optimal">An Optimal path</strong>
-				</small>
-			</p>
-			<Grid {size} {obstacles} started={true} variant="wireframe">
-				<XrayLayer
-					bind:this={gridOptimal}
-					path={optimalPath}
-					color="optimal"
-				/>
-			</Grid>
 		</div>
+		<p class="replay"><Button onclick={onReplay}>Replay</Button></p>
 	</div>
-
-	<p class="replay"><Button onclick={onReplay}>Replay</Button></p>
 </div>
 
 <style>
 	.inner {
+		margin: 4rem auto;
+		max-width: var(--media-max-width);
+	}
+
+	.lawns {
 		display: flex;
 		justify-content: center;
-		max-width: var(--media-max-width);
-		margin: 0 auto;
 		flex-direction: column;
 	}
 
 	.g {
-		padding: 0 8px;
+		padding: 0 1rem;
 		width: 100%;
 	}
 
 	.inner p {
-		margin: 0;
+		margin: 0 auto;
 		text-align: center;
 		font-family: var(--font-mono);
 		text-transform: uppercase;
@@ -128,7 +132,7 @@
 	}
 
 	@media (min-width: 640px) {
-		.inner {
+		.lawns {
 			flex-direction: row;
 		}
 

@@ -1,7 +1,6 @@
 <script>
 	import { tick } from "svelte";
 	import { browser } from "$app/environment";
-	import { base } from "$app/paths";
 	import Game from "$components/Game.svelte";
 	import Grid from "$components/Grid.svelte";
 	import GameLayer from "$components/grid/GameLayer.svelte";
@@ -107,7 +106,7 @@
 	async function loadStoredPath() {
 		fetchAttempted = true;
 		try {
-			const rows = await loadCsv(`${base}/assets/users/${session.userId}.csv`);
+			const rows = await loadCsv(`assets/users/${session.userId}.csv`);
 			fetchedPath = rows.map((row) => ({
 				x: +row.x,
 				y: +row.y,

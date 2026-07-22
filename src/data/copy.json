@@ -43,16 +43,18 @@
           "value": "A few weeks ago, 20,305 people mowed the same lawn. Here is what they look like."
         },
         {
-          "type": "text",
-          "value": "<mark>visual of all paths</mark>"
+          "type": "Sample",
+          "value": {}
         },
         {
           "type": "text",
-          "value": "Many came close to the optimal path. 55% of people came within five moves of the best possible path, and 18% did it perfectly."
+          "value": "Many came close to the optimal path. 55% of people came within five moves of the best possible path, and <mark>18% did it perfectly.</mark>"
         },
         {
-          "type": "text",
-          "value": "<mark>histogram of moves</mark>"
+          "type": "Round2Moves",
+          "value": {
+            "label": "moves"
+          }
         },
         {
           "type": "text",
@@ -222,7 +224,15 @@
         },
         {
           "type": "text",
-          "value": "To go back to the initial driving question: did optimality decrease as the problem size increased? No!"
+          "value": "First, here is everyone’s average optimality score across all the rounds they played. We measured optimality by counting the number of overlaps they made compared to the perfect optimal path."
+        },
+        {
+          "type": "note",
+          "value": "histogram of average optimality by player; player average score highlighted"
+        },
+        {
+          "type": "text",
+          "value": "Now let’s answer the initial driving question: did optimality decrease as the problem size increased? No!"
         },
         {
           "type": "note",
@@ -230,87 +240,31 @@
         },
         {
           "type": "text",
-          "value": "Our results showed that optimality held at ~90% (TKTK fact check) even as the lawn scaled from 25 cells to 196&mdash;almost 8x larger! This was surprising to us as we expected human optimality to break down as the problem grew more complicated, based on what we learned from the Traveling Salesman Problem."
+          "value": "Our results showed that optimality held at ~90% (TKTK fact check) even as the lawn scaled from 25 cells to 196&mdash;almost 8x larger. This was surprising to us as we expected human optimality to break down as the problem grew more complicated, based on what we learned from the Traveling Salesman Problem."
         },
         {
           "type": "text",
-          "value": "We think this is because the consistent visual structure of our game allowed players to more easily draw on common heuristics compared to those who had to deal with the random node-scatter of the TSP. In particular, the game supported two strategies: <strong>decomposition</strong> and <strong>compression</strong>. Players were able to decompose the grid into smaller, more manageable sections and solve them incrementally&mdash;clear this empty space first, then that corner, and finally the cavity between the rocks. As they moved between rounds, they were able to compress"
+          "value": "We think this is because the consistent visual structure of our game allowed players to more easily draw on common heuristics compared to those who had to connect the random scattered nodes of the TSP. We believe our game supported two particular strategies: <strong>decomposition</strong> and <strong>compression</strong>. Players were able to decompose the grid into smaller, more manageable sections and solve them incrementally&mdash;clear this empty space first, then that corner, and finally the cavity between the rocks. As they moved between rounds, they compressed what they learned into a mental model of the game, allowing them to identify patterns in more complex grids and adapt their gameplay. Trap me once, shame on me; trap me twice…"
         },
         {
           "type": "text",
-          "value": "* the visual structure of the lawn game (square, equally spaced, repetitive grid) lended itself well to common heuristic strategies"
+          "value": "That being said, we also think we might not have hit the true ceiling with our largest 14x14 grid. Did we underestimate how dedicated people were to the art of mowing? If we had continued to scale the grid, it's unclear whether we'd continue to see the same trend in optimality or whether we would eventually see it decline anyway."
         },
         {
           "type": "text",
-          "value": "* Decomposition – we break the problem down into smaller, more manageable sub-problems, pick the solution that feels most promising, rinse and repeat when we reach the next decision point."
-        },
-        {
-          "type": "text",
-          "value": "* Compression – As players move between the rounds, they carry forward strategies and patterns they’ve recognized, reusing them to solve more complex grids – round 2 warned players that they should watch out for one-way tunnels"
-        },
-        {
-          "type": "text",
-          "value": "That being said, we also think we might not have hit the true ceiling with our largest 14x14 grid. Clearly we underestimated how good people are at mowing. If we had continued to scale the grid, it's unclear whether we'd continue to see the same trend in optimality or whether it would eventually begin to decline."
-        },
-        {
-          "type": "text",
-          "value": "pausing and thinking"
-        },
-        {
-          "type": "text",
-          "value": "* fast/good vs fast/slow"
-        },
-        {
-          "type": "text",
-          "value": "open up here to exploring meta topics? we’ve already explained/showed branching and pausing"
-        },
-        {
-          "type": "text",
-          "value": "* Reinsert stuff about heuristics, working memory, decomposition, compression, etc"
-        },
-        {
-          "type": "text",
-          "value": "* Through the use of heuristics, even a perfectly average player was able to find a pretty good solution in a short/reasonable amount of time"
-        },
-        {
-          "type": "text",
-          "value": "* An algorithm chasing the optimal path would have to weigh a combinatorial explosion of possible routes, burning a lot of computational effort in the process"
-        },
-        {
-          "type": "text",
-          "value": "* [maybe simulate an algorithmic path probing and pruning dead ends]"
-        },
-        {
-          "type": "text",
-          "value": "could be fun to pivot to our interviewee as the optimal path and include quotes from them to give it more humanity"
-        },
-        {
-          "type": "text",
-          "value": "possible other viz - mini multiple of 12 optimals, or side-by-side heatmap of avg person moves vs. heatmap"
-        },
-        {
-          "type": "text",
-          "value": "If we look at the whole lawn you can see these patterns of pausing and branching repeat. Pauses occur and paths fork around the hard parts: the obstacles, corners, and edges. The open stretches stay boringly uniform."
+          "value": "What about speed? The obvious theory here is that players who took more time to think tended to do better, because they were able to carefully plan their moves. We looked at each player’s pause time and compared it against their optimality score."
         },
         {
           "type": "note",
-          "value": "pause heatmap over the grid, hard spots hot, open areas cold"
-        },
-        {
-          "type": "text",
-          "value": "This raised a few questions for us. First, if people pause at the hard parts, does that thinking pay off?"
-        },
-        {
-          "type": "text",
-          "value": "We expected the people who paused the longest to end up with the best paths. That is not what happened."
-        },
-        {
-          "type": "note",
-          "value": "Plot total pause time against efficiency and the relationship is flat. Staring at the lawn longer did not make people meaningfully better at mowing it."
+          "value": "Plot total pause time against efficiency and the relationship is flat."
         },
         {
           "type": "note",
           "value": "scatter, total pause time vs efficiency, flat trend, <strong>Bones</strong> highlighted"
+        },
+        {
+          "type": "text",
+          "value": "It turns out that staring at the lawn longer did not make people meaningfully better at mowing it."
         },
         {
           "type": "text",
@@ -336,8 +290,7 @@
           "type": "text",
           "value": "So it is not about thinking more, or thinking faster. It is about <strong>when</strong> you think. And that is exactly what a good heuristic does: it saves your effort for the decisions that matter and spends nothing on the ones that do not."
         }
-      ],
-      "Final": "we could show the demographic breakdown? Just as interesting data"
+      ]
     }
   ]
 }
