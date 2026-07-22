@@ -4,6 +4,7 @@
 	import { interpolateHcl, piecewise } from "d3";
 	import Scrolly from "$components/helpers/Scrolly.svelte";
 	import Grid from "$components/Grid.svelte";
+	import Overlay from "$components/grid/Overlay.svelte";
 	import GameLayer from "$components/grid/GameLayer.svelte";
 	import XrayLayer from "$components/grid/XrayLayer.svelte";
 	import HeatmapLayer from "$components/grid/HeatmapLayer.svelte";
@@ -451,6 +452,7 @@
 							<PulseLayer cells={pulseCells} />
 						</div>
 					{/if}
+					<Overlay />
 				</Grid>
 			</div>
 		{/if}
