@@ -187,7 +187,7 @@
 
 	onMount(async () => {
 		try {
-			const rows = await loadCsv(`assets/users/${BONES_ID}.csv`);
+			const rows = await loadCsv(`assets/round2/${BONES_ID}.csv`);
 			bonesPath = rows.map((r) => ({ x: +r.x, y: +r.y, t: +r.t }));
 		} catch (err) {
 			console.warn(`Could not load Bones path (${BONES_ID})`, err);

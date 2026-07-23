@@ -3,6 +3,9 @@ import * as d3 from "d3";
 
 const level = "round2";
 
+// every playable round, oldest → newest. user paths get written per round.
+const LEVELS = ["tutorial", "round1", "round2", "bonus1", "bonus2", "bonus3"];
+
 // --- data loading -----------------------------------------------------------
 
 function loadData() {
@@ -30,35 +33,49 @@ function loadData() {
 }
 
 function setupDirs() {
-	// make sure the folders exist
-	if (!fs.existsSync("./static/assets/users"))
-		fs.mkdirSync("./static/assets/users", { recursive: true });
+	// per-round user path folders are created/cleared in writeUserPaths; just
+	// make sure the aggregate data folder exists here.
 	if (!fs.existsSync("./static/assets/data"))
 		fs.mkdirSync("./static/assets/data", { recursive: true });
-
-	// clear out static/assets/users
-	fs.readdirSync("./static/assets/users").forEach((file) => {
-		fs.unlinkSync(`./static/assets/users/${file}`);
-	});
 }
 
 // --- per-step log / write functions -----------------------------------------
 
-// save each path and return the length of every unique path taken on the level
-function writeUserPaths(exampleTests) {
+// write every user's path for every round, one csv per user under that round's
+// folder (assets/round2/<user_id>.csv, assets/round1/<user_id>.csv, ...).
+// returns the round2 unique-path-length lookup that the round2 stats still use.
+function writeUserPaths(testsRaw, usersLookup) {
 	const pathLengths = {};
-	exampleTests.forEach(({ user_id, result }) => {
-		const file = `./static/assets/users/${user_id}.csv`;
-		const parsed = JSON.parse(result);
-		const temp = parsed.map(({ x, y }) => `${x},${y}`).join("|");
-		pathLengths[temp] = parsed.length;
-		fs.writeFileSync(file, d3.csvFormat(parsed));
+
+	LEVELS.forEach((lvl) => {
+		const dir = `./static/assets/${lvl}`;
+		if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+		fs.readdirSync(dir).forEach((file) => fs.unlinkSync(`${dir}/${file}`));
+
+		const tests = testsRaw
+			.filter((d) => d.level === lvl)
+			.filter((d) => d.result !== "[]")
+			.filter((d) => usersLookup[d.user_id]);
+		tests.sort((a, b) => d3.descending(a.created_at, b.created_at));
+
+		tests.forEach(({ user_id, result }) => {
+			const parsed = JSON.parse(result);
+			fs.writeFileSync(`${dir}/${user_id}.csv`, d3.csvFormat(parsed));
+			if (lvl === level) {
+				const key = parsed.map(({ x, y }) => `${x},${y}`).join("|");
+				pathLengths[key] = parsed.length;
+			}
+		});
+
+		console.log(`Wrote ${tests.length} paths to ${dir}`);
 	});
+
 	return pathLengths;
 }
 
 // how many users we have, how many unique paths, and the path-length breakdown
 function logPathStats(exampleTests, pathLengths, minPathLength) {
+	console.log("Round 2");
 	console.log(`Users: ${exampleTests.length}`);
 	console.log(`Unique paths: ${Object.keys(pathLengths).length}`);
 
@@ -424,7 +441,7 @@ function main() {
 	const { usersLookup, testsRaw, exampleTests } = loadData();
 	setupDirs();
 
-	const pathLengths = writeUserPaths(exampleTests);
+	const pathLengths = writeUserPaths(testsRaw, usersLookup);
 	const allPathLengths = exampleTests.map(
 		({ result }) => JSON.parse(result).length
 	);

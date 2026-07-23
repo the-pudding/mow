@@ -38,7 +38,7 @@
 
 	async function loadPaths() {
 		const idsToLoad = optimal ? range(+count).map((i) => `${level}-${i}`) : ids;
-		const folder = optimal ? "optimal" : "users";
+		const folder = optimal ? "optimal" : level;
 		const counts = await loadCounts();
 		const temp = await Promise.all(
 			idsToLoad.map(async (id, i) => {

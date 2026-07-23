@@ -106,7 +106,7 @@
 	async function loadStoredPath() {
 		fetchAttempted = true;
 		try {
-			const rows = await loadCsv(`assets/users/${session.userId}.csv`);
+			const rows = await loadCsv(`assets/round2/${session.userId}.csv`);
 			fetchedPath = rows.map((row) => ({
 				x: +row.x,
 				y: +row.y,
