@@ -1,5 +1,5 @@
 <script>
-	import { onMount, tick } from "svelte";
+	import { onMount, tick, untrack } from "svelte";
 	import { fade } from "svelte/transition";
 	import { interpolateHcl, piecewise } from "d3";
 	import Scrolly from "$components/helpers/Scrolly.svelte";
@@ -11,12 +11,12 @@
 	import SectionLayer from "$components/grid/SectionLayer.svelte";
 	import ForkLayer from "$components/grid/ForkLayer.svelte";
 	import PulseLayer from "$components/grid/PulseLayer.svelte";
+	import Histogram from "$components/charts/Histogram.svelte";
 	import loadCsv from "$utils/loadCsv.js";
 	import levels from "$data/levels.json";
 	import variables from "$data/variables.json";
 
 	let { steps } = $props();
-	let stepIndex = $state(0);
 
 	// Heatmap bins: low → high, dark green to light yellow. Add/remove entries to
 	// change how many steps the heatmap quantizes into.
@@ -61,9 +61,15 @@
 	// and the player id whose path we replay.
 	// ---------------------------------------------------------------------------
 	const FADE_IN = 250;
-	const FADE_OUT = 50;
+	const FADE_OUT = 0;
 	const BONES_ID = "yo7m5rr3nl";
 	const TOUR_LEVEL = "round2"; // 8x8 lawn; matches Bones' path extent + obstacles
+
+	let stepIndex = $state(0);
+
+	let histogramData = $state([]);
+	let histogramLabel = $state("seconds");
+
 	let level = $derived(levels.find((l) => l.id === TOUR_LEVEL));
 
 	// Bones' full path, loaded once ({ x, y, t }). Steps slice this for replay.
@@ -83,6 +89,10 @@
 	// The dead-end pause (~2.4s at cell 3,7) — the "up to this point" cutoff for
 	// the pause-duration heatmap. bonesPath[19] is where they hit the bottom.
 	const PAUSE_THROUGH_INDEX = 19;
+
+	// The story has already walked the mower through the fork by the pause step,
+	// so it starts mowed through here and only animates the run-in to the dead end.
+	const PAUSE_FROM_INDEX = 5;
 
 	// Left/right sections, transcribed from the tour figure onto the round2 grid.
 	// Neutral cells (the top strip, the (2,3) neck, the (4,6) pocket) belong to
@@ -193,6 +203,40 @@
 		} catch (err) {
 			console.warn("Could not load round2-last-move.csv", err);
 		}
+		try {
+			const rows = await loadCsv(
+				"assets/data/round2-first-move-pause-counts.csv"
+			);
+
+			const temp = rows.map((r) => ({
+				value: +r.seconds,
+				count: +r.count
+			}));
+			const threshold = 30; // seconds
+			const over = temp
+				.filter((d) => d.value >= threshold)
+				.reduce((acc, d) => acc + d.count, 0);
+			histogramData = [
+				...temp.filter((d) => d.value < threshold),
+				{ value: threshold, count: over, label: `${threshold}+` }
+			];
+		} catch (err) {
+			console.warn("Could not load round2-first-move-pause-counts.csv", err);
+		}
+
+		try {
+			const rows = await loadCsv("assets/data/round2-fork-counts.csv");
+			forkBranches = rows.map((r) => ({
+				to: { x: +r.x, y: +r.y },
+				count: +r.count
+			}));
+		} catch (err) {
+			console.warn("Could not load round2-fork-counts.csv", err);
+			forkBranches = [
+				{ to: { x: 4, y: 1 }, count: 0 },
+				{ to: { x: 5, y: 0 }, count: 0 }
+			];
+		}
 	});
 
 	// ---------------------------------------------------------------------------
@@ -217,6 +261,18 @@
 	let showPulse = $state(false);
 	let pulseCells = $state([]);
 
+	// Scene change held back until the game replay reaches its last square. A step
+	// trigger sets it, GameLayer's onFinish fires it, resetScene() clears it.
+	// Plain `let`, NOT $state: resetScene() reads these synchronously inside
+	// applyStep's effect, so tracking them would make the effect depend on them —
+	// finishing a replay would retrigger the step and loop the animation forever.
+	// Nothing in the template reads them, so there is nothing to be reactive for.
+	let afterReplay = null;
+	let afterReplayTimeout = null;
+
+	// beat between the mower landing and the deferred reveal firing
+	const AFTER_REPLAY_DELAY = 500;
+
 	let showFork = $state(false);
 	let forkOrigin = $state({ x: 0, y: 0 });
 	let forkTrunk = $state([]);
@@ -231,7 +287,22 @@
 	let sectionCorridor = $state([]);
 	let sectionArrow = $state(null);
 
+	let autoTimer = $state(true);
+
+	// Tear down the previous step before the next one builds its scene. Halts any
+	// in-flight replay and drops its deferred reveal first — the game layer
+	// survives step changes that keep it on screen, so its timer would otherwise
+	// keep ticking and land onFinish on the new scene.
 	function resetScene() {
+		// untracked: this runs synchronously inside applyStep's effect, and
+		// `gameLayer` is a bind:this ref. Reading it tracked would make the effect
+		// depend on the layer mounting — so a deferred reveal that hides the game
+		// would retrigger the step and replay it forever.
+		untrack(() => gameLayer)?.stop();
+		clearTimeout(afterReplayTimeout);
+		afterReplayTimeout = null;
+		afterReplay = null;
+
 		showXray = false;
 		showGame = false;
 		showPulse = false;
@@ -255,6 +326,7 @@
 			showXray = true;
 			xrayRealtime = false;
 			xrayBacktracks = true;
+			autoTimer = true;
 		},
 
 		// "back to lawn" — mower parked at the start; pause histogram is inline in
@@ -263,6 +335,7 @@
 			variant = "grass";
 			showGame = true;
 			gameReplay = bonesPath.slice(0, 1);
+			autoTimer = true;
 		},
 
 		// "play quick animation until fifth square, then overlay blinking options"
@@ -270,45 +343,58 @@
 			variant = "grass";
 			showGame = true;
 			gameReplay = bonesPath.slice(0, 5);
-			showPulse = true;
+			autoTimer = 500;
 			pulseCells = [
 				{ x: 5, y: 0 },
 				{ x: 4, y: 1 }
 			];
+			// hold the pulse until the mower actually reaches the fifth square
+			afterReplay = () => {
+				showPulse = true;
+			};
 		},
 
 		// "introduce forking; fork viz of everyone" (weighted two-branch split)
 		diverge() {
+			autoTimer = true;
 			variant = "wireframe";
 			showFork = true;
 			forkOrigin = { x: 4, y: 0 };
 			forkTrunk = bonesPath.slice(0, 5); // shared opening (0,0)→(4,0)
-			forkBranches = [
-				{ to: { x: 4, y: 1 }, count: 0 },
-				{ to: { x: 5, y: 0 }, count: 0 }
-			];
 			forkChosen = 0; // Bones went down
 		},
 
-		// "heatmap of pause duration (player's path up to this point), hide lawn"
+		// "heatmap of pause duration (player's path up to this point), hide lawn" —
+		// mow the run-up to the dead-end first, then swap the lawn for the heatmap
+		// of how long they lingered on each square along the way.
 		pause() {
-			variant = "wireframe";
-			showHeatmap = true;
-			// heatmapInterpolate = interpolateGr;
-			heatmapData = dwellHeatmap(bonesPath, PAUSE_THROUGH_INDEX);
+			autoTimer = 250;
+			variant = "grass";
+			showGame = true;
+			gameReplay = bonesPath.slice(0, PAUSE_THROUGH_INDEX + 1);
+			gameStartIndex = PAUSE_FROM_INDEX;
+			afterReplay = () => {
+				variant = "wireframe";
+				showGame = false;
+				showHeatmap = true;
+				// heatmapInterpolate = interpolateGr;
+				heatmapData = dwellHeatmap(bonesPath, PAUSE_THROUGH_INDEX - 1);
+			};
 		},
 
 		// "show lawn, animate remainder of path" — grass mowed up to the dead-end,
 		// then the mower carries on from there to the finish.
 		remaining() {
+			autoTimer = true;
 			variant = "grass";
 			showGame = true;
 			gameReplay = bonesPath;
-			gameStartIndex = PAUSE_THROUGH_INDEX;
+			gameStartIndex = PAUSE_THROUGH_INDEX - 1;
 		},
 
 		// "left/right divide graphic and highlight the corridor"
 		sections() {
+			autoTimer = true;
 			variant = "wireframe";
 			showSection = true;
 			sectionRegions = [
@@ -331,6 +417,7 @@
 
 		// "heatmap of other finishing spots on the right side" (sub-optimal players)
 		right() {
+			autoTimer = true;
 			variant = "wireframe";
 			showHeatmap = true;
 			// heatmapInterpolate = interpolateGr;
@@ -339,12 +426,23 @@
 
 		// "heatmap of other finishing spots on the left side" (near-optimal players)
 		left() {
+			autoTimer = true;
 			variant = "wireframe";
 			showHeatmap = true;
 			// heatmapInterpolate = interpolateGr;
 			heatmapData = finishLeftData;
 		}
 	};
+
+	// Fired when a game replay reaches its final square (lawn need not be done),
+	// running whatever reveal the active step deferred until the mower arrives.
+	function handleGameFinish() {
+		if (!afterReplay) return;
+		afterReplayTimeout = setTimeout(() => {
+			afterReplayTimeout = null;
+			afterReplay?.();
+		}, AFTER_REPLAY_DELAY);
+	}
 
 	// Apply the active step's scene, then (after the layers render) fire any
 	// reveal/replay animations.
@@ -356,10 +454,7 @@
 			xrayLayer?.reset();
 			xrayLayer?.animate();
 		}
-		if (showGame && gameReplay.length - gameStartIndex > 1) {
-			gameLayer?.stop();
-			gameLayer?.play();
-		}
+		if (showGame && gameReplay.length - gameStartIndex > 1) gameLayer?.play();
 	}
 
 	$effect(() => {
@@ -380,20 +475,22 @@
 					{#if showGame}
 						<div
 							class="layer"
-							in:fade={{ duration: FADE_IN }}
+							in:fade={{ delay: FADE_IN, duration: FADE_IN }}
 							out:fade={{ duration: FADE_OUT }}
 						>
 							<GameLayer
 								bind:this={gameLayer}
 								replay={gameReplay}
 								startIndex={gameStartIndex}
+								onFinish={handleGameFinish}
+								auto={autoTimer}
 							/>
 						</div>
 					{/if}
 					{#if showXray}
 						<div
 							class="layer"
-							in:fade={{ duration: FADE_IN }}
+							in:fade={{ delay: FADE_IN, duration: FADE_IN }}
 							out:fade={{ duration: FADE_OUT }}
 						>
 							<XrayLayer
@@ -407,7 +504,7 @@
 					{#if showHeatmap}
 						<div
 							class="layer"
-							in:fade={{ duration: FADE_IN }}
+							in:fade={{ delay: FADE_IN, duration: FADE_IN }}
 							out:fade={{ duration: FADE_OUT }}
 						>
 							<HeatmapLayer
@@ -415,11 +512,12 @@
 								interpolate={heatmapInterpolate}
 							/>
 						</div>
+						<Overlay />
 					{/if}
 					{#if showSection}
 						<div
 							class="layer"
-							in:fade={{ duration: FADE_IN }}
+							in:fade={{ delay: FADE_IN, duration: FADE_IN }}
 							out:fade={{ duration: FADE_OUT }}
 						>
 							<SectionLayer
@@ -432,7 +530,7 @@
 					{#if showFork}
 						<div
 							class="layer"
-							in:fade={{ duration: FADE_IN }}
+							in:fade={{ delay: FADE_IN, duration: FADE_IN }}
 							out:fade={{ duration: FADE_OUT }}
 						>
 							<ForkLayer
@@ -446,24 +544,29 @@
 					{#if showPulse}
 						<div
 							class="layer"
-							in:fade={{ duration: FADE_IN }}
+							in:fade={{ delay: FADE_IN, duration: FADE_IN }}
 							out:fade={{ duration: FADE_OUT }}
 						>
 							<PulseLayer cells={pulseCells} />
 						</div>
 					{/if}
-					<Overlay />
 				</Grid>
 			</div>
 		{/if}
 	</div>
 
 	<Scrolly bind:value={stepIndex}>
-		{#each steps as { text, step, note }, i}
+		{#each steps as { text, step, chart }, i}
 			{@const active = stepIndex === i}
 			<div class="step" class:active data-step={i}>
 				<p>{@html text}</p>
-				<mark>{note}</mark>
+				{#if chart && histogramData.length}
+					<Histogram
+						data={histogramData}
+						label={histogramLabel}
+						highlight={3}
+					/>
+				{/if}
 			</div>
 		{/each}
 	</Scrolly>

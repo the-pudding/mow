@@ -12,7 +12,7 @@
 		startIndex = 0,
 		flipCharacter,
 		onFinish = null,
-		auto = false
+		auto = undefined
 	} = $props();
 
 	const grid = getContext("grid");
@@ -69,7 +69,9 @@
 				typeof stepCurr?.t === "number" &&
 				typeof stepNext?.t === "number"
 					? stepNext.t - stepCurr.t
-					: REPLAY_STEP_MS;
+					: typeof auto === "number"
+						? auto
+						: REPLAY_STEP_MS;
 			intervalId = setTimeout(step, delay);
 		};
 
@@ -78,7 +80,7 @@
 		const delay =
 			!auto && typeof first?.t === "number" && typeof second?.t === "number"
 				? second.t - first.t
-				: REPLAY_STEP_MS * 10;
+				: 500;
 		intervalId = setTimeout(step, delay);
 	};
 

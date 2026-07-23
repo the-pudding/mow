@@ -12,12 +12,13 @@
 				count: +count
 			}));
 			// add up everything above 79 moves into a single "80+" bin
-			const over80 = temp
-				.filter((d) => d.value > 79)
+			const threshold = 80;
+			const over = temp
+				.filter((d) => d.value >= threshold)
 				.reduce((acc, d) => acc + d.count, 0);
 			data = [
-				...temp.filter((d) => d.value <= 79),
-				{ value: 80, count: over80, label: "80+" }
+				...temp.filter((d) => d.value < threshold),
+				{ value: threshold, count: over, label: `${threshold}+` }
 			];
 		} catch (error) {
 			console.error(error);

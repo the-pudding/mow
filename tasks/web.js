@@ -102,14 +102,14 @@ function writeFirstMovePauseHistogram(exampleTests) {
 	const medianFirstMovePause = d3.median(firstMovePause);
 	console.log(`Median pause time on first move: ${medianFirstMovePause}ms`);
 
-	// filter out pauses over 15 seconds
-	const pauseFiltered = firstMovePause.filter((ms) => ms <= 15000);
+	// filter out pauses over 60 seconds
+	const pauseFiltered = firstMovePause.filter((ms) => ms <= 60000);
 	console.log(
-		`Filtered out ${firstMovePause.length - pauseFiltered.length} pauses over 15s`
+		`Filtered out ${firstMovePause.length - pauseFiltered.length} pauses over 60s`
 	);
 
-	// convert ms -> seconds rounded to quarter seconds, then bin
-	const pauseSeconds = pauseFiltered.map((ms) => Math.round(ms / 250) / 4);
+	// convert ms -> seconds rounded to half seconds, then bin
+	const pauseSeconds = pauseFiltered.map((ms) => Math.round(ms / 500) / 2);
 	const pauseBinCounts = d3.rollup(
 		pauseSeconds,
 		(v) => v.length,
@@ -121,11 +121,11 @@ function writeFirstMovePauseHistogram(exampleTests) {
 	})).sort((a, b) => d3.ascending(a.seconds, b.seconds));
 
 	fs.writeFileSync(
-		"./static/assets/data/first-move-pause-histogram.csv",
+		"./static/assets/data/round2-first-move-pause-counts.csv",
 		d3.csvFormat(pauseHistogram)
 	);
 	console.log(
-		`Wrote ${pauseHistogram.length} bins to ./static/assets/data/first-move-pause-histogram.csv`
+		`Wrote ${pauseHistogram.length} bins to ./static/assets/data/round2-first-move-pause-counts.csv`
 	);
 }
 
@@ -165,6 +165,59 @@ function writeFinishingSpots(exampleTests) {
 	);
 }
 
+// the first real choice: the opening is forced right along the top row to (4,0)
+// (obstacles block y=1 for x<4), so move 6 (index 5) is where players split —
+// right to (5,0) or down to (4,1). Feeds the fork viz branch counts.
+
+function writeForkCounts(exampleTests) {
+	const forkIndex = 5;
+	const paths = exampleTests
+		.map(({ result }) => JSON.parse(result))
+		.filter((p) => p.length > forkIndex);
+
+	const moves = paths.map((p) => {
+		const from = p[forkIndex - 1];
+		const to = p[forkIndex];
+		const dx = to.x - from.x;
+		const dy = to.y - from.y;
+		const direction =
+			dx > 0 ? "right" : dx < 0 ? "left" : dy > 0 ? "down" : "up";
+		return { direction, x: to.x, y: to.y };
+	});
+
+	const rows = d3
+		.rollups(
+			moves,
+			(v) => v.length,
+			(d) => d.direction,
+			(d) => `${d.x},${d.y}`
+		)
+		.flatMap(([direction, squares]) =>
+			squares.map(([xy, count]) => {
+				const [x, y] = xy.split(",").map(Number);
+				return { direction, x, y, count };
+			})
+		)
+		.sort((a, b) => d3.descending(a.count, b.count))
+		.slice(0, 2);
+
+	// log out the percent down/right
+	fs.writeFileSync(
+		`./static/assets/data/${level}-fork-counts.csv`,
+		d3.csvFormat(rows)
+	);
+
+	console.log(
+		`Wrote ${rows.length} rows to ./static/assets/data/${level}-fork-counts.csv`
+	);
+
+	const total = d3.sum(rows, (d) => d.count);
+	rows.forEach((d) => {
+		d.pct = (d.count / total) * 100;
+	});
+	console.table(rows);
+}
+
 // mean / median efficiency (shortest path length / actual path length)
 function logEfficiency(allPathLengths, minPathLength, testsRaw, usersLookup) {
 	const efficiencies = allPathLengths.map((length) => minPathLength / length);
@@ -193,8 +246,7 @@ function logEfficiency(allPathLengths, minPathLength, testsRaw, usersLookup) {
 		.forEach((d) => {
 			const len = JSON.parse(d.result).length;
 			const m = bestLen.get(d.level);
-			if (!m.has(d.user_id) || len < m.get(d.user_id))
-				m.set(d.user_id, len);
+			if (!m.has(d.user_id) || len < m.get(d.user_id)) m.set(d.user_id, len);
 		});
 
 	const completedAll = Object.keys(usersLookup).filter((u) =>
@@ -382,6 +434,7 @@ function main() {
 	logShortestProximity(allPathLengths, minPathLength, exampleTests.length);
 	writeFirstMovePauseHistogram(exampleTests);
 	writeFinishingSpots(exampleTests);
+	writeForkCounts(exampleTests);
 	logEfficiency(allPathLengths, minPathLength, testsRaw, usersLookup);
 	logAllLevels(testsRaw, usersLookup);
 	writeLevel2Moves(exampleTests, usersLookup);
