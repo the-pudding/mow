@@ -56,7 +56,13 @@
 				path,
 				heat: dwellHeatmap(path),
 				moves: path.length,
-				seconds: +((path.at(-1).t - path[0].t) / 1000).toFixed(1)
+				seconds: +((path.at(-1).t - path[0].t) / 1000).toFixed(1),
+				// shortest possible run for this round, and how close they got to it
+				// (optimal moves / actual). tutorial has no optimal, so both stay null.
+				optimal: level.optimal ?? null,
+				optimalPct: level.optimal
+					? Math.round((level.optimal / path.length) * 100)
+					: null
 			};
 		} catch (err) {
 			console.warn(`No run for ${USER_ID} on ${level.id}`, err);
@@ -86,7 +92,10 @@
 		<section>
 			<header>
 				<h2>{round.id}</h2>
-				<span class="meta">{round.moves} moves · {round.seconds}s</span>
+				<span class="meta"
+					>{round.moves} moves · {round.seconds}s{#if round.optimalPct != null}
+						· {round.optimalPct}% optimal ({round.optimal}){/if}</span
+				>
 				<button onclick={() => replay(i)}>replay ▸</button>
 			</header>
 
