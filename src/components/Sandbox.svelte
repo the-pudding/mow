@@ -101,7 +101,7 @@
 
 			<div class="grids">
 				<figure>
-					<figcaption>realtime xray</figcaption>
+					<figcaption>realtime replay</figcaption>
 					<div class="grid-wrap">
 						<Grid
 							size={round.size}
@@ -120,7 +120,7 @@
 				</figure>
 
 				<figure>
-					<figcaption>pause heatmap (seconds per square)</figcaption>
+					<figcaption>pause heatmap</figcaption>
 					<div class="grid-wrap">
 						<Grid
 							size={round.size}
