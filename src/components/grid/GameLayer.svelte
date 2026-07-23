@@ -12,7 +12,8 @@
 		startIndex = 0,
 		flipCharacter,
 		onFinish = null,
-		auto = undefined
+		auto = undefined,
+		showCharacter = true
 	} = $props();
 
 	const grid = getContext("grid");
@@ -90,11 +91,13 @@
 </script>
 
 <div class="mower">
-	<div
-		class="character"
-		style="--x: {latest.x}; --y: {latest.y};"
-		class:flip={replay ? replayFlip : flipCharacter}
-	></div>
+	{#if showCharacter}
+		<div
+			class="character"
+			style="--x: {latest.x}; --y: {latest.y};"
+			class:flip={replay ? replayFlip : flipCharacter}
+		></div>
+	{/if}
 </div>
 
 <style>

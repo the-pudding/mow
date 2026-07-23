@@ -14,7 +14,7 @@
 		regions = [],
 		corridor = [],
 		arrow = null,
-		corridorColor = "var(--color-yellow)"
+		corridorColor = "var(--color-fg)"
 	} = $props();
 
 	const grid = getContext("grid");

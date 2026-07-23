@@ -48,7 +48,7 @@
         },
         {
           "type": "text",
-          "value": "Many came close to the optimal path. 55% of people came within five moves of the best possible path, and <mark>18% did it perfectly.</mark>"
+          "value": "Many came close to the optimal path. 55% of people came within five moves of the best possible path, and <strong>18% did it perfectly.</strong>"
         },
         {
           "type": "Round2Moves",
@@ -109,7 +109,7 @@
         {
           "type": "Img",
           "value": {
-            "src": "assets/images/study.png",
+            "src": "assets/images/study.jpg",
             "alt": "A chart depicting how people perform on the Traveling Salesman Problem compared to the optimal path, which shows that people perform near-ideal at fewer nodes, with a slow increasing deviation as more nodes are added",
             "figcaption": "Chart of findings from <a href=https://docs.lib.purdue.edu/jps/vol1/iss1/4/ target=_blank rel=noreferrer>this study</a>"
           }
@@ -141,7 +141,7 @@
         },
         {
           "type": "text",
-          "value": "When problems are small, the approach doesn’t matter much, almost everything works. But as complexity grows, optimal becomes impossible and heuristics become necessary. This is true for both humans <strong>and</strong> computers. We both fall back on good-enough strategies when perfect is impractical."
+          "value": "When problems are small, the approach doesn’t matter much, almost everything works. But as complexity grows, optimal becomes impossible and heuristics become necessary. This is true for both humans <em>and</em> computers. We both fall back on good-enough strategies when perfect is impractical."
         },
         {
           "type": "text",
@@ -161,7 +161,7 @@
                 "note": "Just the trace of the path (use xray, not realtime) - path yo7m5rr3nl"
               },
               {
-                "text": "We’ll rewind to the start and walk through it. Before Bones even makes a move, they pause for <strong>2.9 seconds.</strong> They were perfectly average here as well; the median first-move pause for all players was three seconds. Upon seeing the lawn revealed, they naturally pause to survey the lawn and, perhaps, make a plan.",
+                "text": "We’ll rewind to the start and walk through it. Before Bones even makes a move, they pause for 2.9 seconds. They were perfectly average here as well; the median first-move pause for all players was <strong>three seconds.</strong> Upon seeing the lawn revealed, they naturally pause to survey the lawn and, perhaps, make a plan.",
                 "chart": "histogram",
                 "step": "rewind"
               },
@@ -190,7 +190,7 @@
                 "step": "right"
               },
               {
-                "text": "While those who were <strong>nearly or perfectly optimal</strong> chose to mow the right side first so they could end their run on the left side, having anticipated the one-way trap.",
+                "text": "While those who were nearly or <strong>perfectly optimal</strong> chose to mow the right side first so they could end their run on the left side, having anticipated the one-way trap.",
                 "step": "left"
               },
               {
@@ -212,8 +212,8 @@
           "value": "That was one lawn. We gave players five more, each bigger and more cluttered than the last, up to a 14x14 lawn with nearly 200 squares to cover."
         },
         {
-          "type": "text",
-          "value": "<mark>show all lawns?</mark>"
+          "type": "SixLawns",
+          "value": {}
         },
         {
           "type": "text",

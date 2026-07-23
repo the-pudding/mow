@@ -181,8 +181,4 @@
 		max-width: var(--grid-max-width);
 		margin: 2rem auto;
 	}
-
-	.c :global(strong) {
-		color: var(--color-yellow);
-	}
 </style>

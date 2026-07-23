@@ -7,7 +7,15 @@
 	// grass/wireframe surface + gridlines, and responsive sizing. Provides a
 	// reactive "grid" context that layer components (children) build on top of.
 	// obstacles is an array of [{x,y}]
-	let { size, obstacles = [], started, variant = "grass", children } = $props();
+	// fill: opt out of the shared cell scale and take the full container width
+	let {
+		size,
+		obstacles = [],
+		started,
+		variant = "grass",
+		fill = false,
+		children
+	} = $props();
 
 	const obstacleFrames = Object.values(obstacleSpriteData.frames);
 	const numObstacleFrames = obstacleFrames.length;
@@ -44,7 +52,8 @@
 		}))
 	);
 
-	let visualGridSize = $derived(Math.max(size, 8));
+	// boards below the reference size render narrower so cells stay the same size
+	let visualGridSize = $derived(fill ? size : Math.max(size, 8));
 	// sized in CSS rather than measured, so grids can be skipped when offscreen
 	let widthPercent = $derived((size / visualGridSize) * 100);
 

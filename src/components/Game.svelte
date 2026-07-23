@@ -13,7 +13,11 @@
 		size = 10,
 		classifier = false,
 		onComplete,
-		onStart: onStartProp
+		onStart: onStartProp,
+		// display-only mode: no keypad, no start button, no move counter
+		controls = true,
+		showCharacter = true,
+		fill = false
 	} = $props();
 
 	// const predictionMoves = 15;
@@ -26,12 +30,16 @@
 	let visited = new SvelteSet(["0,0"]);
 	let revisited = new SvelteSet();
 	let flipCharacter = $state(true);
-	let started = $derived(startTime != null);
+	// without controls there is nothing to press, so the lawn shows right away
+	let started = $derived(!controls || startTime != null);
 
 	function onStart() {
 		startTime = Date.now();
 		onStartProp?.();
 	}
+
+	// nothing can move without controls, so don't mow the starting cell
+	let displayPath = $derived(controls ? path : []);
 
 	let visitedCount = $derived(visited.size);
 	let completed = $derived(visitedCount === targetCount);
@@ -112,13 +120,15 @@
 
 <div class="c" class:disable={!active} class:dim={showMessage}>
 	<div class="inner">
-		<div class="steps">
-			<span>move: {path.length}</span>
-		</div>
+		{#if controls}
+			<div class="steps">
+				<span>move: {path.length}</span>
+			</div>
+		{/if}
 		<div class="g">
 			<div class="grid">
-				<Grid {size} {obstacles} {started}>
-					<GameLayer {path} {flipCharacter} />
+				<Grid {size} {obstacles} {started} {fill}>
+					<GameLayer path={displayPath} {flipCharacter} {showCharacter} />
 				</Grid>
 			</div>
 			{#if showMessage}
@@ -126,13 +136,13 @@
 					<strong>{message}</strong>
 				</p>
 			{/if}
-			{#if !startTime}
+			{#if controls && !startTime}
 				<div class="start">
 					<Button size="lg" onclick={onStart}>Start</Button>
 				</div>
 			{/if}
 		</div>
-		{#if active}<Keypad {onmove} {active}></Keypad>{/if}
+		{#if controls && active}<Keypad {onmove} {active}></Keypad>{/if}
 	</div>
 </div>
 

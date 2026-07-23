@@ -155,7 +155,7 @@
 		}
 		return [...totals].map(([key, value]) => {
 			const [x, y] = key.split(",").map(Number);
-			return { x, y, value: +value.toFixed(2) };
+			return { x, y, value: +value.toFixed(1) };
 		});
 	}
 
@@ -369,7 +369,7 @@
 			autoTimer = 250;
 			variant = "grass";
 			showGame = true;
-			gameReplay = bonesPath.slice(0, PAUSE_INDEX + 1);
+			gameReplay = bonesPath.slice(0, PAUSE_INDEX);
 			gameStartIndex = FORK_INDEX;
 			afterReplay = () => {
 				variant = "wireframe";
@@ -608,9 +608,5 @@
 			margin-left: var(--text-width);
 			width: calc(100% - var(--text-width));
 		}
-	}
-
-	.tour :global(strong) {
-		color: var(--color-yellow);
 	}
 </style>

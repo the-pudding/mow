@@ -180,6 +180,10 @@ mark {
 	box-decoration-break: clone;
 }
 
+p strong {
+	color: var(--color-mark);
+}
+
 @media screen and (min-width: 640px) {
 	main p, main li {
 		font-size: var(--22px);

@@ -62,9 +62,10 @@
 		<div class="lawns">
 			{#if userPath.length}
 				<div class="g">
-					<p>
+					<span>
 						<small><strong class="user">Your path</strong></small>
-					</p>
+					</span>
+
 					<Grid {size} {obstacles} started={true} variant="wireframe">
 						<XrayLayer
 							bind:this={gridUser}
@@ -76,11 +77,12 @@
 				</div>
 			{/if}
 			<div class="g">
-				<p>
+				<span>
 					<small>
 						<strong class="optimal">An Optimal path</strong>
 					</small>
-				</p>
+				</span>
+
 				<Grid {size} {obstacles} started={true} variant="wireframe">
 					<XrayLayer
 						bind:this={gridOptimal}
@@ -111,7 +113,8 @@
 		width: 100%;
 	}
 
-	.inner p {
+	.inner span {
+		display: block;
 		margin: 0 auto;
 		text-align: center;
 		font-family: var(--font-mono);
