@@ -114,6 +114,10 @@
 		overflow: visible;
 	}
 
+	rect {
+		fill-opacity: 1;
+	}
+
 	rect.corridor {
 		fill: none;
 		stroke-width: 0.1;
@@ -126,12 +130,11 @@
 
 	text {
 		font-family: var(--font-mono);
-		font-size: 0.9px;
+		font-size: 0.6px;
 		font-weight: 700;
 		text-transform: uppercase;
-		fill: var(--color-fg, #000);
+		fill: var(--color-bg);
 		paint-order: stroke;
-		stroke: var(--color-bg);
 		stroke-width: 0.12px;
 	}
 </style>

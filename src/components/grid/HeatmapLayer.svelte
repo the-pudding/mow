@@ -25,17 +25,17 @@
 
 	// WCAG relative luminance → pick the label color with the better contrast.
 	// 0.179 is the crossover where white and black contrast equally against a fill.
-	function labelColor(fill) {
-		const { r, g, b } = rgb(fill);
-		const channel = (c) => {
-			const s = c / 255;
-			return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
-		};
-		const l = 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
-		return l > 0.25
-			? variables.category["yellow-dark"]
-			: variables.category["yellow-light"];
-	}
+	// function labelColor(fill) {
+	// 	const { r, g, b } = rgb(fill);
+	// 	const channel = (c) => {
+	// 		const s = c / 255;
+	// 		return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+	// 	};
+	// 	const l = 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+	// 	return l > 0.25
+	// 		? variables.color["gray-900"]
+	// 		: variables.category["gray-50"];
+	// }
 
 	let lookup = $derived(new Map(data.map((d) => [`${d.x},${d.y}`, d.value])));
 
@@ -59,8 +59,7 @@
 					x={x + 0.5}
 					y={y + 0.5}
 					text-anchor="middle"
-					dominant-baseline="central"
-					fill={labelColor(fill)}>{formatValue(value)}</text
+					dominant-baseline="central">{formatValue(value)}</text
 				>
 			{/if}
 		{/if}
@@ -86,5 +85,6 @@
 		font-family: var(--font-mono);
 		font-size: 0.2px;
 		font-weight: 700;
+		fill: var(--color-bg);
 	}
 </style>

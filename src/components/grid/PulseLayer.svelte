@@ -11,7 +11,7 @@
 </script>
 
 <svg viewBox="0 0 {grid.size} {grid.size}">
-	{#each cells as { x, y }, i (`${x},${y}`)}
+	{#each cells as { x, y, label }, i (`${x},${y}`)}
 		<rect
 			class="pulse"
 			{x}
@@ -23,6 +23,14 @@
 			style:stroke={color}
 			style:animation-delay={`${i * 250}ms`}
 		/>
+		{#if label}
+			<text
+				x={x + 0.5}
+				y={y + 0.5}
+				text-anchor="middle"
+				dominant-baseline="central">{label}</text
+			>
+		{/if}
 	{/each}
 </svg>
 
@@ -38,12 +46,23 @@
 		overflow: visible;
 	}
 
+	rect {
+		shape-rendering: crispEdges;
+	}
+
 	rect.pulse {
 		fill-opacity: 0.4;
 		stroke-width: 0.08;
 		transform-box: fill-box;
 		transform-origin: center;
 		animation: pulse 1.2s ease-in-out infinite;
+	}
+
+	text {
+		font-family: var(--font-mono);
+		font-size: 0.2px;
+		font-weight: 700;
+		fill: var(--color-bg);
 	}
 
 	@keyframes pulse {

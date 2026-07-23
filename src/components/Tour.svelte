@@ -1,7 +1,7 @@
 <script>
 	import { onMount, tick, untrack } from "svelte";
 	import { fade } from "svelte/transition";
-	import { interpolateHcl, piecewise } from "d3";
+	import { interpolateHcl, format } from "d3";
 	import Scrolly from "$components/helpers/Scrolly.svelte";
 	import Grid from "$components/Grid.svelte";
 	import Overlay from "$components/grid/Overlay.svelte";
@@ -9,7 +9,6 @@
 	import XrayLayer from "$components/grid/XrayLayer.svelte";
 	import HeatmapLayer from "$components/grid/HeatmapLayer.svelte";
 	import SectionLayer from "$components/grid/SectionLayer.svelte";
-	import ForkLayer from "$components/grid/ForkLayer.svelte";
 	import PulseLayer from "$components/grid/PulseLayer.svelte";
 	import Histogram from "$components/charts/Histogram.svelte";
 	import loadCsv from "$utils/loadCsv.js";
@@ -88,11 +87,11 @@
 
 	// The dead-end pause (~2.4s at cell 3,7) — the "up to this point" cutoff for
 	// the pause-duration heatmap. bonesPath[19] is where they hit the bottom.
-	const PAUSE_THROUGH_INDEX = 19;
+	const PAUSE_INDEX = 19;
 
 	// The story has already walked the mower through the fork by the pause step,
 	// so it starts mowed through here and only animates the run-in to the dead end.
-	const PAUSE_FROM_INDEX = 5;
+	const FORK_INDEX = 5;
 
 	// Left/right sections, transcribed from the tour figure onto the round2 grid.
 	// Neutral cells (the top strip, the (2,3) neck, the (4,6) pocket) belong to
@@ -226,15 +225,17 @@
 
 		try {
 			const rows = await loadCsv("assets/data/round2-fork-counts.csv");
+			const total = rows.reduce((acc, r) => acc + +r.count, 0);
 			forkBranches = rows.map((r) => ({
-				to: { x: +r.x, y: +r.y },
-				count: +r.count
+				x: +r.x,
+				y: +r.y,
+				label: format(".0%")(+r.count / total)
 			}));
 		} catch (err) {
 			console.warn("Could not load round2-fork-counts.csv", err);
 			forkBranches = [
-				{ to: { x: 4, y: 1 }, count: 0 },
-				{ to: { x: 5, y: 0 }, count: 0 }
+				{ x: 4, y: 1 },
+				{ x: 5, y: 0 }
 			];
 		}
 	});
@@ -246,7 +247,7 @@
 	// ---------------------------------------------------------------------------
 	let variant = $state("wireframe");
 
-	let heatmapInterpolate = $state(interpolateYe);
+	let heatmapInterpolate = $state(interpolatePuYe);
 
 	let showXray = $state(false);
 	let xrayRealtime = $state(false);
@@ -273,11 +274,7 @@
 	// beat between the mower landing and the deferred reveal firing
 	const AFTER_REPLAY_DELAY = 500;
 
-	let showFork = $state(false);
-	let forkOrigin = $state({ x: 0, y: 0 });
-	let forkTrunk = $state([]);
 	let forkBranches = $state([]);
-	let forkChosen = $state(null);
 
 	let showHeatmap = $state(false);
 	let heatmapData = $state([]);
@@ -306,7 +303,6 @@
 		showXray = false;
 		showGame = false;
 		showPulse = false;
-		showFork = false;
 		showHeatmap = false;
 		showSection = false;
 		gameReplay = [];
@@ -342,7 +338,7 @@
 		fifth() {
 			variant = "grass";
 			showGame = true;
-			gameReplay = bonesPath.slice(0, 5);
+			gameReplay = bonesPath.slice(0, FORK_INDEX);
 			autoTimer = 500;
 			pulseCells = [
 				{ x: 5, y: 0 },
@@ -358,10 +354,12 @@
 		diverge() {
 			autoTimer = true;
 			variant = "wireframe";
-			showFork = true;
-			forkOrigin = { x: 4, y: 0 };
-			forkTrunk = bonesPath.slice(0, 5); // shared opening (0,0)→(4,0)
-			forkChosen = 0; // Bones went down
+			showPulse = true;
+			showGame = true;
+			variant = "grass";
+			gameReplay = bonesPath.slice(0, FORK_INDEX);
+			gameStartIndex = FORK_INDEX;
+			pulseCells = [...forkBranches];
 		},
 
 		// "heatmap of pause duration (player's path up to this point), hide lawn" —
@@ -371,14 +369,14 @@
 			autoTimer = 250;
 			variant = "grass";
 			showGame = true;
-			gameReplay = bonesPath.slice(0, PAUSE_THROUGH_INDEX + 1);
-			gameStartIndex = PAUSE_FROM_INDEX;
+			gameReplay = bonesPath.slice(0, PAUSE_INDEX + 1);
+			gameStartIndex = FORK_INDEX;
 			afterReplay = () => {
 				variant = "wireframe";
 				showGame = false;
 				showHeatmap = true;
 				// heatmapInterpolate = interpolateGr;
-				heatmapData = dwellHeatmap(bonesPath, PAUSE_THROUGH_INDEX - 1);
+				heatmapData = dwellHeatmap(bonesPath, PAUSE_INDEX - 1);
 			};
 		},
 
@@ -389,7 +387,7 @@
 			variant = "grass";
 			showGame = true;
 			gameReplay = bonesPath;
-			gameStartIndex = PAUSE_THROUGH_INDEX - 1;
+			gameStartIndex = PAUSE_INDEX - 1;
 		},
 
 		// "left/right divide graphic and highlight the corridor"
@@ -402,13 +400,13 @@
 					cells: LEFT_CELLS,
 					label: "left",
 					labelAt: { x: 1, y: 6.5 },
-					fill: "rgba(255, 0, 0, 0.33)"
+					fill: variables.category["green-light"]
 				},
 				{
 					cells: RIGHT_CELLS,
 					label: "right",
 					labelAt: { x: 5.5, y: 3.5 },
-					fill: "rgba(0, 255, 0, 0.33)"
+					fill: variables.category["orange-light"]
 				}
 			];
 			sectionCorridor = [{ x: 2, y: 3 }];
@@ -524,20 +522,6 @@
 								regions={sectionRegions}
 								corridor={sectionCorridor}
 								arrow={sectionArrow}
-							/>
-						</div>
-					{/if}
-					{#if showFork}
-						<div
-							class="layer"
-							in:fade={{ delay: FADE_IN, duration: FADE_IN }}
-							out:fade={{ duration: FADE_OUT }}
-						>
-							<ForkLayer
-								origin={forkOrigin}
-								trunk={forkTrunk}
-								branches={forkBranches}
-								chosen={forkChosen}
 							/>
 						</div>
 					{/if}
