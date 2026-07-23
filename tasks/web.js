@@ -2,6 +2,7 @@ import fs from "fs";
 import * as d3 from "d3";
 
 const level = "round2";
+const usersToWrite = ["tt3aprpgrp"];
 
 // every playable round, oldest → newest. user paths get written per round.
 const LEVELS = ["tutorial", "round1", "round2", "bonus1", "bonus2", "bonus3"];
@@ -60,7 +61,10 @@ function writeUserPaths(testsRaw, usersLookup) {
 
 		tests.forEach(({ user_id, result }) => {
 			const parsed = JSON.parse(result);
-			fs.writeFileSync(`${dir}/${user_id}.csv`, d3.csvFormat(parsed));
+			// write all of round2 (the "level"); other rounds only the featured users
+			if (lvl === level || usersToWrite.includes(user_id)) {
+				fs.writeFileSync(`${dir}/${user_id}.csv`, d3.csvFormat(parsed));
+			}
 			if (lvl === level) {
 				const key = parsed.map(({ x, y }) => `${x},${y}`).join("|");
 				pathLengths[key] = parsed.length;
