@@ -40,7 +40,7 @@
         },
         {
           "type": "text",
-          "value": "A few weeks ago, 22,657 people mowed the same lawn. Here is what their paths look like."
+          "value": "A few weeks ago, 22,654 people mowed the same lawn. Here is what their paths look like."
         },
         {
           "type": "Sample",
@@ -58,7 +58,7 @@
         },
         {
           "type": "text",
-          "value": "Many different approaches, yet similar, pretty good outcomes. Only 49 squares needed to be covered, but people found 10,686 different ways to do it. Despite all that variety, the median person still hit 91% efficiency (within 5 moves)."
+          "value": "Many different approaches, yet similar, pretty good outcomes. Only 49 squares needed to be covered, but people found 10,685 different ways to do it. Despite all that variety, the median person still hit 91% efficiency (within 5 moves)."
         },
         {
           "type": "text",
@@ -161,7 +161,7 @@
                 "note": "Just the trace of the path (use xray, not realtime) - path yo7m5rr3nl"
               },
               {
-                "text": "We’ll rewind to the start and walk through it. Before Bones even makes a move, they pause for 2.9 seconds. They were perfectly average here as well; the median first-move pause for all players was <strong>three seconds.</strong> Upon seeing the lawn revealed, they naturally pause to survey the lawn and, perhaps, make a plan.",
+                "text": "We’ll rewind to the start and walk through it. Before Bones even makes a move, they pause for <strong>2.9 seconds.</strong> They were perfectly average here as well. Upon seeing the lawn revealed, they naturally pause to survey the lawn and, perhaps, make a plan.",
                 "chart": "histogram",
                 "step": "rewind"
               },
@@ -209,7 +209,7 @@
         },
         {
           "type": "text",
-          "value": "That was one lawn. We gave players five more, each bigger and more cluttered than the last, up to a 14x14 lawn with nearly 200 squares to cover."
+          "value": "That was one lawn. We gave players five more, each bigger and more cluttered than the last, up to a 14x14 lawn with almost 200 squares to cover."
         },
         {
           "type": "SixLawns",
@@ -217,19 +217,23 @@
         },
         {
           "type": "text",
-          "value": "Here is how everyone did across all of them."
+          "value": "More than 22,000 people made it through the required levels, and over 7,000 people completed a few extra bonus ones. Here is how they did across them."
+        },
+        {
+          "type": "Optimality",
+          "value": {}
         },
         {
           "type": "text",
-          "value": "<mark>people who completed all levels optimality scores</mark>"
+          "value": "We expected a decline. The Traveling Salesman Problem (TSP) research suggests that people do worse as the problem grows. But optimality held around 90% whether the lawn took 26 moves or 177."
         },
         {
           "type": "text",
-          "value": "We expected a decline. The Traveling Salesman Problem (TSP) research suggests that people do worse as the problem grows. They didn’t. Optimality held around 90% from 25 squares to 196, almost 8x larger."
+          "value": "One caveat: we made the lawns bigger with different obstacle layouts at the same time, so we can’t say which mattered more. Performance actually was slightly better on the largest lawn than the previous two, which hints that layout matters more than raw size."
         },
         {
           "type": "text",
-          "value": "Our best guess is the lawn itself. Where TSP scatters nodes randomly, a lawn has structure, which lets players fall back on two strategies: <strong>decomposition</strong> and <strong>compression</strong>."
+          "value": "Whatever the mix of size and layout, neither broke people. Our best guess is the structure of a lawn itself. Where TSP scatters nodes randomly, a lawn has structure, which lets players fall back on two strategies: <strong>decomposition</strong> and <strong>compression</strong>."
         },
         {
           "type": "text",
@@ -237,11 +241,7 @@
         },
         {
           "type": "text",
-          "value": "As they moved between rounds, they <strong>compressed</strong> what they learned into a mental model of the game, allowing them to identify patterns in more complex lawns and adapt their gameplay."
-        },
-        {
-          "type": "text",
-          "value": "Also, we may not have found the inflection point. Our largest lawn was 14x14. We don’t know whether the trend holds or breaks as it gets larger."
+          "value": "As they moved between rounds, they may have <strong>compressed</strong> what they learned into a mental model of the game, allowing them to identify patterns in more complex lawns and adapt their gameplay."
         },
         {
           "type": "h2",
@@ -314,6 +314,10 @@
         {
           "type": "h2",
           "value": "Demographic differences?"
+        },
+        {
+          "type": "Method",
+          "value": {}
         }
       ]
     }

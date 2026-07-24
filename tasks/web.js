@@ -23,14 +23,48 @@ function loadData() {
 		usersLookup[d.user_id] = d;
 	});
 
-	const exampleTests = testsRaw
+	const tests = cleanTests(testsRaw, usersLookup);
+
+	const exampleTests = tests
 		.filter((d) => d.level === level)
 		.filter((d) => d.result !== "[]")
 		.filter((d) => usersLookup[d.user_id]); // only keep users that are in the usersRaw
 
 	exampleTests.sort((a, b) => d3.descending(a.created_at, b.created_at));
 
-	return { usersLookup, testsRaw, exampleTests };
+	return { usersLookup, testsRaw: tests, exampleTests };
+}
+
+// one attempt per user per level: drop empty results and unknown users, then
+// resolve duplicate (user, level) rows to the earliest attempt. everything
+// downstream counts rows, so without this a user who replayed a level would be
+// counted twice there and the per-level totals wouldn't line up.
+function cleanTests(testsRaw, usersLookup) {
+	const eligible = testsRaw
+		.filter((d) => d.result !== "[]")
+		.filter((d) => usersLookup[d.user_id])
+		.filter((d) => LEVELS.includes(d.level));
+
+	const earliest = new Map();
+	eligible.forEach((d) => {
+		const key = `${d.level}|${d.user_id}`;
+		const prev = earliest.get(key);
+		if (!prev || d.created_at < prev.created_at) earliest.set(key, d);
+	});
+
+	const tests = Array.from(earliest.values());
+	console.log(
+		`Cleaned tests: ${tests.length} kept, ${eligible.length - tests.length} duplicate (user, level) rows dropped`
+	);
+
+	// per-level counts + how many users have a row on every level
+	const byLevel = LEVELS.map((lvl) => ({
+		level: lvl,
+		users: tests.filter((d) => d.level === lvl).length
+	}));
+	console.table(byLevel);
+
+	return tests;
 }
 
 function setupDirs() {
@@ -321,6 +355,145 @@ function writeLevel2Moves(exampleTests, usersLookup) {
 	console.log(`Wrote ${level2Moves.length} rows to ./tasks/level2_moves.csv`);
 }
 
+// the set of users with a run on every level (tests are already one per user
+// per level, so "has a row" and "completed" are the same thing here)
+function getCompletedAll(tests) {
+	const completed = new Map(LEVELS.map((l) => [l, new Set()]));
+	tests.forEach((d) => completed.get(d.level).add(d.user_id));
+
+	return new Set(
+		Array.from(completed.get(LEVELS[0])).filter((u) =>
+			LEVELS.every((l) => completed.get(l).has(u))
+		)
+	);
+}
+
+// one row per completed run: how long the player sat before their first move,
+// how long the whole run took, and the mowing time with that opening pause
+// removed. completed_all flags runs by players who finished every level.
+function writeLevelTimes(tests) {
+	const completedAll = getCompletedAll(tests);
+
+	const rows = LEVELS.flatMap((lvl) =>
+		tests
+			.filter((d) => d.level === lvl)
+			.map((d) => ({ user_id: d.user_id, path: JSON.parse(d.result) }))
+			.filter(({ path }) => path.length > 1)
+			.map(({ user_id, path }) => {
+				const first_move_ms = path[1].t - path[0].t;
+				const total_ms = path.at(-1).t - path[0].t;
+				return {
+					level: lvl,
+					first_move_ms,
+					total_ms,
+					after_first_move_ms: total_ms - first_move_ms,
+					completed_all: completedAll.has(user_id)
+				};
+			})
+	);
+
+	fs.writeFileSync("./tasks/level_times.csv", d3.csvFormat(rows));
+	console.log(`Wrote ${rows.length} rows to ./tasks/level_times.csv`);
+	console.log(`Users completing all levels: ${completedAll.size}`);
+
+	// sanity check: the completed_all count should be identical on every level.
+	// median pause is the wait before the first move, in ms.
+	console.table(
+		LEVELS.map((lvl) => {
+			const atLevel = rows.filter((d) => d.level === lvl);
+			const finishers = atLevel.filter((d) => d.completed_all);
+			return {
+				level: lvl,
+				rows: atLevel.length,
+				completed_all: finishers.length,
+				median_pause_ms: d3.median(atLevel, (d) => d.first_move_ms),
+				median_pause_finishers_ms: d3.median(finishers, (d) => d.first_move_ms),
+				median_total_ms: d3.median(atLevel, (d) => d.total_ms)
+			};
+		})
+	);
+}
+
+// optimality per level, one row per level, p10 / median / p90 of three metrics:
+//   efficiency     optimal / actual — 1 is perfect, lower is worse
+//   excess_moves   actual - optimal — raw wasted steps, grows with level size
+//   excess_per_100 wasted steps per 100 optimal moves — size-adjusted
+// quantiles always run low → high, so p10 is the *worst* efficiency but the
+// *best* excess. written twice: -completed.csv is only users who finished every
+// level (same people in all six rows), -all.csv is everyone who played that
+// level (bigger n, but a different crowd per row).
+function writeLevelOptimality(tests) {
+	const optimalRaw = d3.csvParse(
+		fs.readFileSync("./tasks/optimal_solutions_multi.csv", "utf-8")
+	);
+	const optLen = d3.rollup(
+		optimalRaw,
+		(v) => d3.min(v, (d) => JSON.parse(d.path_json).length),
+		(d) => d.level
+	);
+
+	const completedAll = getCompletedAll(tests);
+
+	// {label}_p10 / _median / _p90 for one metric, ready to spread into a row
+	const band = (label, values, digits) => {
+		const sorted = values.slice().sort(d3.ascending);
+		const at = (p) => {
+			const v = d3.quantile(sorted, p);
+			return v === undefined ? "" : +v.toFixed(digits);
+		};
+		return {
+			[`${label}_p10`]: at(0.1),
+			[`${label}_median`]: at(0.5),
+			[`${label}_p90`]: at(0.9)
+		};
+	};
+
+	const bands = (keep) =>
+		LEVELS.map((lvl) => {
+			const optimal = optLen.get(lvl);
+			const actual = tests
+				.filter((d) => d.level === lvl)
+				.filter(keep)
+				.map((d) => JSON.parse(d.result).length);
+
+			return {
+				level: lvl,
+				optimal,
+				n: actual.length,
+				...band(
+					"efficiency",
+					actual.map((a) => optimal / a),
+					4
+				),
+				...band(
+					"excess_moves",
+					actual.map((a) => a - optimal),
+					1
+				),
+				...band(
+					"excess_per_100",
+					actual.map((a) => ((a - optimal) / optimal) * 100),
+					2
+				)
+			};
+		});
+
+	const cohorts = [
+		{
+			file: "level-optimality-completed.csv",
+			keep: (d) => completedAll.has(d.user_id)
+		},
+		{ file: "level-optimality-all.csv", keep: () => true }
+	];
+
+	cohorts.forEach(({ file, keep }) => {
+		const rows = bands(keep);
+		fs.writeFileSync(`./static/assets/data/${file}`, d3.csvFormat(rows));
+		console.log(`Wrote ${rows.length} rows to ./static/assets/data/${file}`);
+		console.table(rows);
+	});
+}
+
 // distribution of path lengths: how many players took each number of moves
 function writeMoveCounts(exampleTests) {
 	const rows = d3
@@ -344,7 +517,7 @@ function writeMoveCounts(exampleTests) {
 // an evenly-spaced sample of unique paths for drawing on the grid. dedupes,
 // sorts by length, then takes every Nth so the sample spans short -> long runs
 // and comes out identical on every run. one column of JSON: [{"x":0,"y":0},...]
-function writeSamplePaths(exampleTests, sampleSize = 50) {
+function writeSamplePaths(exampleTests, sampleSize = 100) {
 	const unique = new Map();
 	exampleTests.forEach(({ user_id, result }) => {
 		const path = JSON.parse(result).map(({ x, y }) => ({ x, y }));
@@ -459,6 +632,8 @@ function main() {
 	logEfficiency(allPathLengths, minPathLength, testsRaw, usersLookup);
 	logAllLevels(testsRaw, usersLookup);
 	writeLevel2Moves(exampleTests, usersLookup);
+	writeLevelTimes(testsRaw);
+	writeLevelOptimality(testsRaw);
 	writeMoveCounts(exampleTests);
 	writeSamplePaths(exampleTests);
 	writeOptimalSolutionCounts(exampleTests);
