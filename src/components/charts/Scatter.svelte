@@ -100,6 +100,9 @@
 			.y((d) => yScale(d[1]))(fitPoints)
 	);
 
+	// dots carrying a `label` field get an SVG text label next to them
+	let labeledPoints = $derived(data.filter((d) => d.label));
+
 	let fitLabel = $derived(
 		regression && fitPoints.length
 			? `Trend line (R² = ${d3Format(".1%")(fitPoints.rSquared)})`
@@ -228,6 +231,17 @@
 						>
 					{/if}
 
+					<!-- per-dot labels -->
+					{#each labeledPoints as d}
+						<text
+							class="tick dot-label"
+							x={xScale(getX(d))}
+							y={yScale(getY(d))}
+							dy={-radius - 4}
+							text-anchor="middle">{d.label}</text
+						>
+					{/each}
+
 					{#if regression && fitLine && fitLabelPos}
 						<path class="regression" d={fitLine} />
 						<text
@@ -312,5 +326,12 @@
 
 	text.label {
 		text-transform: uppercase;
+	}
+
+	text.dot-label {
+		paint-order: stroke fill;
+		stroke: var(--color-bg);
+		stroke-width: 3px;
+		stroke-linejoin: round;
 	}
 </style>

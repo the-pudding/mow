@@ -277,11 +277,7 @@
         },
         {
           "type": "text",
-          "value": "<strong>Bones</strong> took 32 seconds to mow the lawn–about 10 seconds quicker than the median– and finished right in the middle of the pack."
-        },
-        {
-          "type": "text",
-          "value": "The obvious theory here is that players who thought longer would mow better. But pace alone explains less than 5% of the variation in how people did (R<sup>2</sup> of 4.8%)."
+          "value": "It seemed obvious to us that players who thought longer would mow better. But time alone explains less than 5% of the variation in how people did (R<sup>2</sup> of 4.8%)."
         },
         {
           "type": "text",
@@ -293,7 +289,7 @@
         },
         {
           "type": "text",
-          "value": "But <em>where</em> people paused is a different story."
+          "value": "We looked at just pause/thinking time and the same trend held, but <em>where</em> they paused is a different story."
         },
         {
           "type": "text",
