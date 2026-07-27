@@ -37,9 +37,11 @@
 				.map((d) => ({
 					...d,
 					fill:
-						d.optimality > 0.9
+						d.optimality < 0.1
+							? variables.category["purple-dark"]
+							: d.optimality > 0.9
 								? variables.category["yellow-light"]
-								: variables.color["gray-500"],
+								: variables.color["gray-500"]
 				}));
 		});
 		return () => (alive = false);
