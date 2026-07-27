@@ -62,6 +62,7 @@
 	const FADE_IN = 250;
 	const FADE_OUT = 0;
 	const BONES_ID = "yo7m5rr3nl";
+	const SARAH_ID = "tt3aprpgrp";
 	const TOUR_LEVEL = "round2"; // 8x8 lawn; matches Bones' path extent + obstacles
 
 	let stepIndex = $state(0);
@@ -73,6 +74,10 @@
 
 	// Bones' full path, loaded once ({ x, y, t }). Steps slice this for replay.
 	let bonesPath = $state([]);
+
+	// Sarah's full path ({ x, y, t }) — the near-optimal player featured in the
+	// closing tour steps (full lawn mow, pause heatmap, and static xray trace).
+	let sarahPath = $state([]);
 
 	// Finishing spots: player count per (moves, last square), from web.js.
 	let lastMoveRows = $state([]);
@@ -192,6 +197,12 @@
 			console.warn(`Could not load Bones path (${BONES_ID})`, err);
 		}
 		try {
+			const rows = await loadCsv(`assets/round2/${SARAH_ID}.csv`);
+			sarahPath = rows.map((r) => ({ x: +r.x, y: +r.y, t: +r.t }));
+		} catch (err) {
+			console.warn(`Could not load Sarah path (${SARAH_ID})`, err);
+		}
+		try {
 			const rows = await loadCsv("assets/data/round2-last-move.csv");
 			lastMoveRows = rows.map((r) => ({
 				moves: +r.moves,
@@ -252,7 +263,13 @@
 	let showXray = $state(false);
 	let xrayRealtime = $state(false);
 	let xrayBacktracks = $state(false);
+	let xrayAnimate = $state(true);
 	let xrayLayer = $state();
+
+	// Which player's trace the xray layer draws. Derived (not copied) so the layer
+	// still updates when the chosen path finishes loading after the step fires.
+	let xraySource = $state("bones");
+	let xrayPath = $derived(xraySource === "sarah" ? sarahPath : bonesPath);
 
 	let showGame = $state(false);
 	let gameReplay = $state([]);
@@ -301,6 +318,8 @@
 		afterReplay = null;
 
 		showXray = false;
+		xraySource = "bones";
+		xrayAnimate = true;
 		showGame = false;
 		showPulse = false;
 		showHeatmap = false;
@@ -320,6 +339,7 @@
 		intro() {
 			variant = "wireframe";
 			showXray = true;
+			xraySource = "bones";
 			xrayRealtime = false;
 			xrayBacktracks = true;
 			autoTimer = true;
@@ -429,6 +449,40 @@
 			showHeatmap = true;
 			// heatmapInterpolate = interpolateGr;
 			heatmapData = finishLeftData;
+		},
+
+		// Sarah is introduced — replay her full near-optimal run on the real lawn at
+		// the auto (fixed-pace) timer, start to finish.
+		"sarah-path"() {
+			autoTimer = true;
+			variant = "grass";
+			showGame = true;
+			gameReplay = sarahPath;
+			gameStartIndex = 0;
+			afterReplay = () => {
+				gameLayer?.play();
+			};
+		},
+
+		// "Sarah's pause heatmap" — swap the lawn for a dwell-time heatmap of her
+		// full run, showing her longest hesitation landing a square before the fork.
+		"sarah-pause"() {
+			autoTimer = true;
+			variant = "wireframe";
+			showHeatmap = true;
+			heatmapData = dwellHeatmap(sarahPath);
+		},
+
+		// Close on Sarah's trace — the whole xray path rendered at once, no reveal
+		// animation (xrayAnimate = false).
+		"sarah-snake"() {
+			autoTimer = true;
+			variant = "wireframe";
+			showXray = true;
+			xraySource = "sarah";
+			xrayRealtime = false;
+			xrayBacktracks = true;
+			xrayAnimate = false;
 		}
 	};
 
@@ -493,9 +547,10 @@
 						>
 							<XrayLayer
 								bind:this={xrayLayer}
-								path={bonesPath}
+								path={xrayPath}
 								realtime={xrayRealtime}
 								showBacktracks={xrayBacktracks}
+								shouldAnimate={xrayAnimate}
 							/>
 						</div>
 					{/if}
@@ -565,11 +620,19 @@
 	}
 
 	.step {
-		margin-bottom: 90svh;
+		padding-bottom: 25svh;
+		padding-top: 25svh;
+		opacity: 0.5;
+		transition: opacity 0.25s ease-in-out;
 	}
 
 	.step:first-of-type {
+		padding-top: 0;
 		margin-top: -100svh;
+	}
+
+	.step.active {
+		opacity: 1;
 	}
 
 	.vis {
@@ -600,7 +663,6 @@
 	@media screen and (min-width: 640px) {
 		.step {
 			max-width: var(--text-width);
-			margin-bottom: 50svh;
 			padding-right: 1rem;
 		}
 

@@ -11,6 +11,7 @@
 	import Sample from "$components/Sample.svelte";
 	import SixLawns from "$components/SixLawns.svelte";
 	import Optimality from "$components/Optimality.svelte";
+	import OptimalityVsTime from "$components/OptimalityVsTime.svelte";
 
 	const copy = getContext("copy");
 	const { body } = copy;
@@ -24,7 +25,8 @@
 		Round2Moves,
 		Sample,
 		SixLawns,
-		Optimality
+		Optimality,
+		OptimalityVsTime
 	};
 </script>
 

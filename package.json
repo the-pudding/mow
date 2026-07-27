@@ -25,6 +25,7 @@
 		"autoprefixer": "^10.4.21",
 		"bits-ui": "^2.15.4",
 		"d3": "^7.9.0",
+		"d3-regression": "^2.2.0",
 		"lodash.debounce": "^4.0.8",
 		"postcss": "^8.5.6",
 		"prettier": "^3.8.1",

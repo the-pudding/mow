@@ -109,7 +109,7 @@
         {
           "type": "Img",
           "value": {
-            "src": "assets/images/study.jpg",
+            "src": "assets/images/study.png",
             "alt": "A chart depicting how people perform on the Traveling Salesman Problem compared to the optimal path, which shows that people perform near-ideal at fewer nodes, with a slow increasing deviation as more nodes are added",
             "figcaption": "Chart of findings from <a href=https://docs.lib.purdue.edu/jps/vol1/iss1/4/ target=_blank rel=noreferrer>this study</a>"
           }
@@ -161,32 +161,32 @@
                 "note": "Just the trace of the path (use xray, not realtime) - path yo7m5rr3nl"
               },
               {
-                "text": "We’ll rewind to the start and walk through it. Before Bones even makes a move, they pause for <strong>2.9 seconds.</strong> They were perfectly average here as well. Upon seeing the lawn revealed, they naturally pause to survey the lawn and, perhaps, make a plan.",
+                "text": "We’ll rewind to the start and walk through it. Before Bones even made a move, they paused for <strong>2.9 seconds.</strong> They were perfectly average here as well. Upon seeing the lawn revealed, they naturally paused to survey the lawn and, perhaps, made a plan.",
                 "chart": "histogram",
                 "step": "rewind"
               },
               {
-                "text": "Off goes Bones! There is nothing to decide in the opening stretch until the fifth square. Continue <strong>right,</strong> or go <strong>down</strong>?",
+                "text": "Off went Bones! There was nothing to decide in the opening stretch until the fifth square. Continue <strong>right,</strong> or go <strong>down</strong>?",
                 "step": "fifth"
               },
               {
-                "text": "This is where players’ paths first diverge. Bones barely hesitates (0.7s) and decides to go down, like 21% of other players. This is a critical moment that we’ll come back to shortly.",
+                "text": "This is where players’ paths first diverged. Bones barely hesitated (0.7s) and decided to go down, like 21% of other players. This is a critical moment that we’ll come back to shortly.",
                 "step": "diverge"
               },
               {
-                "text": "Bones plods along the outside edge until they reach the bottom. Their first notable pause (2.4s) comes when they realize they’ve hit a dead end and will have to retrace their steps.",
+                "text": "Bones plodded along the outside edge until they reached the bottom. Their first notable pause (2.4s) came when they realized they hit a dead end and had to retrace their steps.",
                 "step": "pause"
               },
               {
-                "text": "After realizing their mistake, Bones turns around and re-mows their first square to finish this section. To get to the other open section they must backtrack through two more squares. Then it is pretty much smooth sailing as they work around the edges, then fill in the remaining squares in the middle.",
+                "text": "After realizing their mistake, Bones turned around and re-mowed their first square to finish this section. To get to the other open section they had to backtrack through two more squares. Then it was mostly smooth sailing as they worked around the edges, then filled in the remaining squares in the middle.",
                 "step": "remaining"
               },
               {
-                "text": "What differentiated the great players from everyone else comes down to a single critical mistake. We can divide the lawn into two main sections: left and right. Like most players, Bones chose to complete the left section first, forcing an inevitable backtrack because of this one-way corridor.",
+                "text": "What differentiated the great players from everyone else came down to a single critical mistake. We can divide the lawn into two main sections: left and right. Bones chose to complete the left section first, forcing an inevitable backtrack because of this one-way corridor.",
                 "step": "sections"
               },
               {
-                "text": "If we look at where every player ended up we can see this play out. Players who were <strong>three or more moves</strong> from optimal finished all over the lawn.",
+                "text": "If we look at where every player ended up we can see this play out. Players who were three or more moves from optimal finished all over the lawn.",
                 "step": "right"
               },
               {
@@ -194,11 +194,19 @@
                 "step": "left"
               },
               {
-                "text": "One of those was <strong>player X</strong>. We tracked them down–discovered their name was X–and asked them, why were they so awesome at this game?"
+                "text": "One of those was player <strong>tt3aprpgrp</strong>. We tracked them down and discovered their name was <strong>Sarah.</strong> She finished on the left with intention. <blockquote>“I saw the dead end at the end and I was like, okay, that’s where I need to end as well, so don’t go that way first.”</blockquote>",
+                "step": "sarah-path",
+                "note": "show Sarah's x ray path, animated (autotimer)"
               },
               {
-                "text": "TK interview",
-                "note": "question about snaking (required in lots of places which is counterintuitive to natural tendency to follow edges)"
+                "text": "She didn’t explicitly register the one-way corridor, but knew a dead-end meant the left section <em>had</em> to be reserved for the end to avoid a backtrack. The pause data backs her up. Her longest hesitation came a square <em>before</em> the fork, before continuing to clear the right side.",
+                "step": "sarah-pause",
+                "note": "sarah’s pause heatmap"
+              },
+              {
+                "text": "Sarah also did something that appears a bit unnatural. Instead of continuing straight a couple times, she intuitively and preemptively turned in a snake-like pattern. This highlighted a key difference between real-life mowing and our simplified game, an approach the best players exploit.",
+                "step": "sarah-snake",
+                "note": "replay (on loop) her steps 10 through 18 on the real lawn"
               }
             ]
           }
@@ -233,7 +241,7 @@
         },
         {
           "type": "text",
-          "value": "Whatever the mix of size and layout, neither broke people. Our best guess is the structure of a lawn itself. Where TSP scatters nodes randomly, a lawn has structure, which lets players fall back on two strategies: <strong>decomposition</strong> and <strong>compression</strong>."
+          "value": "Our best guess is the structure of a lawn itself. Where TSP scatters nodes randomly, a lawn has structure, which lets players fall back on two strategies: <strong>decomposition</strong> and <strong>compression</strong>."
         },
         {
           "type": "text",
@@ -241,7 +249,27 @@
         },
         {
           "type": "text",
-          "value": "As they moved between rounds, they may have <strong>compressed</strong> what they learned into a mental model of the game, allowing them to identify patterns in more complex lawns and adapt their gameplay."
+          "value": "Our interviewee Sarah described this perfectly."
+        },
+        {
+          "type": "text",
+          "value": "<blockquote>“I take it piece by piece...I try to leave everything behind me finished.”</blockquote>"
+        },
+        {
+          "type": "text",
+          "value": "On the biggest lawn, she was explicit about why: holding the whole thing in her head wasn’t an option."
+        },
+        {
+          "type": "text",
+          "value": "<blockquote> “I’m not going to be able to plan all of this out...just even trying to remember all of it would be way too challenging.”</blockquote>"
+        },
+        {
+          "type": "text",
+          "value": "So she chunked things up. She cleared a section and moved on to the next. Textbook decomposition."
+        },
+        {
+          "type": "text",
+          "value": "As players moved between rounds, they may have <strong>compressed</strong> what they learned into a mental model of the game, allowing them to identify patterns in more complex lawns and adapt their gameplay."
         },
         {
           "type": "h2",
@@ -249,15 +277,19 @@
         },
         {
           "type": "text",
-          "value": "<strong>Bones</strong> took X seconds to mow the lawn and finished in the middle of the pack. TK how typical that was."
+          "value": "<strong>Bones</strong> took 32 seconds to mow the lawn–about 10 seconds quicker than the median– and finished right in the middle of the pack."
         },
         {
           "type": "text",
-          "value": "The obvious theory here is that players who thought longer would mow better. But total mow time had almost no relationship to optimality."
+          "value": "The obvious theory here is that players who thought longer would mow better. But pace alone explains less than 5% of the variation in how people did (R<sup>2</sup> of 4.8%)."
         },
         {
           "type": "text",
-          "value": "<mark>chart</mark>"
+          "value": "Below, each dot is a player who finished every lawn, plotted by pace (seconds spent per square, which normalizes time across lawn sizes) against how close to optimal they got."
+        },
+        {
+          "type": "OptimalityVsTime",
+          "value": {}
         },
         {
           "type": "text",
@@ -265,15 +297,7 @@
         },
         {
           "type": "text",
-          "value": "The top players (90th percentile) spent time thinking early as they traveled down the first column, then dedicated most of it at this one juncture: fork toward the cluttered middle section, or clear the open space to the right first."
-        },
-        {
-          "type": "text",
-          "value": "<mark>pause heatmap of bonus2, top vs worst players, as static annotated visual</mark>"
-        },
-        {
-          "type": "text",
-          "value": "<mark>highlight pause spots for top players</mark>"
+          "value": "Let’s take a look at level four as an example. The top players (90th percentile) spent time thinking early as they traveled down the first column, then dedicated most of it at this one fork: go toward the cluttered middle section, or clear the open space to the right first."
         },
         {
           "type": "text",
@@ -281,15 +305,19 @@
         },
         {
           "type": "text",
-          "value": "<mark>highlight pause spots for worst players</mark>"
+          "value": "<mark>highlight pause spots for top vs worst players</mark>"
         },
         {
           "type": "text",
-          "value": "The top players were able to anticipate where they should end in order to minimize backtracking: this little pocket at the top. They didn’t need to pause once they reached the home stretch. The worst players only realized they were trapped once they arrived and were forced to stop, backtrack, and work out where to go from there."
+          "value": "The top players were able to anticipate where they should end in order to minimize backtracking at this little section at the top. They didn’t need to pause once they reached the home stretch. The worst players only realized they were trapped once they arrived and were forced to stop, backtrack, and work out where to go from there."
         },
         {
           "type": "text",
-          "value": "<mark>highlight the ending pocket</mark>"
+          "value": "<mark>highlight the pockets</mark>"
+        },
+        {
+          "type": "text",
+          "value": "The best players moved at about the same pace as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest. Below are two players who finish at the exact same time with different results."
         },
         {
           "type": "text",
@@ -297,7 +325,15 @@
         },
         {
           "type": "text",
-          "value": "The best players moved at about the same pace as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest."
+          "value": "We heard this in the interview too. Sarah, one of the best players, spent her attention unevenly on purpose. She had a theory about why."
+        },
+        {
+          "type": "text",
+          "value": "<blockquote>“The bigger spaces have more cognitive load for you to figure out what the best path is. Whereas the smaller spaces...there are fewer decisions to make.”</blockquote>"
+        },
+        {
+          "type": "text",
+          "value": "She planned the tight, trap-prone sections carefully and let herself wing the open ones."
         },
         {
           "type": "text",
@@ -310,6 +346,10 @@
         {
           "type": "text",
           "value": "how this applies to your day to day, working memory, brain etc"
+        },
+        {
+          "type": "text",
+          "value": "practical applications"
         },
         {
           "type": "h2",

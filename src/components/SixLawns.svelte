@@ -6,7 +6,7 @@
 <div class="c">
 	{#each levels as { id, size, obstacles }, i}
 		<!-- replace numbers with nothing -->
-		{@const label = i === 0 ? id : `level ${i + 1}`}
+		{@const label = i === 0 ? id : `level ${i}`}
 		<div class="lawn">
 			<span class="label">
 				<small><strong>{label}</strong> ({size} &times; {size})</small>

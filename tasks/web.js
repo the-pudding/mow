@@ -422,16 +422,20 @@ function writeLevelTimes(tests) {
 // *best* excess. written twice: -completed.csv is only users who finished every
 // level (same people in all six rows), -all.csv is everyone who played that
 // level (bigger n, but a different crowd per row).
-function writeLevelOptimality(tests) {
+// level -> shortest optimal path length
+function loadOptimalLengths() {
 	const optimalRaw = d3.csvParse(
 		fs.readFileSync("./tasks/optimal_solutions_multi.csv", "utf-8")
 	);
-	const optLen = d3.rollup(
+	return d3.rollup(
 		optimalRaw,
 		(v) => d3.min(v, (d) => JSON.parse(d.path_json).length),
 		(d) => d.level
 	);
+}
 
+function writeLevelOptimality(tests) {
+	const optLen = loadOptimalLengths();
 	const completedAll = getCompletedAll(tests);
 
 	// {label}_p10 / _median / _p90 for one metric, ready to spread into a row
@@ -492,6 +496,238 @@ function writeLevelOptimality(tests) {
 		console.log(`Wrote ${rows.length} rows to ./static/assets/data/${file}`);
 		console.table(rows);
 	});
+}
+
+// every run as a (time, optimality) point, binned so repeats collapse to a
+// count — feeds a scatter/heatmap of "how long did it take vs how good was it".
+// time is total run seconds rounded to a tenth; optimality is efficiency
+// (optimal / actual) rounded to 0.1% (three decimals). one row per distinct
+// (level, time, optimality) cell.
+function writeTimeOptimality(tests) {
+	const optLen = loadOptimalLengths();
+
+	const points = tests
+		.map((d) => ({ level: d.level, path: JSON.parse(d.result) }))
+		.filter(({ path }) => path.length > 1)
+		.map(({ level, path }) => {
+			const total_ms = path.at(-1).t - path[0].t;
+			return {
+				level,
+				time: Math.round(total_ms / 100) / 10,
+				optimality: Math.round((optLen.get(level) / path.length) * 1000) / 1000
+			};
+		});
+
+	const rows = d3
+		.rollups(
+			points,
+			(v) => v.length,
+			(d) => d.level,
+			(d) => d.time,
+			(d) => d.optimality
+		)
+		.flatMap(([lvl, byTime]) =>
+			byTime.flatMap(([time, byOpt]) =>
+				byOpt.map(([optimality, count]) => ({
+					level: lvl,
+					time,
+					optimality,
+					count
+				}))
+			)
+		)
+		.sort(
+			(a, b) =>
+				LEVELS.indexOf(a.level) - LEVELS.indexOf(b.level) ||
+				d3.ascending(a.time, b.time) ||
+				d3.ascending(a.optimality, b.optimality)
+		);
+
+	fs.writeFileSync(
+		"./static/assets/data/level-time-optimality.csv",
+		d3.csvFormat(rows)
+	);
+	console.log(
+		`Wrote ${rows.length} rows to ./static/assets/data/level-time-optimality.csv`
+	);
+}
+
+// empirical percentile rank (0-100) of each value within `values`, aligned to
+// the input order. ties share the average rank of the tied block so equal
+// values land on the same percentile.
+function percentileRanks(values) {
+	const n = values.length;
+	const order = values.map((v, i) => [v, i]).sort((a, b) => a[0] - b[0]);
+	const ranks = new Array(n);
+	let i = 0;
+	while (i < n) {
+		let j = i;
+		while (j + 1 < n && order[j + 1][0] === order[i][0]) j++;
+		const pct = n > 1 ? (((i + j) / 2) * 100) / (n - 1) : 0;
+		for (let k = i; k <= j; k++) ranks[order[k][1]] = pct;
+		i = j + 1;
+	}
+	return ranks;
+}
+
+// every run as a (percentile_optimal, percentile_time) point, binned so
+// repeats collapse to a count — feeds a 0-100% x 0-100% scatter of how a
+// run's speed ranked against how efficient it was. percentiles are computed
+// within each level's own population (not pooled), then rounded to the
+// nearest 0.1%.
+function writePercentileOptimalityTime(tests) {
+	const optLen = loadOptimalLengths();
+
+	const points = tests
+		.map((d) => ({ level: d.level, path: JSON.parse(d.result) }))
+		.filter(({ path }) => path.length > 1)
+		.map(({ level, path }) => ({
+			level,
+			time: (path.at(-1).t - path[0].t) / 1000,
+			optimality: optLen.get(level) / path.length
+		}));
+
+	const rounded = LEVELS.flatMap((lvl) => {
+		const levelPoints = points.filter((d) => d.level === lvl);
+		const optimalPct = percentileRanks(levelPoints.map((d) => d.optimality));
+		const timePct = percentileRanks(levelPoints.map((d) => d.time));
+
+		return levelPoints.map((d, i) => ({
+			level: d.level,
+			percentile_optimal: Math.round(optimalPct[i] * 10) / 10,
+			percentile_time: Math.round(timePct[i] * 10) / 10
+		}));
+	});
+
+	const rows = d3
+		.rollups(
+			rounded,
+			(v) => v.length,
+			(d) => d.level,
+			(d) => d.percentile_optimal,
+			(d) => d.percentile_time
+		)
+		.flatMap(([lvl, byOpt]) =>
+			byOpt.flatMap(([percentile_optimal, byTime]) =>
+				byTime.map(([percentile_time, count]) => ({
+					level: lvl,
+					percentile_optimal,
+					percentile_time,
+					count
+				}))
+			)
+		)
+		.sort(
+			(a, b) =>
+				LEVELS.indexOf(a.level) - LEVELS.indexOf(b.level) ||
+				d3.ascending(a.percentile_optimal, b.percentile_optimal) ||
+				d3.ascending(a.percentile_time, b.percentile_time)
+		);
+
+	fs.writeFileSync(
+		"./static/assets/data/percentile-optimality-time.csv",
+		d3.csvFormat(rows)
+	);
+	console.log(
+		`Wrote ${rows.length} rows to ./static/assets/data/percentile-optimality-time.csv`
+	);
+}
+
+// fraction of `sorted` (ascending) at or below `v` — R's ecdf(), i.e. percentile
+// rank as "how many finished at or below me", not the tie-averaged rank
+// percentileRanks() above uses. Ties all land on the same (higher) percentile.
+function ecdfPercent(sorted, v) {
+	return sorted.length ? d3.bisectRight(sorted, v) / sorted.length : undefined;
+}
+
+// one row per user, collapsing every non-tutorial level they played into two
+// numbers: mean optimality and mean pace. pace is duration_s / optimal length
+// (seconds per required square, not per move they actually took) — dividing
+// by their own path length would entangle pace with optimality, since a
+// meandering path both lowers optimality and inflates the move count that's
+// diluting the per-move time. dividing by optimal length keeps pace an
+// independent axis, and normalizes across levels of different sizes the same
+// way the optimality ratio does. zero-duration rows are dropped before
+// averaging (skipped instant/auto-submitted attempts). a user only counts as
+// `completed_all` if they have a row for every non-tutorial level -
+// percentiles and the top/worst/quick/slow 10% tails are computed only
+// within that completed_all pool, so the round set is held fixed and
+// easy-round-only players can't skew it.
+const COHORT_Q = 0.1;
+function writeUserCohorts(tests) {
+	const optLen = loadOptimalLengths();
+	const nonTutorial = LEVELS.filter((lvl) => lvl !== "tutorial");
+
+	const perRun = tests
+		.filter((d) => nonTutorial.includes(d.level))
+		.map((d) => {
+			const path = JSON.parse(d.result);
+			if (path.length <= 1) return null;
+			const optimal = optLen.get(d.level);
+			const duration_s = (path.at(-1).t - path[0].t) / 1000;
+			return {
+				user_id: d.user_id,
+				level: d.level,
+				optimality: optimal / path.length,
+				pace_s: duration_s / optimal,
+				duration_s
+			};
+		})
+		.filter(Boolean);
+
+	const userAgg = d3.groups(perRun, (d) => d.user_id).map(([user_id, rows]) => {
+		const completed_all =
+			new Set(rows.map((r) => r.level)).size === nonTutorial.length;
+		const mean_opt = d3.mean(rows, (r) => r.optimality);
+		const paces = rows.filter((r) => r.duration_s > 0).map((r) => r.pace_s);
+		const mean_pace = paces.length ? d3.mean(paces) : undefined;
+		return { user_id, completed_all, mean_opt, mean_pace };
+	});
+
+	// thresholds/percentiles taken only over the completed-all pool
+	const ca = userAgg.filter((d) => d.completed_all);
+	const optSorted = ca.map((d) => d.mean_opt).sort(d3.ascending);
+	const paceSorted = ca
+		.filter((d) => d.mean_pace !== undefined)
+		.map((d) => d.mean_pace)
+		.sort(d3.ascending);
+
+	const optHi = d3.quantile(optSorted, 1 - COHORT_Q);
+	const optLo = d3.quantile(optSorted, COHORT_Q);
+	const paceLo = d3.quantile(paceSorted, COHORT_Q);
+	const paceHi = d3.quantile(paceSorted, 1 - COHORT_Q);
+
+	// only the completed-all cohort ships — that's the fixed-round-set pool the
+	// percentiles/thresholds above were computed over in the first place.
+	const rows = ca.map((d) => {
+		const hasPace = d.mean_pace !== undefined;
+		return {
+			user_id: d.user_id,
+			mean_opt: +d.mean_opt.toFixed(4),
+			mean_pace: hasPace ? +d.mean_pace.toFixed(3) : "",
+			opt_pct: +ecdfPercent(optSorted, d.mean_opt).toFixed(4),
+			pace_pct: hasPace
+				? +ecdfPercent(paceSorted, d.mean_pace).toFixed(4)
+				: "",
+			top_solver: d.mean_opt >= optHi,
+			worst_solver: d.mean_opt <= optLo,
+			quick_solver: hasPace && d.mean_pace <= paceLo,
+			slow_solver: hasPace && d.mean_pace >= paceHi
+		};
+	});
+
+	fs.writeFileSync("./static/assets/data/user-cohorts.csv", d3.csvFormat(rows));
+	console.log(
+		`Wrote ${rows.length} rows to ./static/assets/data/user-cohorts.csv`
+	);
+
+	const cohortCols = ["top_solver", "worst_solver", "quick_solver", "slow_solver"];
+	console.log(`cohort sizes (of ${rows.length} completed_all users):`);
+	console.table(
+		Object.fromEntries(
+			cohortCols.map((c) => [c, rows.filter((r) => r[c]).length])
+		)
+	);
 }
 
 // distribution of path lengths: how many players took each number of moves
@@ -634,6 +870,9 @@ function main() {
 	writeLevel2Moves(exampleTests, usersLookup);
 	writeLevelTimes(testsRaw);
 	writeLevelOptimality(testsRaw);
+	writeTimeOptimality(testsRaw);
+	writePercentileOptimalityTime(testsRaw);
+	writeUserCohorts(testsRaw);
 	writeMoveCounts(exampleTests);
 	writeSamplePaths(exampleTests);
 	writeOptimalSolutionCounts(exampleTests);
