@@ -1,8 +1,9 @@
 <script>
-	import { onMount, tick } from "svelte";
+	import { onMount } from "svelte";
 	import Grid from "$components/Grid.svelte";
 	import GameLayer from "$components/grid/GameLayer.svelte";
 	import loadCsv from "$utils/loadCsv.js";
+	import inView from "$actions/inview.js";
 	import levels from "$data/levels.json";
 
 	// Two players' bonus2 runs, each replayed with a mower sprite walking
@@ -22,6 +23,7 @@
 
 	let sarahLayer = $state();
 	let otherLayer = $state();
+	let visible = $state(false);
 
 	// optimal percent compared to level data
 	let sarahOptimal = $derived(
@@ -56,13 +58,15 @@
 			loadPath(sarah),
 			loadPath(other)
 		]);
-		await tick();
-		replay();
+	});
+
+	$effect(() => {
+		if (visible && sarahPath.length && otherPath.length) replay();
 	});
 </script>
 
 {#if level}
-	<div class="c">
+	<div class="c" use:inView onenter={() => (visible = true)}>
 		<div class="stage">
 			<div class="name">Sarah ({sarahOptimal}% optimal)</div>
 			<Grid size={level.size} obstacles={level.obstacles} started>
