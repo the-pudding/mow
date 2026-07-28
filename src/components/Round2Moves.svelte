@@ -28,7 +28,15 @@
 
 <div class="c">
 	{#if data.length}
-		<Histogram {data} {label} highlight={49} />
+		<Histogram
+			{data}
+			{label}
+			highlight={49}
+			yLabel="Number of Players"
+			highlightLabel="optimal path"
+			highlightLabelAnchor="start"
+			highlightBaseline="hanging"
+		/>
 	{/if}
 </div>
 

@@ -675,14 +675,16 @@ function writeUserCohorts(tests) {
 		})
 		.filter(Boolean);
 
-	const userAgg = d3.groups(perRun, (d) => d.user_id).map(([user_id, rows]) => {
-		const completed_all =
-			new Set(rows.map((r) => r.level)).size === nonTutorial.length;
-		const mean_opt = d3.mean(rows, (r) => r.optimality);
-		const paces = rows.filter((r) => r.duration_s > 0).map((r) => r.pace_s);
-		const mean_pace = paces.length ? d3.mean(paces) : undefined;
-		return { user_id, completed_all, mean_opt, mean_pace };
-	});
+	const userAgg = d3
+		.groups(perRun, (d) => d.user_id)
+		.map(([user_id, rows]) => {
+			const completed_all =
+				new Set(rows.map((r) => r.level)).size === nonTutorial.length;
+			const mean_opt = d3.mean(rows, (r) => r.optimality);
+			const paces = rows.filter((r) => r.duration_s > 0).map((r) => r.pace_s);
+			const mean_pace = paces.length ? d3.mean(paces) : undefined;
+			return { user_id, completed_all, mean_opt, mean_pace };
+		});
 
 	// thresholds/percentiles taken only over the completed-all pool
 	const ca = userAgg.filter((d) => d.completed_all);
@@ -702,17 +704,15 @@ function writeUserCohorts(tests) {
 	const rows = ca.map((d) => {
 		const hasPace = d.mean_pace !== undefined;
 		return {
-			user_id: d.user_id,
-			mean_opt: +d.mean_opt.toFixed(4),
-			mean_pace: hasPace ? +d.mean_pace.toFixed(3) : "",
+			// user_id: d.user_id,
+			// mean_opt: +d.mean_opt.toFixed(4),
+			// mean_pace: hasPace ? +d.mean_pace.toFixed(3) : "",
 			opt_pct: +ecdfPercent(optSorted, d.mean_opt).toFixed(4),
-			pace_pct: hasPace
-				? +ecdfPercent(paceSorted, d.mean_pace).toFixed(4)
-				: "",
-			top_solver: d.mean_opt >= optHi,
-			worst_solver: d.mean_opt <= optLo,
-			quick_solver: hasPace && d.mean_pace <= paceLo,
-			slow_solver: hasPace && d.mean_pace >= paceHi
+			pace_pct: hasPace ? +ecdfPercent(paceSorted, d.mean_pace).toFixed(4) : ""
+			// top_solver: d.mean_opt >= optHi,
+			// worst_solver: d.mean_opt <= optLo,
+			// quick_solver: hasPace && d.mean_pace <= paceLo,
+			// slow_solver: hasPace && d.mean_pace >= paceHi
 		};
 	});
 
@@ -721,7 +721,12 @@ function writeUserCohorts(tests) {
 		`Wrote ${rows.length} rows to ./static/assets/data/user-cohorts.csv`
 	);
 
-	const cohortCols = ["top_solver", "worst_solver", "quick_solver", "slow_solver"];
+	const cohortCols = [
+		"top_solver",
+		"worst_solver",
+		"quick_solver",
+		"slow_solver"
+	];
 	console.log(`cohort sizes (of ${rows.length} completed_all users):`);
 	console.table(
 		Object.fromEntries(

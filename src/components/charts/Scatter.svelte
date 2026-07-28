@@ -36,7 +36,10 @@
 		regressionType = "linear",
 		// tick label formatting: a d3.format specifier string (e.g. ".0%") or a
 		// (value) => string function, applied to both axes' tick labels.
-		format = null
+		format = null,
+		// free-floating annotations, positioned in data space (same units as
+		// x.value/y.value): [{ label, x, y, fill }]
+		customLabels = []
 	} = $props();
 
 	let formatTick = $derived(
@@ -152,10 +155,16 @@
 		const defaultFill = variables.color["gray-500"];
 
 		for (const d of data) {
+			const cx = xScale(getX(d));
+			const cy = yScale(getY(d));
 			ctx.globalAlpha = Math.min(1, getCount(d) * alpha);
-			ctx.beginPath();
-			ctx.arc(xScale(getX(d)), yScale(getY(d)), radius, 0, Math.PI * 2);
 			ctx.fillStyle = d.fill || defaultFill;
+			ctx.beginPath();
+			if (d.shape === "square") {
+				ctx.rect(cx - radius, cy - radius, radius * 2, radius * 2);
+			} else {
+				ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+			}
 			ctx.fill();
 		}
 	});
@@ -239,6 +248,17 @@
 							y={yScale(getY(d))}
 							dy={-radius - 4}
 							text-anchor="middle">{d.label}</text
+						>
+					{/each}
+
+					<!-- free-floating annotations -->
+					{#each customLabels as d}
+						<text
+							class="tick dot-label custom-label"
+							x={xScale(d.x)}
+							y={yScale(d.y)}
+							text-anchor="middle"
+							style={d.fill ? `fill: ${d.fill};` : undefined}>{d.label}</text
 						>
 					{/each}
 
@@ -333,5 +353,10 @@
 		stroke: var(--color-bg);
 		stroke-width: 3px;
 		stroke-linejoin: round;
+	}
+
+	text.custom-label {
+		font-weight: 700;
+		text-transform: uppercase;
 	}
 </style>

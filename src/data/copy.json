@@ -1,8 +1,8 @@
 {
   "meta": {
-    "title": "Lawn Mowing Experiment",
-    "description": "This is a story about how our minds work.",
-    "byline": "By Russell Samora, Arjun Kakkar, Florina Sutanto, and Sushant Karki"
+    "title": "Why some people mow a lawn better than others",
+    "description": "We analyzed over 100,000 attempts to mow a lawn efficiently, a problem that’s surprisingly hard for computers.",
+    "byline": "By Russell Samora, Florina Sutanto, Arjun Kakkar, and Sushant Karki"
   },
   "body": [
     {
@@ -88,31 +88,20 @@
           "value": "Solving the lawn mowing problem is formally called Coverage Path Planning, and is related to one of the most famous path planning problems in computer science: <a href=https://en.wikipedia.org/wiki/Travelling_salesman_problem target=_blank rel=noreferrer>The Traveling Salesman Problem.</a>"
         },
         {
-          "type": "Video",
-          "value": {
-            "src": "assets/videos/tsp.mp4",
-            "preload": "true",
-            "autoplay": "true",
-            "muted": "true",
-            "loop": "true",
-            "figcaption": "From <a href=https://www.youtube.com/watch?v=BAejnwN4Ccw target=_blank rel=noreferrer>The Coding Train</a> with Daniel Shiffman"
-          }
-        },
-        {
           "type": "text",
           "value": "The premise is simple: a salesman must visit a set of cities exactly once and return to their starting point, all while taking the shortest possible route. We see this all the time in the real world. A pizza delivery driver planning their stops or a trick-or-treater maximizing their candy haul is solving a version of this problem."
         },
         {
-          "type": "text",
-          "value": "We wanted to create this mowing experiment after we <a href=https://docs.lib.purdue.edu/jps/vol1/iss1/4/ target=_blank rel=noreferrer>read a study</a> that found humans come impressively close to computer-calculated optimal solutions to this problem with fewer stops, and even do pretty good &mdash; just 11% less efficient than optimal &mdash; for 70+ stops. But as the stops increase, humans’ ability decreases. Would results be similar for mowing a lawn?"
+          "type": "TSPLayer",
+          "value": {}
         },
         {
-          "type": "Img",
-          "value": {
-            "src": "assets/images/study.png",
-            "alt": "A chart depicting how people perform on the Traveling Salesman Problem compared to the optimal path, which shows that people perform near-ideal at fewer nodes, with a slow increasing deviation as more nodes are added",
-            "figcaption": "Chart of findings from <a href=https://docs.lib.purdue.edu/jps/vol1/iss1/4/ target=_blank rel=noreferrer>this study</a>"
-          }
+          "type": "text",
+          "value": "We wanted to create this mowing experiment after we <a href=https://docs.lib.purdue.edu/jps/vol1/iss1/4/ target=_blank rel=noreferrer>read a study</a> that found humans come impressively close to computer-calculated optimal solutions to this problem with fewer stops, and even do pretty good &mdash; just 11% less efficient than optimal &mdash; for 70+ stops. As you can see in our recreated chart of their results below, as the stops increase, humans’ ability decreases. Would results be similar for mowing a lawn?"
+        },
+        {
+          "type": "Study",
+          "value": {}
         },
         {
           "type": "text",
@@ -122,14 +111,14 @@
           "type": "ul",
           "value": {
             "li": [
-              "<strong>algorithms</strong> which calculate the optimal path and",
-              "<strong>heuristics</strong> which are simple strategies to complete the path"
+              "<strong>algorithms</strong> which guarantee the optimal path and",
+              "<strong>heuristics</strong> which use shortcuts to find a “good enough” path fast"
             ]
           }
         },
         {
           "type": "text",
-          "value": "Why do we need heuristics? If we look at the brute force calculations for a salesperson visiting just 10 cities, we’d surprisingly need to test 3.6 million possible routes. That number explodes exponentially as more cities are added."
+          "value": "Why do we need heuristics? If a salesperson had to visit just 10 cities and we had to check every possible route, we’d surprisingly need to test 3.6 million of them. That number explodes exponentially as more cities are added."
         },
         {
           "type": "text",
@@ -156,7 +145,7 @@
           "value": {
             "steps": [
               {
-                "text": "Let’s replay a mowing session, director’s-cut style, with some commentary along the way. For this walkthrough, we’ll use a perfectly average run from player <strong>yo7m5rr3nl</strong>, who called themselves <strong>Bones</strong>. It took them 54 moves–five more than optimal. We recorded the timestamp of each move, so every hesitation or direction change left a data footprint.",
+                "text": "Let’s replay a mowing session, director’s-cut style, with some commentary along the way. For this walkthrough, we’ll use a perfectly average run from a player who called themselves <strong>Bones</strong>. It took them 54 moves–five more than optimal. We recorded the timestamp of each move, so every hesitation or direction change left a data footprint.",
                 "step": "intro",
                 "note": "Just the trace of the path (use xray, not realtime) - path yo7m5rr3nl"
               },
@@ -182,19 +171,19 @@
                 "step": "remaining"
               },
               {
-                "text": "What differentiated the great players from everyone else came down to a single critical mistake. We can divide the lawn into two main sections: left and right. Bones chose to complete the left section first, forcing an inevitable backtrack because of this one-way corridor.",
+                "text": "What differentiated the great players from everyone else came down to a single critical decision. We can divide the lawn into two main sections: left and right. Bones completed the left section first. Because it dead-ends, the only path out was to retrace their steps, creating an inevitable backtrack.",
                 "step": "sections"
               },
               {
-                "text": "If we look at where every player ended up we can see this play out. Players who were three or more moves from optimal finished all over the lawn.",
+                "text": "If we look at where each player ended, we can see this play out. Players three or more moves from optimal finished scattered across the lawn.",
                 "step": "right"
               },
               {
-                "text": "While those who were nearly or <strong>perfectly optimal</strong> chose to mow the right side first so they could end their run on the left side, having anticipated the one-way trap.",
+                "text": "While those who were nearly or <strong>perfectly optimal</strong> chose to mow the right side first so they could end their run on the left, having anticipated the dead-end trap.",
                 "step": "left"
               },
               {
-                "text": "One of those was player <strong>tt3aprpgrp</strong>. We tracked them down and discovered their name was <strong>Sarah.</strong> She finished on the left with intention. <blockquote>“I saw the dead end at the end and I was like, okay, that’s where I need to end as well, so don’t go that way first.”</blockquote>",
+                "text": "One of those was a player (actually) named <strong>Sarah.</strong> We got in touch, and learned that she finished on the left with intention. <blockquote>“I saw the dead end at the end and I was like, okay, that’s where I need to end as well, so don’t go that way first.”</blockquote>",
                 "step": "sarah-path",
                 "note": "show Sarah's x ray path, animated (autotimer)"
               },
@@ -225,7 +214,7 @@
         },
         {
           "type": "text",
-          "value": "More than 22,000 people made it through the required levels, and over 7,000 people completed a few extra bonus ones. Here is how they did across them."
+          "value": "More than 22,000 people made it through the required levels, and over 7,000 people completed a few extra bonus ones. Here is how they did across them. Note: the light band represents how most players (80%) did."
         },
         {
           "type": "Optimality",
@@ -233,15 +222,15 @@
         },
         {
           "type": "text",
-          "value": "We expected a decline. The Traveling Salesman Problem (TSP) research suggests that people do worse as the problem grows. But optimality held around 90% whether the lawn took 26 moves or 177."
+          "value": "We expected a decline. The Traveling Salesman Problem research suggests that people do worse as the problem grows. But optimality held around 90% whether the lawn took 26 moves or 177."
         },
         {
           "type": "text",
-          "value": "One caveat: we made the lawns bigger with different obstacle layouts at the same time, so we can’t say which mattered more. Performance actually was slightly better on the largest lawn than the previous two, which hints that layout matters more than raw size."
+          "value": "One caveat: we made the lawns bigger with different obstacle layouts at the same time, so we can’t say which mattered more. Performance actually was slightly better on the largest lawn than the previous two, which suggests that layout matters more than raw size."
         },
         {
           "type": "text",
-          "value": "Our best guess is the structure of a lawn itself. Where TSP scatters nodes randomly, a lawn has structure, which lets players fall back on two strategies: <strong>decomposition</strong> and <strong>compression</strong>."
+          "value": "Our best guess is the structure of a lawn itself. Where the Traveling Salesman Problem scatters nodes randomly, a lawn has structure, which lets players fall back on two strategies: <strong>decomposition</strong> and <strong>compression</strong>."
         },
         {
           "type": "text",
@@ -281,7 +270,7 @@
         },
         {
           "type": "text",
-          "value": "Below, each dot is a player who finished every lawn, plotted by pace (seconds spent per square, which normalizes time across lawn sizes) against how close to optimal they got."
+          "value": "Below, each dot is a player who finished every lawn, plotted by speed (seconds spent per square, which normalizes time across lawn sizes) against how close to optimal they got."
         },
         {
           "type": "OptimalityVsTime",
@@ -293,7 +282,15 @@
         },
         {
           "type": "text",
-          "value": "Let’s take a look at level four as an example. The top players (90th percentile) spent time thinking early as they traveled down the first column, then dedicated most of it at this one fork: go toward the cluttered middle section, or clear the open space to the right first."
+          "value": "Let’s take a look at level four as an example."
+        },
+        {
+          "type": "text",
+          "value": "<mark>show us this level, along with the heatmap pause</mark>"
+        },
+        {
+          "type": "text",
+          "value": "The top players (90th percentile) spent time thinking early as they traveled down the first column, then dedicated most of it at this one fork: go toward the cluttered middle section, or clear the open space to the right first."
         },
         {
           "type": "text",
@@ -313,7 +310,7 @@
         },
         {
           "type": "text",
-          "value": "The best players moved at about the same pace as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest. Below are two players who finish at the exact same time with different results."
+          "value": "The best players moved at about the same speed as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest. Below are two players who finish at the exact same time with different results."
         },
         {
           "type": "text",
@@ -349,7 +346,11 @@
         },
         {
           "type": "h2",
-          "value": "Demographic differences?"
+          "value": "Sandbox"
+        },
+        {
+          "type": "text",
+          "value": "<mark>Let people re-play each maze. After (or a button that says see results) Show /toggle between an common ending squares, heatmap pauses, optimal solution(s), heatmap of repeated squares</mark>"
         },
         {
           "type": "Method",

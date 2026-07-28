@@ -52,10 +52,10 @@
 		}))
 	);
 
-	// boards below the reference size render narrower so cells stay the same size
-	let visualGridSize = $derived(fill ? size : Math.max(size, 8));
+	let visualGridSize = $derived(Math.max(size, 8));
 	// sized in CSS rather than measured, so grids can be skipped when offscreen
-	let widthPercent = $derived((size / visualGridSize) * 100);
+	// let widthPercent = $derived((size / visualGridSize) * 100);
+	let widthPercent = 100;
 
 	setContext("grid", {
 		get size() {
@@ -176,6 +176,12 @@
 			var(--grass-x) 0%;
 	}
 
+	.wireframe .cell.obstacle {
+		background-image: url("/assets/images/obstacles.png");
+		background-size: var(--obstacle-bg-size);
+		background-position: var(--sprite-x) 0%;
+	}
+
 	.cell.visited {
 		opacity: 0.4;
 	}
@@ -212,8 +218,8 @@
 	}
 
 	.wireframe .obstacle {
-		background: var(--color-gray-500);
-		border: 0.5px solid var(--color-bg);
+		/* background: var(--color-gray-500); */
+		/* border: 0.5px solid var(--color-bg); */
 	}
 
 	.wireframe .obstacle .fg {

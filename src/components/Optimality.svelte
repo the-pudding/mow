@@ -15,6 +15,7 @@
 	} = $props();
 
 	const tickSize = 12;
+	const fmtN = format(",");
 
 	let width = $state(0);
 	let raw = $state([]);
@@ -30,6 +31,7 @@
 	let data = $derived(
 		raw.map((d) => ({
 			level: d.level,
+			n: +d.n,
 			p10: +d[`${metric}_p10`],
 			median: +d[`${metric}_median`],
 			p90: +d[`${metric}_p90`]
@@ -39,8 +41,8 @@
 	let margin = $derived({
 		top: 12,
 		right: 12,
-		bottom: 28,
-		left: tickSize * 2 + 12
+		bottom: 40,
+		left: tickSize * 3 + 12
 	});
 
 	let height = $derived(Math.round(width * ratio));
@@ -67,6 +69,13 @@
 			aria-label="Efficiency by level"
 		>
 			<g transform={`translate(${margin.left},${margin.top})`}>
+				<!-- y-axis label -->
+				<text
+					class="axis-label"
+					transform={`translate(${-margin.left + 8},${innerH / 2}) rotate(-90)`}
+					text-anchor="middle">optimality</text
+				>
+
 				<!-- y gridlines + labels -->
 				{#each yTicks as t}
 					<line class="grid" x1={0} x2={innerW} y1={y(t)} y2={y(t)} />
@@ -104,8 +113,14 @@
 					<text
 						class="tick"
 						x={cx + x.bandwidth() / 2}
-						y={innerH + 18}
+						y={innerH + 16}
 						text-anchor="middle">{level}</text
+					>
+					<text
+						class="tick count"
+						x={cx + x.bandwidth() / 2}
+						y={innerH + 32}
+						text-anchor="middle">({fmtN(d.n)})</text
 					>
 				{/each}
 
@@ -152,6 +167,11 @@
 	}
 
 	text.tick {
+		font-size: var(--12px);
+		text-transform: uppercase;
+	}
+
+	text.axis-label {
 		font-size: var(--12px);
 		text-transform: uppercase;
 	}

@@ -62,7 +62,7 @@
 <div class="c">
 	<div class="g">
 		<span class="label"
-			><small><strong>player: {id}</strong> ({moves} moves)</small></span
+			><small><strong>player id: {id}</strong> ({moves} moves)</small></span
 		>
 		<Grid {size} {obstacles} started={true} variant="wireframe">
 			{#if path}

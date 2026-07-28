@@ -295,6 +295,7 @@
 
 	let showHeatmap = $state(false);
 	let heatmapData = $state([]);
+	let heatmapTitle = $state("");
 
 	let showSection = $state(false);
 	let sectionRegions = $state([]);
@@ -397,6 +398,7 @@
 				showHeatmap = true;
 				// heatmapInterpolate = interpolateGr;
 				heatmapData = dwellHeatmap(bonesPath, PAUSE_INDEX - 1);
+				heatmapTitle = "Seconds paused per square";
 			};
 		},
 
@@ -440,6 +442,7 @@
 			showHeatmap = true;
 			// heatmapInterpolate = interpolateGr;
 			heatmapData = finishRightData;
+			heatmapTitle = "Count of where sub-optimal players finished";
 		},
 
 		// "heatmap of other finishing spots on the left side" (near-optimal players)
@@ -449,6 +452,7 @@
 			showHeatmap = true;
 			// heatmapInterpolate = interpolateGr;
 			heatmapData = finishLeftData;
+			heatmapTitle = "Count of where near-optimal players finished";
 		},
 
 		// Sarah is introduced — replay her full near-optimal run on the real lawn at
@@ -471,6 +475,7 @@
 			variant = "wireframe";
 			showHeatmap = true;
 			heatmapData = dwellHeatmap(sarahPath);
+			heatmapTitle = "Seconds Sarah paused per square";
 		},
 
 		// Close on Sarah's trace — the whole xray path rendered at once, no reveal
@@ -563,6 +568,7 @@
 							<HeatmapLayer
 								data={heatmapData}
 								interpolate={heatmapInterpolate}
+								title={heatmapTitle}
 							/>
 						</div>
 						<Overlay />
@@ -603,7 +609,11 @@
 					<Histogram
 						data={histogramData}
 						label={histogramLabel}
+						yLabel="Number of Players"
 						highlight={3}
+						highlightLabel={"Median"}
+						highlightLabelAnchor="start"
+						higlightBaseline="bottom"
 					/>
 				{/if}
 			</div>

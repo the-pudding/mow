@@ -2,24 +2,10 @@
 	import Scatter from "$components/charts/Scatter.svelte";
 	import loadCsv from "$utils/loadCsv.js";
 	import variables from "$data/variables.json";
-
-	// const highlight = [
-	// 	{
-	// 		id: "yo7m5rr3nl",
-	// 		label: "BONES",
-	// 		fill: variables.category["orange-light"]
-	// 	},
-	// 	{
-	// 		id: "tt3aprpgrp",
-	// 		label: "SARAH",
-	// 		fill: variables.category["green-light"]
-	// 	}
-	// ];
-
 	// Loads user-cohorts.csv (one row per completed-all player, pace/optimality
 	// already expressed as percentile ranks) and hands it to the generic Scatter
 	// chart, which draws its own line of best fit via regression={true}.
-	let { src = "assets/data/user-cohorts.csv" } = $props();
+	const src = "assets/data/user-cohorts.csv";
 
 	let data = $state([]);
 
@@ -38,7 +24,7 @@
 					...d,
 					fill:
 						d.optimality < 0.1
-							? variables.category["purple-dark"]
+							? variables.category["purple-light"]
 							: d.optimality > 0.9
 								? variables.category["yellow-light"]
 								: variables.color["gray-500"]
@@ -60,7 +46,7 @@
 			{data}
 			x={{
 				value: "time",
-				label: "pace percentile",
+				label: "speed percentile",
 				low: "← Faster",
 				high: "Slower →"
 			}}
@@ -68,6 +54,20 @@
 			regression
 			regressionType="linear"
 			format=".0%"
+			customLabels={[
+				{
+					label: "10th percentile",
+					x: 0.1,
+					y: 0.125,
+					fill: variables.category["purple-light"]
+				},
+				{
+					label: "90th percentile",
+					x: 0.1,
+					y: 0.85,
+					fill: variables.category["yellow-light"]
+				}
+			]}
 		/>
 	{/if}
 </div>
@@ -75,11 +75,5 @@
 <style>
 	.c {
 		width: 100%;
-	}
-
-	.controls {
-		display: flex;
-		justify-content: center;
-		margin-bottom: 1rem;
 	}
 </style>

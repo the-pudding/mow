@@ -17,6 +17,8 @@
 		data = [],
 		interpolate,
 		showValues = true,
+		showLegend = true,
+		title = "",
 		// big counts get compacted (1600 → 1.6k); small/decimal values print as-is
 		formatValue = (v) => (Math.abs(v) >= 1000 ? format(",")(v) : String(v))
 	} = $props();
@@ -39,15 +41,27 @@
 
 	let lookup = $derived(new Map(data.map((d) => [`${d.x},${d.y}`, d.value])));
 
+	let lo = $derived(extent(data, (d) => d.value)[0]);
+	let hi = $derived(extent(data, (d) => d.value)[1]);
+
 	let color = $derived.by(() => {
-		const [lo, hi] = extent(data, (d) => d.value);
 		const domain = [lo ?? 0, hi ?? 1];
 		return Array.isArray(interpolate)
 			? scaleQuantize().domain(domain).range(interpolate)
 			: scaleSequential(interpolate).domain(domain);
 	});
+
+	// sample the ramp into CSS gradient stops; discrete arrays are used as-is
+	let legendGradient = $derived(
+		Array.isArray(interpolate)
+			? interpolate.join(", ")
+			: Array.from({ length: 10 }, (_, i) => interpolate(i / 9)).join(", ")
+	);
 </script>
 
+{#if title}
+	<div class="heatmap-title">{title}</div>
+{/if}
 <svg viewBox="0 0 {grid.size} {grid.size}">
 	{#each grid.cells as { x, y, obstacle }}
 		{@const value = lookup.get(`${x},${y}`)}
@@ -65,6 +79,16 @@
 		{/if}
 	{/each}
 </svg>
+{#if showLegend && lo != null && hi != null}
+	<div class="heatmap-legend">
+		<span class="legend-label">{formatValue(lo)}</span>
+		<div
+			class="legend-bar"
+			style="background: linear-gradient(to right, {legendGradient});"
+		></div>
+		<span class="legend-label">{formatValue(hi)}</span>
+	</div>
+{/if}
 
 <style>
 	svg {
@@ -86,5 +110,42 @@
 		font-size: 0.2px;
 		font-weight: 700;
 		fill: var(--color-bg);
+	}
+
+	.heatmap-title {
+		position: absolute;
+		top: -0.5rem;
+		left: 0;
+		width: 100%;
+		text-align: center;
+		z-index: var(--z-top);
+		transform: translateY(-100%);
+		font-family: var(--font-mono);
+		font-size: var(--12px);
+		text-transform: uppercase;
+	}
+
+	.heatmap-legend {
+		position: absolute;
+		bottom: -0.5rem;
+		left: 50%;
+		width: 100%;
+		max-width: 10rem;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		z-index: var(--z-top);
+		transform: translate(-50%, 100%);
+	}
+
+	.legend-bar {
+		flex: 1;
+		height: 0.5rem;
+	}
+
+	.legend-label {
+		font-family: var(--font-mono);
+		font-size: var(--12px);
+		white-space: nowrap;
 	}
 </style>

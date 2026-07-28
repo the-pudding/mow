@@ -12,6 +12,8 @@
 	import SixLawns from "$components/SixLawns.svelte";
 	import Optimality from "$components/Optimality.svelte";
 	import OptimalityVsTime from "$components/OptimalityVsTime.svelte";
+	import TSPLayer from "$components/grid/TSPLayer.svelte";
+	import Study from "$components/Study.svelte";
 
 	const copy = getContext("copy");
 	const { body } = copy;
@@ -26,7 +28,9 @@
 		Sample,
 		SixLawns,
 		Optimality,
-		OptimalityVsTime
+		OptimalityVsTime,
+		TSPLayer,
+		Study
 	};
 </script>
 
@@ -46,10 +50,9 @@
 	}
 
 	h1 {
-		font-size: clamp(var(--36px, 36px), 10vw, var(--64px, 64px));
+		font-size: clamp(var(--32px, 32px), 10vw, var(--48px, 48px));
 		font-weight: 900;
 		line-height: 1;
-		text-transform: uppercase;
 	}
 
 	.byline {

@@ -22,6 +22,8 @@
 		highlight = null,
 		highlightLabel = null,
 		highlightColor = "var(--color-yellow)",
+		highlightLabelAnchor = "middle",
+		highlightBaseline = "top",
 		median = null,
 		medianLabel = null,
 		tickCount = 5,
@@ -117,7 +119,8 @@
 				{/each}
 
 				{#if yLabel}
-					<text class="tick" x={-margin.left + 2} y={-8}>{yLabel}</text>
+					<text class="tick y-label" x={-margin.left + 2} y={-12}>{yLabel}</text
+					>
 				{/if}
 
 				<!-- bars -->
@@ -149,11 +152,14 @@
 				<!-- label sitting on top of the highlighted bar -->
 				{#if highlighted && highlightLabel}
 					<text
-						class="lbl"
-						fill={highlightColor}
-						x={x((highlighted.x0 + highlighted.x1) / 2)}
-						y={y(highlighted.count) - 6}
-						text-anchor="middle">{highlightLabel}</text
+						class="lbl lbl-highlight"
+						style="fill: {highlightColor}"
+						x={x((highlighted.x0 + highlighted.x1) / 2) +
+							(x(highlighted.x1) - x(highlighted.x0)) * 0.5 +
+							4}
+						y={y(highlighted.count) + (highlightBaseline === "bottom" ? -4 : 2)}
+						alignment-baseline={highlightBaseline}
+						text-anchor={highlightLabelAnchor}>{highlightLabel}</text
 					>
 				{/if}
 
@@ -163,8 +169,11 @@
 				{/if}
 				{#if showTicks}
 					{#each ticks as t (t.value)}
-						<text class="tick" x={x(t.value)} y={innerH + 14} text-anchor="middle"
-							>{t.text}</text
+						<text
+							class="tick"
+							x={x(t.value)}
+							y={innerH + 14}
+							text-anchor="middle">{t.text}</text
 						>
 					{/each}
 				{/if}
@@ -213,6 +222,7 @@
 	text {
 		font-family: var(--font-mono);
 		fill: var(--color-fg);
+		text-transform: uppercase;
 	}
 
 	text.tick {
@@ -221,7 +231,6 @@
 
 	text.lbl {
 		font-size: 12px;
-		font-weight: 700;
 	}
 
 	.x-label {
