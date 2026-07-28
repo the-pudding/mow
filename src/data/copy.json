@@ -309,8 +309,8 @@
           "value": "The top players moved at about the same speed as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest. Below are two players who finish at the exact same time with different results."
         },
         {
-          "type": "text",
-          "value": "<mark>two ghost mowers side by side on the same clock, top solver vs average reader</mark>"
+          "type": "TwoMowers",
+          "value": {}
         },
         {
           "type": "text",

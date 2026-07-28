@@ -16,6 +16,7 @@
 	import Study from "$components/Study.svelte";
 	import LevelFour from "$components/LevelFour.svelte";
 	import LevelFourHeat from "$components/LevelFourHeat.svelte";
+	import TwoMowers from "$components/TwoMowers.svelte";
 
 	const copy = getContext("copy");
 	const { body } = copy;
@@ -34,7 +35,8 @@
 		TSPLayer,
 		Study,
 		LevelFour,
-		LevelFourHeat
+		LevelFourHeat,
+		TwoMowers
 	};
 </script>
 

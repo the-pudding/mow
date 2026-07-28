@@ -2,7 +2,8 @@ import fs from "fs";
 import * as d3 from "d3";
 
 const level = "round2";
-const usersToWrite = ["tt3aprpgrp"];
+// mysterybear, cheesepuff, seamus
+const usersToWrite = ["tt3aprpgrp", "2a826e0mz7", "nkdu4xxevi", "cpt1csrzxq"];
 
 // every playable round, oldest → newest. user paths get written per round.
 const LEVELS = ["tutorial", "round1", "round2", "bonus1", "bonus2", "bonus3"];
@@ -912,6 +913,29 @@ function writePauseHeatmap(testsRaw, lvl) {
 	});
 }
 
+// one row per player who ran `lvl`: their id, optimality (optimal / actual
+// path length), and the timestamp of their last move.
+function writeLevelSummary(testsRaw, usersLookup, lvl) {
+	const optLen = loadOptimalLengths();
+	const optimal = optLen.get(lvl);
+	const tests = testsRaw.filter((d) => d.level === lvl);
+
+	const rows = tests.map((d) => {
+		const path = JSON.parse(d.result);
+		return {
+			user_id: d.user_id,
+			name: usersLookup[d.user_id].name,
+			optimality: +(optimal / path.length).toFixed(4),
+			first_move_t: path[1].t,
+			last_move_t: path.at(-1).t
+		};
+	});
+
+	const file = `./tasks/${lvl}-summary.csv`;
+	fs.writeFileSync(file, d3.csvFormat(rows));
+	console.log(`Wrote ${rows.length} rows to ${file}`);
+}
+
 // write each optimal solution path out to assets/optimal/[level]-[index].csv
 function writeOptimalSolutions() {
 	const optimalRaw = d3.csvParse(
@@ -966,6 +990,7 @@ function main() {
 	writeOptimalSolutionCounts(exampleTests);
 	writeOptimalSolutions();
 	writePauseHeatmap(testsRaw, "bonus2");
+	writeLevelSummary(testsRaw, usersLookup, "bonus2");
 }
 
 main();
