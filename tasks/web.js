@@ -829,6 +829,89 @@ function writeOptimalSolutionCounts(exampleTests) {
 	console.table(rows);
 }
 
+// aggregate pause heatmap: for every cell on `lvl`'s lawn, how long players
+// lingered there across all their runs. per-player dwell at a cell is summed
+// across revisits (same as the Tour's single-path dwellHeatmap), then the
+// per-cell mean/median is taken across every player who visited that cell.
+// steps over 60s are dropped as AFK, not a real pause (same cutoff
+// writeFirstMovePauseHistogram uses for the first-move pause).
+const PAUSE_STEP_CAP_S = 60;
+
+// per-cell mean/median dwell seconds across `tests` (already filtered to the
+// cohort of interest); one seconds-value per player per cell they visited.
+function dwellRows(tests) {
+	const perCell = new Map(); // "x,y" -> seconds[], one entry per player who visited
+
+	tests.forEach(({ result }) => {
+		const path = JSON.parse(result);
+		if (path.length < 2) return;
+
+		const dwell = new Map();
+		for (let i = 0; i < path.length - 1; i++) {
+			const dt = (path[i + 1].t - path[i].t) / 1000;
+			if (dt > PAUSE_STEP_CAP_S) continue;
+			const key = `${path[i].x},${path[i].y}`;
+			dwell.set(key, (dwell.get(key) ?? 0) + dt);
+		}
+		dwell.forEach((seconds, key) => {
+			if (!perCell.has(key)) perCell.set(key, []);
+			perCell.get(key).push(seconds);
+		});
+	});
+
+	return Array.from(perCell, ([key, values]) => {
+		const [x, y] = key.split(",").map(Number);
+		return {
+			x,
+			y,
+			players: values.length,
+			mean_seconds: +d3.mean(values).toFixed(2),
+			median_seconds: +d3.median(values).toFixed(2)
+		};
+	}).sort((a, b) => d3.ascending(a.y, b.y) || d3.ascending(a.x, b.x));
+}
+
+// writes the pause heatmap for `lvl` three ways: everyone, the top cohort
+// (efficiency >= 90th percentile for that level), and the worst cohort
+// (efficiency <= 10th percentile). efficiency here is optimal / actual path
+// length for that single (earliest) attempt, same metric writeUserCohorts
+// ranks players on, just computed within this level instead of averaged
+// across all of them.
+function writePauseHeatmap(testsRaw, lvl) {
+	const optLen = loadOptimalLengths();
+	const optimal = optLen.get(lvl);
+	const tests = testsRaw.filter((d) => d.level === lvl);
+
+	const withEfficiency = tests.map((d) => ({
+		...d,
+		efficiency: optimal / JSON.parse(d.result).length
+	}));
+	const effSorted = withEfficiency.map((d) => d.efficiency).sort(d3.ascending);
+	const topCutoff = d3.quantile(effSorted, 1 - COHORT_Q);
+	const bottomCutoff = d3.quantile(effSorted, COHORT_Q);
+
+	const cohorts = [
+		{ suffix: "", tests },
+		{
+			suffix: "-top",
+			tests: withEfficiency.filter((d) => d.efficiency >= topCutoff)
+		},
+		{
+			suffix: "-bottom",
+			tests: withEfficiency.filter((d) => d.efficiency <= bottomCutoff)
+		}
+	];
+
+	cohorts.forEach(({ suffix, tests: cohortTests }) => {
+		const rows = dwellRows(cohortTests);
+		const file = `./static/assets/data/${lvl}-pause-heatmap${suffix}.csv`;
+		fs.writeFileSync(file, d3.csvFormat(rows));
+		console.log(
+			`Wrote ${rows.length} rows (${cohortTests.length} players) to ${file}`
+		);
+	});
+}
+
 // write each optimal solution path out to assets/optimal/[level]-[index].csv
 function writeOptimalSolutions() {
 	const optimalRaw = d3.csvParse(
@@ -882,6 +965,7 @@ function main() {
 	writeSamplePaths(exampleTests);
 	writeOptimalSolutionCounts(exampleTests);
 	writeOptimalSolutions();
+	writePauseHeatmap(testsRaw, "bonus2");
 }
 
 main();

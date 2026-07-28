@@ -14,6 +14,8 @@
 	import OptimalityVsTime from "$components/OptimalityVsTime.svelte";
 	import TSPLayer from "$components/grid/TSPLayer.svelte";
 	import Study from "$components/Study.svelte";
+	import LevelFour from "$components/LevelFour.svelte";
+	import LevelFourHeat from "$components/LevelFourHeat.svelte";
 
 	const copy = getContext("copy");
 	const { body } = copy;
@@ -30,7 +32,9 @@
 		Optimality,
 		OptimalityVsTime,
 		TSPLayer,
-		Study
+		Study,
+		LevelFour,
+		LevelFourHeat
 	};
 </script>
 

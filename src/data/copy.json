@@ -193,7 +193,7 @@
                 "note": "sarah’s pause heatmap"
               },
               {
-                "text": "Sarah also did something that appears a bit unnatural. Instead of continuing straight a couple times, she intuitively and preemptively turned in a snake-like pattern. This highlighted a key difference between real-life mowing and our simplified game, an approach the best players exploit.",
+                "text": "Sarah also did something that appears a bit unnatural. Instead of continuing straight a couple times, she intuitively and preemptively turned in a snake-like pattern. This highlighted a key difference between real-life mowing and our simplified game, an approach the top players exploit.",
                 "step": "sarah-snake",
                 "note": "replay (on loop) her steps 10 through 18 on the real lawn"
               }
@@ -285,20 +285,16 @@
           "value": "Let’s take a look at level four as an example."
         },
         {
-          "type": "text",
-          "value": "<mark>show us this level, along with the heatmap pause</mark>"
+          "type": "LevelFour",
+          "value": {}
         },
         {
           "type": "text",
-          "value": "The top players (90th percentile) spent time thinking early as they traveled down the first column, then dedicated most of it at this one fork: go toward the cluttered middle section, or clear the open space to the right first."
+          "value": "The top players (90th percentile) spent time thinking early as they traveled down the first column, then dedicated most of it at this one fork: go toward the cluttered middle section, or clear the open space to the right first. The worst players (10th percentile) sped through the beginning and barely paused to think until a corner or edge forced them to, implying reacting, not planning."
         },
         {
-          "type": "text",
-          "value": "The worst players (10th percentile) sped through the beginning and barely paused to think until a corner or edge forced them to, implying reacting, not planning."
-        },
-        {
-          "type": "text",
-          "value": "<mark>highlight pause spots for top vs worst players</mark>"
+          "type": "LevelFourHeat",
+          "value": {}
         },
         {
           "type": "text",
@@ -310,7 +306,7 @@
         },
         {
           "type": "text",
-          "value": "The best players moved at about the same speed as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest. Below are two players who finish at the exact same time with different results."
+          "value": "The top players moved at about the same speed as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest. Below are two players who finish at the exact same time with different results."
         },
         {
           "type": "text",
@@ -318,7 +314,7 @@
         },
         {
           "type": "text",
-          "value": "We heard this in the interview too. Sarah, one of the best players, spent her attention unevenly on purpose. She had a theory about why."
+          "value": "We heard this in the interview too. Sarah, one of the top players, spent her attention unevenly on purpose. She had a theory about why."
         },
         {
           "type": "text",
