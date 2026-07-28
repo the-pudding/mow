@@ -67,10 +67,10 @@
 	let getCount = $derived((d) => accessor(count)(d) || 1);
 
 	let margin = $derived({
-		top: 12,
-		right: 14,
-		bottom: 44,
-		left: tickSize * 4 + 8
+		top: radius * 2,
+		right: radius * 2,
+		bottom: 48,
+		left: tickSize * 4 + radius * 2
 	});
 
 	let height = $derived(Math.round(width * ratio));
@@ -140,17 +140,24 @@
 		// });
 	});
 
+	// dots at the domain's min/max extend `radius` px past the plot's inner
+	// bounds; pad the canvas bitmap itself (not just the layout margin) so
+	// that overflow isn't clipped by the canvas's own pixel bounds.
+	let canvasPad = $derived(radius);
+	let canvasW = $derived(innerW + canvasPad * 2);
+	let canvasH = $derived(innerH + canvasPad * 2);
+
 	// redraw whenever the canvas, size, data, or scales change
 	$effect(() => {
 		if (!canvas || !innerW || !innerH || !data.length) return;
 
 		const dpr = window.devicePixelRatio || 1;
-		canvas.width = innerW * dpr;
-		canvas.height = innerH * dpr;
+		canvas.width = canvasW * dpr;
+		canvas.height = canvasH * dpr;
 
 		const ctx = canvas.getContext("2d");
-		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-		ctx.clearRect(0, 0, innerW, innerH);
+		ctx.setTransform(dpr, 0, 0, dpr, canvasPad * dpr, canvasPad * dpr);
+		ctx.clearRect(-canvasPad, -canvasPad, canvasW, canvasH);
 		// canvas can't parse a raw var(); the `color` property computes to rgb()
 		const defaultFill = variables.color["gray-500"];
 
@@ -173,11 +180,7 @@
 <figure class="chart" bind:clientWidth={width} style="--dot: {color};">
 	{#if width > 0 && data.length}
 		<div class="plot" style="height: {height}px;">
-			<canvas
-				bind:this={canvas}
-				style="left: {margin.left}px; top: {margin.top}px; width: {innerW}px; height: {innerH}px;"
-			></canvas>
-
+			<!-- grid/ticks/axis: painted behind the canvas -->
 			<svg viewBox="0 0 {width} {height}" role="img" aria-label="Scatterplot">
 				<g transform={`translate(${margin.left},${margin.top})`}>
 					<!-- y gridlines + labels -->
@@ -239,7 +242,18 @@
 							text-anchor="middle">{y.label}</text
 						>
 					{/if}
+				</g>
+			</svg>
 
+			<canvas
+				bind:this={canvas}
+				style="left: {margin.left - canvasPad}px; top: {margin.top -
+					canvasPad}px; width: {canvasW}px; height: {canvasH}px;"
+			></canvas>
+
+			<!-- dot labels/annotations/regression: painted above the canvas -->
+			<svg viewBox="0 0 {width} {height}" role="img" aria-label="Scatterplot annotations">
+				<g transform={`translate(${margin.left},${margin.top})`}>
 					<!-- per-dot labels -->
 					{#each labeledPoints as d}
 						<text
@@ -297,10 +311,12 @@
 	}
 
 	svg {
-		position: relative;
+		position: absolute;
+		top: 0;
+		left: 0;
 		display: block;
 		width: 100%;
-		height: auto;
+		height: 100%;
 		overflow: visible;
 		pointer-events: none;
 	}

@@ -9,7 +9,7 @@
 		shape: d.group === "optimal" ? "square" : "circle",
 		fill:
 			d.group === "optimal"
-				? variables.category["green-light"]
+				? variables.category["green-medium"]
 				: variables.category["orange-light"]
 	}));
 </script>
@@ -36,7 +36,7 @@
 					label: "Optimal",
 					x: 120,
 					y: 1170,
-					fill: variables.category["green-light"]
+					fill: variables.category["green-medium"]
 				}
 			]}
 		/>
