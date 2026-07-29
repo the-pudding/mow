@@ -2,7 +2,8 @@
   "meta": {
     "title": "Why some people mow a lawn better than others",
     "description": "We analyzed over 100,000 attempts to mow a lawn efficiently, a problem that’s surprisingly hard for computers.",
-    "byline": "By Russell Samora, Florina Sutanto, Arjun Kakkar, and Sushant Karki"
+    "byline": "By Russell Samora, Florina Sutanto, Arjun Kakkar, and Sushant Karki",
+    "keywords": "mow, traveling, salesman, path, coverage, planning, roomba, vacuum"
   },
   "body": [
     {

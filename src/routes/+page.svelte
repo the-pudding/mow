@@ -26,7 +26,7 @@
 		"https://pudding.cool/assets/fonts/inconsolata/inconsolata-v32-latin-700.woff2"
 	];
 
-	const { title, description, keywords } = copy;
+	const { title, description, keywords } = copy.meta;
 
 	const metaObj =
 		import.meta.env.VITE_SITE == "citizencodex"
