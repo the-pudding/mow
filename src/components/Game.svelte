@@ -190,6 +190,8 @@
 		margin: 2rem auto 0 auto;
 		max-width: var(--grid-max-width);
 		text-align: center;
-		font-size: var(--14px);
+		font-size: var(--12px);
+		font-family: var(--font-mono);
+		text-transform: uppercase;
 	}
 </style>

@@ -7,10 +7,9 @@
 	import levels from "$data/levels.json";
 	import variables from "$data/variables.json";
 
-	// Side-by-side bonus2 comparison: the plain lawn/obstacles next to a heatmap
-	// of how long players, in aggregate, paused on each square (median seconds
-	// paused per cell, across every player who visited it — see tasks/web.js's
-	// writePauseHeatmap).
+	// Side-by-side bonus2 comparison: the pause heatmap for the top 10% most
+	// efficient players next to the same heatmap for the bottom 10% — both
+	// written by tasks/web.js's writePauseHeatmap.
 	const LEVEL_ID = "bonus2";
 
 	const interpolatePuYe = interpolateHcl(
@@ -20,20 +19,35 @@
 
 	let level = $derived(levels.find((l) => l.id === LEVEL_ID));
 
-	let heatmapData = $state([]);
+	let topData = $state([]);
+	let bottomData = $state([]);
+	let maxValue = $derived(
+		Math.max(
+			...topData.filter((d) => !(d.x === 0 && d.y === 0)).map((d) => d.value),
+			...bottomData.filter((d) => !(d.x === 0 && d.y === 0)).map((d) => d.value)
+		)
+	);
+	let minValue = $derived(
+		Math.min(...topData.map((d) => d.value), ...bottomData.map((d) => d.value))
+	);
+
+	async function loadHeatmap(suffix) {
+		const rows = await loadCsv(
+			`assets/data/${LEVEL_ID}-pause-heatmap${suffix}.csv`
+		);
+		return rows.map((r) => ({ x: +r.x, y: +r.y, value: +r.median_seconds }));
+	}
 
 	onMount(async () => {
 		try {
-			const rows = await loadCsv(`assets/data/${LEVEL_ID}-pause-heatmap.csv`);
-			heatmapData = rows
-				.map((r) => ({
-					x: +r.x,
-					y: +r.y,
-					value: +r.median_seconds
-				}))
-				.filter((d) => !(d.x === 0 && d.y === 0));
+			topData = await loadHeatmap("-top");
 		} catch (err) {
-			console.warn(`Could not load ${LEVEL_ID}-pause-heatmap.csv`, err);
+			console.warn(`Could not load ${LEVEL_ID}-pause-heatmap-top.csv`, err);
+		}
+		try {
+			bottomData = await loadHeatmap("-bottom");
+		} catch (err) {
+			console.warn(`Could not load ${LEVEL_ID}-pause-heatmap-bottom.csv`, err);
 		}
 	});
 </script>
@@ -45,8 +59,16 @@
 				size={level.size}
 				obstacles={level.obstacles}
 				started
-				variant="grass"
-			/>
+				variant="wireframe"
+			>
+				<HeatmapLayer
+					data={topData}
+					{maxValue}
+					{minValue}
+					interpolate={interpolatePuYe}
+					title="Top 10% — seconds paused per square"
+				/>
+			</Grid>
 		</div>
 		<div class="stage">
 			<Grid
@@ -56,10 +78,11 @@
 				variant="wireframe"
 			>
 				<HeatmapLayer
-					data={heatmapData}
+					data={bottomData}
+					{maxValue}
+					{minValue}
 					interpolate={interpolatePuYe}
-					showValues={false}
-					title="Median seconds paused per square <br>(excluding the start)"
+					title="Bottom 10% — seconds paused per square"
 				/>
 			</Grid>
 		</div>

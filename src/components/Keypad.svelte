@@ -35,7 +35,7 @@
 	</div>
 
 	<div class="keyboard">
-		<p><small>use the arrow keys to move</small></p>
+		<p>use the arrow keys to move</p>
 	</div>
 </div>
 
@@ -43,6 +43,8 @@
 	.c {
 		margin: 0 auto;
 		max-width: var(--grid-max-width);
+		font-family: var(--font-mono);
+		text-transform: uppercase;
 	}
 
 	.keypad {
@@ -59,6 +61,10 @@
 
 	.keyboard p {
 		margin: 0;
+	}
+
+	p {
+		font-size: var(--12px);
 	}
 
 	button {
