@@ -19,6 +19,9 @@
 		showValues = true,
 		showLegend = true,
 		title = "",
+		// overrides the domain's upper bound instead of deriving it from `data`
+		maxValue,
+		minValue,
 		// big counts get compacted (1600 → 1.6k); small/decimal values print as-is
 		formatValue = (v) => (Math.abs(v) >= 1000 ? format(",")(v) : String(v))
 	} = $props();
@@ -41,14 +44,14 @@
 
 	let lookup = $derived(new Map(data.map((d) => [`${d.x},${d.y}`, d.value])));
 
-	let lo = $derived(extent(data, (d) => d.value)[0]);
-	let hi = $derived(extent(data, (d) => d.value)[1]);
+	let lo = $derived(minValue ?? extent(data, (d) => d.value)[0]);
+	let hi = $derived(maxValue ?? extent(data, (d) => d.value)[1]);
 
 	let color = $derived.by(() => {
 		const domain = [lo ?? 0, hi ?? 1];
 		return Array.isArray(interpolate)
 			? scaleQuantize().domain(domain).range(interpolate)
-			: scaleSequential(interpolate).domain(domain);
+			: scaleSequential(interpolate).domain(domain).clamp(true);
 	});
 
 	// sample the ramp into CSS gradient stops; discrete arrays are used as-is
@@ -86,7 +89,7 @@
 			class="legend-bar"
 			style="background: linear-gradient(to right, {legendGradient});"
 		></div>
-		<span class="legend-label">{formatValue(hi)}</span>
+		<span class="legend-label">{formatValue(hi)}{maxValue ? "+" : ""}</span>
 	</div>
 {/if}
 

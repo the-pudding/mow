@@ -51,8 +51,6 @@
 				high: "Slower →"
 			}}
 			y={{ value: "optimality", label: "optimality percentile" }}
-			regression
-			regressionType="linear"
 			format=".0%"
 			customLabels={[
 				{

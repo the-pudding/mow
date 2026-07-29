@@ -21,14 +21,21 @@
 
 	let topData = $state([]);
 	let bottomData = $state([]);
+	let maxValue = $derived(
+		Math.max(
+			...topData.filter((d) => !(d.x === 0 && d.y === 0)).map((d) => d.value),
+			...bottomData.filter((d) => !(d.x === 0 && d.y === 0)).map((d) => d.value)
+		)
+	);
+	let minValue = $derived(
+		Math.min(...topData.map((d) => d.value), ...bottomData.map((d) => d.value))
+	);
 
 	async function loadHeatmap(suffix) {
 		const rows = await loadCsv(
 			`assets/data/${LEVEL_ID}-pause-heatmap${suffix}.csv`
 		);
-		return rows
-			.map((r) => ({ x: +r.x, y: +r.y, value: +r.median_seconds }))
-			.filter((d) => !(d.x === 0 && d.y === 0));
+		return rows.map((r) => ({ x: +r.x, y: +r.y, value: +r.median_seconds }));
 	}
 
 	onMount(async () => {
@@ -56,6 +63,8 @@
 			>
 				<HeatmapLayer
 					data={topData}
+					{maxValue}
+					{minValue}
 					interpolate={interpolatePuYe}
 					title="Top 10% — seconds paused per square"
 				/>
@@ -70,6 +79,8 @@
 			>
 				<HeatmapLayer
 					data={bottomData}
+					{maxValue}
+					{minValue}
 					interpolate={interpolatePuYe}
 					title="Bottom 10% — seconds paused per square"
 				/>
