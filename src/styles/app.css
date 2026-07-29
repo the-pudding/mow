@@ -8,7 +8,7 @@
 :root {
 	/* font */
 	--font-sans: "Atlas Grotesk", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
-	--font-serif: "Tiempos Web", Iowan Old Style, Times New Roman, Times, serif;
+	--font-serif: "Tiempos Text", Iowan Old Style, Times New Roman, Times, serif;
 	--font-mono: Menlo, Consolas, Monaco, monospace;
 
 	/* z-index */
