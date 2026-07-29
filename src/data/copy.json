@@ -138,7 +138,7 @@
               {
                 "text": "Let’s replay a mowing session, director’s-cut style, with some commentary along the way. For this walkthrough, we’ll use a perfectly average run from a player who called themselves <strong>Bones</strong>. It took them 54 moves–five more than optimal. We recorded the timestamp of each move, so every hesitation or direction change left a data footprint.",
                 "step": "intro",
-                "note": "Just the trace of the path (use xray, not realtime) - path yo7m5rr3nl"
+                "replay": "true"
               },
               {
                 "text": "We’ll rewind to the start and walk through it. Before Bones even made a move, they paused for <strong>2.9 seconds.</strong> They were perfectly average here as well. Upon seeing the lawn revealed, they naturally paused to survey the lawn and, perhaps, made a plan.",
@@ -155,11 +155,13 @@
               },
               {
                 "text": "Bones plodded along the outside edge until they reached the bottom. Their first notable pause (2.4s) came when they realized they hit a dead end and had to retrace their steps.",
-                "step": "pause"
+                "step": "pause",
+                "replay": "true"
               },
               {
                 "text": "After realizing their mistake, Bones turned around and re-mowed their first square to finish this section. To get to the other open section they had to backtrack through two more squares. Then it was mostly smooth sailing as they worked around the edges, then filled in the remaining squares in the middle.",
-                "step": "remaining"
+                "step": "remaining",
+                "replay": "true"
               },
               {
                 "text": "What differentiated the great players from everyone else came down to a single critical decision. We can divide the lawn into two main sections: left and right. Bones completed the left section first. Because it dead-ends, the only path out was to retrace their steps, creating an inevitable backtrack.",
@@ -176,7 +178,7 @@
               {
                 "text": "One of those was a player (actually) named <strong>Sarah.</strong> We got in touch, and learned that she finished on the left with intention. <blockquote>“I saw the dead end at the end and I was like, okay, that’s where I need to end as well, so don’t go that way first.”</blockquote>",
                 "step": "sarah-path",
-                "note": "show Sarah's x ray path, animated (autotimer)"
+                "replay": "true"
               },
               {
                 "text": "Sarah didn’t explicitly register the one-way corridor, but knew a dead-end meant the left section <em>had</em> to be reserved for the end to avoid a backtrack. The pause data backs her up. Her longest hesitation came a square <em>before</em> the fork, before continuing to clear the right side.",
@@ -185,8 +187,7 @@
               },
               {
                 "text": "Sarah also did something that appears a bit unnatural. Instead of simply continuing straight a few times, she intuitively and preemptively turned in a snake-like pattern. This highlighted a key difference between real-life mowing and our simplified game, an approach top players exploit.",
-                "step": "sarah-snake",
-                "note": "replay (on loop) her steps 10 through 18 on the real lawn"
+                "step": "sarah-snake"
               }
             ]
           }
@@ -257,11 +258,7 @@
         },
         {
           "type": "text",
-          "value": "It seemed obvious to us that players who thought longer would mow better. In math speak, time alone explains less than 5% of the variation in how people did (R<sup>2</sup> of 4.8%). In other words, if we told you how long someone took, you couldn’t guess how well they did."
-        },
-        {
-          "type": "text",
-          "value": "Below, each dot is a player who finished every lawn, plotted by speed (seconds spent per square, which normalizes time across lawn sizes) against how close to optimal they got. Pick any speed along the x-axis and you’ll find players are spread out nearly the same as any other."
+          "value": "It seemed obvious to us that players who thought longer would mow better. Below, each dot is a player who finished every lawn, plotted by speed (seconds spent per square, which normalizes time across lawn sizes) against how close to optimal they got. Pick any speed along the x-axis and you’ll find players are spread out nearly the same as any other."
         },
         {
           "type": "OptimalityVsTime",
@@ -269,11 +266,11 @@
         },
         {
           "type": "text",
-          "value": "We looked at just pause/thinking time and the same trend held, but <em>where</em> they paused is a different story."
+          "value": "While there is a very small trend on the opposite ends for the top and worst players, if we told you how long someone took, you couldn’t guess how well they did. Technically speaking, time alone explains less than 5% of the variation in how people did (R<sup>2</sup> of 4.8%)."
         },
         {
           "type": "text",
-          "value": "Let’s take a look at level four as an example."
+          "value": "We looked at just pause/thinking time and the same trend held, but <em>where</em> they paused is a different story. Let’s take a look at level four as an example."
         },
         {
           "type": "text",
@@ -329,7 +326,11 @@
         },
         {
           "type": "text",
-          "value": "<mark>Let people re-play each maze. After (or a button that says see results) Show /toggle between an common ending squares, heatmap pauses, optimal solution(s), heatmap of repeated squares</mark>"
+          "value": "Below is a little playground. Pick a lawn and mow it, or explore where people paused, backtracked, and finished."
+        },
+        {
+          "type": "Sandbox",
+          "value": {}
         },
         {
           "type": "Method",

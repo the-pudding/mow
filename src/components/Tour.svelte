@@ -11,6 +11,7 @@
 	import SectionLayer from "$components/grid/SectionLayer.svelte";
 	import PulseLayer from "$components/grid/PulseLayer.svelte";
 	import Histogram from "$components/charts/Histogram.svelte";
+	import Button from "$components/ui/Button.svelte";
 	import loadCsv from "$utils/loadCsv.js";
 	import levels from "$data/levels.json";
 	import variables from "$data/variables.json";
@@ -511,6 +512,7 @@
 		await tick();
 		if (showXray) {
 			xrayLayer?.reset();
+			await tick();
 			xrayLayer?.animate();
 		}
 		if (showGame && gameReplay.length - gameStartIndex > 1) gameLayer?.play();
@@ -603,7 +605,7 @@
 	</div>
 
 	<Scrolly bind:value={stepIndex}>
-		{#each steps as { text, step, chart }, i}
+		{#each steps as { text, step, chart, replay }, i}
 			{@const active = stepIndex === i}
 			<div class="step" class:active data-step={i}>
 				<p>{@html text}</p>
@@ -618,6 +620,11 @@
 						higlightBaseline="bottom"
 					/>
 				{/if}
+				{#if replay}
+					<p class="replay">
+						<Button onclick={() => applyStep(step)}>Replay</Button>
+					</p>
+				{/if}
 			</div>
 		{/each}
 	</Scrolly>
@@ -627,19 +634,19 @@
 	.c {
 		position: relative;
 		--text-width: 30rem;
-		max-width: 1600px;
+		max-width: var(--chart-max-width);
 		margin: 0 auto;
 	}
 
 	.step {
-		padding-bottom: 25svh;
-		padding-top: 25svh;
+		height: 100svh;
+		padding-top: 2rem;
 		opacity: 0.5;
 		transition: opacity 0.25s ease-in-out;
 	}
 
 	.step:first-of-type {
-		padding-top: 0;
+		/* padding-top: 0; */
 		margin-top: -100svh;
 	}
 
@@ -651,10 +658,10 @@
 		position: sticky;
 		top: 0;
 		height: 100svh;
+		padding-top: 2rem;
 		width: 100%;
 		display: flex;
 		justify-content: center;
-		align-items: center;
 		z-index: -1;
 	}
 
@@ -665,11 +672,13 @@
 		padding: 1rem;
 	}
 
-	/* fade wrapper for each grid layer; fills the grid so the layer's own
-	   absolute positioning resolves against it */
 	.layer {
 		position: absolute;
 		inset: 0;
+	}
+
+	p.replay {
+		margin-top: 1rem;
 	}
 
 	@media screen and (min-width: 640px) {

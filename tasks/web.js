@@ -913,6 +913,96 @@ function writePauseHeatmap(testsRaw, lvl) {
 	});
 }
 
+// --- sandbox heatmaps -------------------------------------------------------
+
+// The three aggregate views the reader toggles between in the Sandbox, written
+// for every level as {lvl}-heatmap-{name}.csv. Every file is x,y,value — value
+// is what HeatmapLayer colors — plus supporting columns for reference.
+//   pause     median seconds a player lingered on that square
+//   ending    players whose last square was that one
+//   backtrack players who mowed that square more than once
+
+// counts keyed "x,y" -> rows, with value = count and its share of `total`
+function heatmapRows(counts, total) {
+	return Array.from(counts, ([key, count]) => {
+		const [x, y] = key.split(",").map(Number);
+		return {
+			x,
+			y,
+			value: count,
+			pct: total ? +((count / total) * 100).toFixed(1) : 0
+		};
+	}).sort((a, b) => d3.ascending(a.y, b.y) || d3.ascending(a.x, b.x));
+}
+
+// median dwell per cell, reusing the same per-player dwell math (and 60s AFK
+// cutoff) as the cohort pause heatmaps
+function pauseHeatmapRows(tests) {
+	return dwellRows(tests).map(
+		({ x, y, players, median_seconds, mean_seconds }) => ({
+			x,
+			y,
+			value: median_seconds,
+			players,
+			mean_seconds
+		})
+	);
+}
+
+function endingHeatmapRows(tests) {
+	const counts = new Map();
+	tests.forEach(({ result }) => {
+		const path = JSON.parse(result);
+		if (!path.length) return;
+		const { x, y } = path.at(-1);
+		const key = `${x},${y}`;
+		counts.set(key, (counts.get(key) ?? 0) + 1);
+	});
+	return heatmapRows(counts, tests.length);
+}
+
+// one player counts once per square they revisited, however many times they
+// revisited it — this is "how many people got sent back here", not total steps
+function backtrackHeatmapRows(tests) {
+	const counts = new Map();
+	tests.forEach(({ result }) => {
+		const visits = new Map();
+		JSON.parse(result).forEach(({ x, y }) => {
+			const key = `${x},${y}`;
+			visits.set(key, (visits.get(key) ?? 0) + 1);
+		});
+		visits.forEach((n, key) => {
+			if (n > 1) counts.set(key, (counts.get(key) ?? 0) + 1);
+		});
+	});
+	return heatmapRows(counts, tests.length);
+}
+
+function writeSandboxHeatmaps(testsRaw) {
+	const builders = {
+		pause: pauseHeatmapRows,
+		ending: endingHeatmapRows,
+		backtrack: backtrackHeatmapRows
+	};
+
+	LEVELS.forEach((lvl) => {
+		const tests = testsRaw.filter((d) => d.level === lvl);
+		if (!tests.length) {
+			console.log(`No tests for ${lvl}, skipping sandbox heatmaps`);
+			return;
+		}
+
+		Object.entries(builders).forEach(([name, build]) => {
+			const rows = build(tests);
+			const file = `./static/assets/data/${lvl}-heatmap-${name}.csv`;
+			fs.writeFileSync(file, d3.csvFormat(rows));
+			console.log(
+				`Wrote ${rows.length} rows (${tests.length} players) to ${file}`
+			);
+		});
+	});
+}
+
 // one row per player who ran `lvl`: their id, optimality (optimal / actual
 // path length), and the timestamp of their last move.
 function writeLevelSummary(testsRaw, usersLookup, lvl) {
@@ -990,6 +1080,7 @@ function main() {
 	writeOptimalSolutionCounts(exampleTests);
 	writeOptimalSolutions();
 	writePauseHeatmap(testsRaw, "bonus2");
+	writeSandboxHeatmaps(testsRaw);
 	writeLevelSummary(testsRaw, usersLookup, "bonus2");
 }
 

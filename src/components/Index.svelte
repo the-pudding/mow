@@ -2,8 +2,6 @@
 	import { getContext } from "svelte";
 	import StoryGame from "$components/StoryGame.svelte";
 	import CMS from "$components/helpers/CMS.svelte";
-	import Img from "$components/Img.svelte";
-	import Video from "$components/Video.svelte";
 	import YourResult from "$components/YourResult.svelte";
 	import Compare from "$components/Compare.svelte";
 	import Tour from "$components/Tour.svelte";
@@ -15,14 +13,12 @@
 	import TSPLayer from "$components/grid/TSPLayer.svelte";
 	import Study from "$components/Study.svelte";
 	import LevelFour from "$components/LevelFour.svelte";
-	import LevelFourHeat from "$components/LevelFourHeat.svelte";
 	import TwoMowers from "$components/TwoMowers.svelte";
+	import Sandbox from "$components/Sandbox.svelte";
 
 	const copy = getContext("copy");
 	const { body } = copy;
 	const components = {
-		Video,
-		Img,
 		StoryGame,
 		YourResult,
 		Tour,
@@ -35,8 +31,8 @@
 		TSPLayer,
 		Study,
 		LevelFour,
-		LevelFourHeat,
-		TwoMowers
+		TwoMowers,
+		Sandbox
 	};
 </script>
 

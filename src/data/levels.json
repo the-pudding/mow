@@ -1,6 +1,7 @@
 [
 	{
 		"id": "tutorial",
+		"label": "Tutorial",
 		"size": 6,
 		"record": false,
 		"optimal": 32,
@@ -25,6 +26,7 @@
 	},
 	{
 		"id": "round1",
+		"label": "Level 1",
 		"size": 6,
 		"record": true,
 		"optimal": 26,
@@ -77,6 +79,7 @@
 	},
 	{
 		"id": "round2",
+		"label": "Level 2",
 		"size": 8,
 		"record": true,
 		"optimal": 49,
@@ -145,6 +148,7 @@
 	},
 	{
 		"id": "bonus1",
+		"label": "Level 3",
 		"size": 10,
 		"record": true,
 		"optimal": 87,
@@ -217,6 +221,7 @@
 	},
 	{
 		"id": "bonus2",
+		"label": "Level 4",
 		"size": 12,
 		"record": true,
 		"optimal": 121,
@@ -317,6 +322,7 @@
 	},
 	{
 		"id": "bonus3",
+		"label": "Level 5",
 		"size": 14,
 		"record": true,
 		"optimal": 177,

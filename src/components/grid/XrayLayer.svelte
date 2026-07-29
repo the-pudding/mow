@@ -6,8 +6,7 @@
 
 	// Animated "xray" path overlay: draws each path segment as a colored line,
 	// fading them in one after another when animate() is called.
-	// showBacktracks: mark cells crossed more than once with a circle that
-	// grows with each additional pass (the 2nd/3rd/... time it was mowed).
+	// showBacktracks: mark cells crossed more than once with a fixed-size circle.
 	// realtime: pace the reveal by each point's actual timestamp (t) instead
 	// of a fixed step per segment.
 	let {
@@ -56,12 +55,10 @@
 		});
 		return [...counts.entries()]
 			.filter(([, { passes }]) => passes > 1)
-			.map(([key, { passes, lastIndex }]) => {
+			.map(([key, { lastIndex }]) => {
 				const [x, y] = key.split(",").map(Number);
 				const { cx, cy } = grid.center(x, y);
-				// 1st backtrack ~0.18r, growing with each extra pass, capped to cell
-				const r = Math.min(0.25 + (passes - 2) * 0.1, 0.5);
-				return { cx, cy, r, passes, lastIndex };
+				return { cx, cy, r: 0.25, lastIndex };
 			});
 	});
 
@@ -110,7 +107,7 @@
 			{/each}
 
 			{#if showBacktracks}
-				{#each backtracks as { cx, cy, r, passes, lastIndex } (`${cx},${cy}`)}
+				{#each backtracks as { cx, cy, r, lastIndex } (`${cx},${cy}`)}
 					<circle
 						class="backtrack"
 						{cx}
@@ -121,7 +118,7 @@
 						style:stroke={colorScale[color](lastIndex / path.length)}
 						style:fill={colorScale[color](lastIndex / path.length)}
 					>
-						<title>{passes} passes</title>
+						<title>backtracked</title>
 					</circle>
 				{/each}
 			{/if}

@@ -23,7 +23,7 @@
 		maxValue,
 		minValue,
 		// big counts get compacted (1600 → 1.6k); small/decimal values print as-is
-		formatValue = (v) => (Math.abs(v) >= 1000 ? format(",")(v) : String(v))
+		formatValue = (v) => (Math.abs(+v) >= 1000 ? format(",")(v) : String(v))
 	} = $props();
 
 	const grid = getContext("grid");

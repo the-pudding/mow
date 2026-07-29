@@ -87,7 +87,7 @@
 		if (raw) {
 			try {
 				const parsed = JSON.parse(raw);
-				console.log(parsed);
+				// console.log(parsed);
 				Object.assign(session, parsed);
 			} catch (e) {
 				console.warn("Could not parse stored session", e);

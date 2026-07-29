@@ -2,6 +2,7 @@
 	import { onMount } from "svelte";
 	import Grid from "$components/Grid.svelte";
 	import GameLayer from "$components/grid/GameLayer.svelte";
+	import Button from "$components/ui/Button.svelte";
 	import loadCsv from "$utils/loadCsv.js";
 	import inView from "$actions/inview.js";
 	import levels from "$data/levels.json";
@@ -66,19 +67,22 @@
 </script>
 
 {#if level}
-	<div class="c" use:inView onenter={() => (visible = true)}>
-		<div class="stage">
-			<div class="name">Sarah ({sarahOptimal}% optimal)</div>
-			<Grid size={level.size} obstacles={level.obstacles} started>
-				<GameLayer bind:this={sarahLayer} replay={sarahPath} />
-			</Grid>
+	<div use:inView onenter={() => (visible = true)}>
+		<div class="c">
+			<div class="stage">
+				<div class="name">Sarah ({sarahOptimal}% optimal)</div>
+				<Grid size={level.size} obstacles={level.obstacles} started>
+					<GameLayer bind:this={sarahLayer} replay={sarahPath} />
+				</Grid>
+			</div>
+			<div class="stage">
+				<div class="name">Cheesepuff ({otherOptimal}% optimal)</div>
+				<Grid size={level.size} obstacles={level.obstacles} started>
+					<GameLayer bind:this={otherLayer} replay={otherPath} />
+				</Grid>
+			</div>
 		</div>
-		<div class="stage">
-			<div class="name">Cheesepuff ({otherOptimal}% optimal)</div>
-			<Grid size={level.size} obstacles={level.obstacles} started>
-				<GameLayer bind:this={otherLayer} replay={otherPath} />
-			</Grid>
-		</div>
+		<p class="replay"><Button onclick={replay}>Replay</Button></p>
 	</div>
 {/if}
 
@@ -101,5 +105,10 @@
 		font-weight: 700;
 		font-family: var(--font-mono);
 		text-transform: uppercase;
+	}
+
+	p.replay {
+		text-align: center;
+		margin: 0 auto;
 	}
 </style>
