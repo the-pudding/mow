@@ -95,7 +95,7 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		gap: 2rem;
-		margin: 0 auto;
+		margin: 2rem auto;
 	}
 
 	.stage {

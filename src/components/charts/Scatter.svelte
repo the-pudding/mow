@@ -252,7 +252,11 @@
 			></canvas>
 
 			<!-- dot labels/annotations/regression: painted above the canvas -->
-			<svg viewBox="0 0 {width} {height}" role="img" aria-label="Scatterplot annotations">
+			<svg
+				viewBox="0 0 {width} {height}"
+				role="img"
+				aria-label="Scatterplot annotations"
+			>
 				<g transform={`translate(${margin.left},${margin.top})`}>
 					<!-- per-dot labels -->
 					{#each labeledPoints as d}
@@ -338,7 +342,7 @@
 	}
 
 	text {
-		font-family: var(--font-mono);
+		font-family: var(--font-form);
 		fill: var(--color-fg);
 	}
 

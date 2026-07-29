@@ -191,7 +191,7 @@
 		max-width: var(--grid-max-width);
 		text-align: center;
 		font-size: var(--12px);
-		font-family: var(--font-mono);
+		font-family: var(--font-form);
 		text-transform: uppercase;
 	}
 </style>

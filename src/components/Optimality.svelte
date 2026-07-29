@@ -162,7 +162,7 @@
 	}
 
 	text {
-		font-family: var(--font-mono);
+		font-family: var(--font-form);
 		fill: var(--color-fg);
 	}
 

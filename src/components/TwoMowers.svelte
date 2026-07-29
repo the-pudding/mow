@@ -90,7 +90,7 @@
 	.c {
 		display: flex;
 		justify-content: center;
-		margin: 0 auto;
+		margin: 2rem auto 0 auto;
 	}
 
 	.stage {
@@ -103,12 +103,12 @@
 		text-align: center;
 		font-size: var(--12px);
 		font-weight: 700;
-		font-family: var(--font-mono);
+		font-family: var(--font-form);
 		text-transform: uppercase;
 	}
 
 	p.replay {
 		text-align: center;
-		margin: 0 auto;
+		margin: 0 auto 2rem auto;
 	}
 </style>

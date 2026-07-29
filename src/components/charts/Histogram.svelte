@@ -213,14 +213,8 @@
 		stroke-width: 1;
 	}
 
-	line.median {
-		stroke: var(--color-gray-900);
-		stroke-width: 1.5;
-		stroke-dasharray: 3 3;
-	}
-
 	text {
-		font-family: var(--font-mono);
+		font-family: var(--font-form);
 		fill: var(--color-fg);
 		text-transform: uppercase;
 	}

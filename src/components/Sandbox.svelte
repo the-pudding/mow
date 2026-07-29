@@ -226,12 +226,13 @@
 <style>
 	.sandbox {
 		margin: 2rem auto;
+		max-width: var(--col-width);
 	}
 
 	.controls {
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: center;
+		justify-content: space-between;
 		align-items: center;
 		gap: 1rem;
 		margin-bottom: 2rem;
@@ -247,7 +248,7 @@
 
 	.note {
 		text-align: center;
-		font-family: var(--font-mono);
+		font-family: var(--font-form);
 		font-size: var(--14px);
 	}
 

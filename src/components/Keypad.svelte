@@ -43,7 +43,7 @@
 	.c {
 		margin: 0 auto;
 		max-width: var(--grid-max-width);
-		font-family: var(--font-mono);
+		font-family: var(--font-form);
 		text-transform: uppercase;
 	}
 

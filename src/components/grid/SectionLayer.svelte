@@ -129,7 +129,7 @@
 	}
 
 	text {
-		font-family: var(--font-mono);
+		font-family: var(--font-form);
 		font-size: 0.6px;
 		font-weight: 700;
 		text-transform: uppercase;

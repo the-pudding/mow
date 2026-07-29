@@ -53,8 +53,8 @@
 
 	h1 {
 		font-size: clamp(var(--32px, 32px), 10vw, var(--48px, 48px));
-		font-weight: 900;
-		line-height: 1;
+		font-weight: 700;
+		line-height: 1.2;
 	}
 
 	.byline {
@@ -63,6 +63,7 @@
 
 	.byline p {
 		text-align: center;
+		line-height: 1.2;
 	}
 
 	.byline img {

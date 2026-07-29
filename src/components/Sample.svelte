@@ -89,7 +89,7 @@
 	.label {
 		display: block;
 		text-align: center;
-		font-family: var(--font-mono);
+		font-family: var(--font-form);
 		text-transform: uppercase;
 	}
 </style>

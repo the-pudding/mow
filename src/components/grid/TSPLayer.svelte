@@ -218,7 +218,7 @@
 	}
 
 	text {
-		font-family: var(--font-mono);
+		font-family: var(--font-form);
 		font-size: 0.2px;
 		font-weight: 700;
 		fill: var(--color-bg);
@@ -236,7 +236,7 @@
 		text-align: center;
 		z-index: var(--z-top);
 		transform: translateY(100%);
-		font-family: var(--font-mono);
+		font-family: var(--font-form);
 		font-size: var(--12px);
 		text-transform: uppercase;
 	}

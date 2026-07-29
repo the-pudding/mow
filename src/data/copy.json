@@ -334,8 +334,24 @@
           "value": {}
         },
         {
-          "type": "Method",
-          "value": {}
+          "type": "h2",
+          "value": "Data and Methods"
+        },
+        {
+          "type": "text",
+          "value": "<small>Tk everything</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>first move pause histogram - filtered out over 1min</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>Later lawns were optional, so fewer people played them. Those who did scored about the same as everyone else</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>Study chart is estimated based on image</small>"
         }
       ]
     }
