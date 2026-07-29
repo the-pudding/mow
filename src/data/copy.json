@@ -207,7 +207,7 @@
         },
         {
           "type": "text",
-          "value": "More than 22,000 people made it through the required levels, and over 7,000 people completed a few extra bonus ones. Here is the median optimality for each lawn. The light band represents how most players (80%) did."
+          "value": "More than 22,000 people made it through two required levels, and over 7,000 people completed a few extra bonus ones. Here is the median optimality for each lawn. The light band represents how most players (80%) did."
         },
         {
           "type": "Optimality",
@@ -259,7 +259,7 @@
         },
         {
           "type": "text",
-          "value": "It seemed obvious to us that players who thought longer would mow better. Below, each dot is a player who finished every lawn, plotted by speed (seconds spent per square, which normalizes time across lawn sizes) against how close to optimal they got. Pick any speed along the x-axis and you’ll find players are spread out nearly the same as any other."
+          "value": "It seemed obvious to us that players who thought longer would mow better. Below, each dot is a player who finished every lawn, plotted by speed (seconds spent per square, which normalizes time across lawn sizes) against how close to optimal they got. Pick any speed along the x-axis and you’ll find players’ optimality are spread out nearly the same as any other."
         },
         {
           "type": "OptimalityVsTime",
@@ -271,7 +271,7 @@
         },
         {
           "type": "text",
-          "value": "We looked at just pause/thinking time and the same trend held, but <em>where</em> they paused is a different story. Let’s take a look at level four as an example."
+          "value": "We isolated just extending pause times (i.e., thinking) and the same trend held, but <em>where</em> they paused is a different story. Let’s take a look at level four as an example."
         },
         {
           "type": "text",
