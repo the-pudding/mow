@@ -353,6 +353,8 @@
 			showGame = true;
 			gameReplay = bonesPath.slice(0, 1);
 			autoTimer = true;
+			showPulse = true;
+			pulseCells = [{ x: 0, y: 0 }];
 		},
 
 		// "play quick animation until fifth square, then overlay blinking options"

@@ -40,7 +40,7 @@
         },
         {
           "type": "text",
-          "value": "A few weeks ago, 22,654 people mowed the same lawn. Here is what their paths look like."
+          "value": "A few weeks ago, 22,654 people mowed the same lawn. Here is what their paths looked like."
         },
         {
           "type": "Sample",
@@ -97,7 +97,7 @@
         },
         {
           "type": "text",
-          "value": "We wanted to create this mowing experiment after we <a href=https://docs.lib.purdue.edu/jps/vol1/iss1/4/ target=_blank rel=noreferrer>read a study</a> that found humans come impressively close to computer-calculated optimal solutions to this problem with fewer stops, and even do pretty good &mdash; just 11% less efficient than optimal &mdash; for 70+ stops. As you can see in our recreated chart of their results below, as the stops increase, humans’ ability decreases. Would results be similar for mowing a lawn?"
+          "value": "We wanted to create this mowing experiment after we <a href=https://docs.lib.purdue.edu/jps/vol1/iss1/4/ target=_blank rel=noreferrer>read a study</a> that found humans come impressively close to computer-calculated optimal solutions to this problem with fewer stops, and even do pretty good &mdash; just 11% less efficient than optimal &mdash; for 70+ stops. We recreated their chart below. As the stops increase, humans’ ability decreases. Would results be similar for mowing a lawn?"
         },
         {
           "type": "Study",
@@ -105,16 +105,7 @@
         },
         {
           "type": "text",
-          "value": "A slight detour, if we may. It is worth noting that there are two main ways to tackle a problem like this:"
-        },
-        {
-          "type": "ul",
-          "value": {
-            "li": [
-              "<strong>algorithms</strong> which guarantee the optimal path and",
-              "<strong>heuristics</strong> which use shortcuts to find a “good enough” path fast"
-            ]
-          }
+          "value": "A slight detour, if we may. It is worth noting that there are two main ways to tackle a problem like this. Simplifying things a bit, there are <strong>algorithms</strong> which guarantee the optimal path, and <strong>heuristics</strong> which use shortcuts to find a “good enough” path, fast."
         },
         {
           "type": "text",
@@ -179,7 +170,7 @@
                 "step": "right"
               },
               {
-                "text": "While those who were nearly or <strong>perfectly optimal</strong> chose to mow the right side first so they could end their run on the left, having anticipated the dead-end trap.",
+                "text": "While those who were within two moves or <strong>perfectly optimal</strong> chose to mow the right side first so they could end their run on the left, having anticipated the dead-end trap.",
                 "step": "left"
               },
               {
@@ -188,12 +179,12 @@
                 "note": "show Sarah's x ray path, animated (autotimer)"
               },
               {
-                "text": "She didn’t explicitly register the one-way corridor, but knew a dead-end meant the left section <em>had</em> to be reserved for the end to avoid a backtrack. The pause data backs her up. Her longest hesitation came a square <em>before</em> the fork, before continuing to clear the right side.",
+                "text": "Sarah didn’t explicitly register the one-way corridor, but knew a dead-end meant the left section <em>had</em> to be reserved for the end to avoid a backtrack. The pause data backs her up. Her longest hesitation came a square <em>before</em> the fork, before continuing to clear the right side.",
                 "step": "sarah-pause",
                 "note": "sarah’s pause heatmap"
               },
               {
-                "text": "Sarah also did something that appears a bit unnatural. Instead of continuing straight a couple times, she intuitively and preemptively turned in a snake-like pattern. This highlighted a key difference between real-life mowing and our simplified game, an approach the top players exploit.",
+                "text": "Sarah also did something that appears a bit unnatural. Instead of simply continuing straight a few times, she intuitively and preemptively turned in a snake-like pattern. This highlighted a key difference between real-life mowing and our simplified game, an approach top players exploit.",
                 "step": "sarah-snake",
                 "note": "replay (on loop) her steps 10 through 18 on the real lawn"
               }
@@ -214,7 +205,7 @@
         },
         {
           "type": "text",
-          "value": "More than 22,000 people made it through the required levels, and over 7,000 people completed a few extra bonus ones. Here is how they did across them. Note: the light band represents how most players (80%) did."
+          "value": "More than 22,000 people made it through the required levels, and over 7,000 people completed a few extra bonus ones. Here is the median optimality for each lawn. The light band represents how most players (80%) did."
         },
         {
           "type": "Optimality",

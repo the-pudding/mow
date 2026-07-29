@@ -20,8 +20,8 @@
 	let gridOptimal = $state();
 	let score = $derived(
 		userPath.length && optimalPath.length
-			? ((optimalPath.length / userPath.length) * 100).toFixed(2)
-			: (0).toFixed(2)
+			? ((optimalPath.length / userPath.length) * 100).toFixed(1)
+			: 0
 	);
 
 	async function onReplay() {

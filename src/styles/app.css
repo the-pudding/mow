@@ -184,6 +184,10 @@ p strong {
 	color: var(--color-mark);
 }
 
+.tour blockquote {
+	margin: 1rem auto;
+}
+
 @media screen and (min-width: 640px) {
 	main p, main li {
 		font-size: var(--22px);
