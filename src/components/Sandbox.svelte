@@ -1,6 +1,6 @@
 <script>
 	import { tick } from "svelte";
-	import { interpolateHcl } from "d3";
+	import { interpolateHcl, format } from "d3";
 	import Grid from "$components/Grid.svelte";
 	import Game from "$components/Game.svelte";
 	import HeatmapLayer from "$components/grid/HeatmapLayer.svelte";
@@ -48,11 +48,14 @@
 	];
 
 	// title per heatmap type; `name` is the csv suffix. Values fall through to
-	// HeatmapLayer's default formatter (thousands get a comma).
+	// HeatmapLayer's default formatter (thousands get a comma) unless a
+	// formatValue is given — pause is seconds, so it gets a fixed decimal
+	// (1 → "1.0") to match neighboring cells like 0.4 / 2.3.
 	const heatmaps = {
 		pause: {
 			name: "pause",
-			title: "Median seconds paused per square"
+			title: "Median seconds paused per square",
+			formatValue: format(".1f")
 		},
 		ending: {
 			name: "ending",
@@ -213,6 +216,7 @@
 							{maxValue}
 							interpolate={interpolatePuYe}
 							title={heatmap.title}
+							formatValue={heatmap.formatValue}
 						/>
 					</Grid>
 				{:else if loading}

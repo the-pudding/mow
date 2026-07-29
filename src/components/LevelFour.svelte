@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from "svelte";
-	import { interpolateHcl } from "d3";
+	import { interpolateHcl, format } from "d3";
 	import Grid from "$components/Grid.svelte";
 	import HeatmapLayer from "$components/grid/HeatmapLayer.svelte";
 	import loadCsv from "$utils/loadCsv.js";
@@ -16,6 +16,10 @@
 		variables.category["purple-dark"],
 		variables.category["yellow-light"]
 	);
+
+	// seconds, so fix the decimal (1 → "1.0") to match neighboring cells like
+	// 0.4 / 2.3 instead of the plain-integer default.
+	const formatSeconds = format(".1f");
 
 	let level = $derived(levels.find((l) => l.id === LEVEL_ID));
 
@@ -67,6 +71,7 @@
 					{minValue}
 					interpolate={interpolatePuYe}
 					title="Top 10% — seconds paused per square"
+					formatValue={formatSeconds}
 				/>
 			</Grid>
 		</div>
@@ -83,6 +88,7 @@
 					{minValue}
 					interpolate={interpolatePuYe}
 					title="Bottom 10% — seconds paused per square"
+					formatValue={formatSeconds}
 				/>
 			</Grid>
 		</div>

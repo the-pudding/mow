@@ -52,6 +52,7 @@
 			}}
 			y={{ value: "optimality", label: "optimality percentile" }}
 			format=".0%"
+			regression={false}
 			customLabels={[
 				{
 					label: "10th percentile",

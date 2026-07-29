@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Why some people mow a lawn better than others",
-    "description": "We analyzed over 100,000 attempts to mow a lawn efficiently, a problem that’s surprisingly hard for computers.",
+    "description": "We analyzed over 20,000 players’ attempts to mow a lawn efficiently, a problem that’s surprisingly hard for computers.",
     "byline": "By Russell Samora, Florina Sutanto, Arjun Kakkar, and Sushant Karki",
     "keywords": "mow, traveling, salesman, path, coverage, planning, roomba, vacuum"
   },
@@ -41,7 +41,7 @@
         },
         {
           "type": "text",
-          "value": "A few weeks ago, 22,654 people mowed the same lawn. Here is what their paths looked like."
+          "value": "A few weeks ago, 22,403 people mowed the same lawn. This is what their paths looked like."
         },
         {
           "type": "Sample",
@@ -59,11 +59,11 @@
         },
         {
           "type": "text",
-          "value": "Many different approaches, yet similar, pretty good outcomes. Only 49 squares needed to be covered, but people found 10,685 different ways to do it. Despite all that variety, the median person still hit 91% efficiency (within 5 moves)."
+          "value": "Many different approaches, yet similar, pretty good outcomes. Only 49 squares need to be covered, but people found 10,607 different ways to do it. Despite all that variety, the median person still hit 91% efficiency (within 5 moves)."
         },
         {
           "type": "text",
-          "value": "For this small lawn, there were 12 different perfect solutions and people found them all."
+          "value": "For this small lawn, there are 12 different perfect solutions and people found them all."
         },
         {
           "type": "Compare",
@@ -90,7 +90,7 @@
         },
         {
           "type": "text",
-          "value": "The premise is simple: a salesman must visit a set of cities exactly once and return to their starting point, all while taking the shortest possible route. We see this all the time in the real world. A pizza delivery driver planning their stops or a trick-or-treater maximizing their candy haul is solving a version of this problem."
+          "value": "The premise is simple: a salesman must visit a set of cities exactly once and return to their starting point, all while taking the shortest possible route. A pizza delivery driver planning their stops or a trick-or-treater maximizing their candy haul is solving a version of this problem."
         },
         {
           "type": "TSPLayer",
@@ -110,7 +110,7 @@
         },
         {
           "type": "text",
-          "value": "Why do we need heuristics? If a salesperson had to visit just 10 cities and we had to check every possible route, we’d surprisingly need to test 3.6 million of them. That number explodes exponentially as more cities are added."
+          "value": "Why do people need heuristics? If a salesperson had to visit just 10 cities and every possible route has to be checked, we’d surprisingly need to test 3.6 million of them. That number explodes exponentially as more cities are added."
         },
         {
           "type": "text",
@@ -122,11 +122,7 @@
         },
         {
           "type": "text",
-          "value": "When problems are small, the approach doesn’t matter much, almost everything works. But as complexity grows, optimal becomes impossible and heuristics become necessary. This is true for both humans <em>and</em> computers. We both fall back on good-enough strategies when perfect is impractical."
-        },
-        {
-          "type": "text",
-          "value": "With the maths out of the way we can get back to the good stuff."
+          "value": "When problems are small, the approach doesn’t matter much, almost everything works. But as complexity grows, optimal becomes impossible and heuristics become necessary. This is true for both humans <em>and</em> computers. People both fall back on good-enough strategies when perfect is impractical."
         },
         {
           "type": "h2",
@@ -165,7 +161,7 @@
                 "replay": "true"
               },
               {
-                "text": "What differentiated the great players from everyone else came down to a single critical decision. We can divide the lawn into two main sections: left and right. Bones completed the left section first. Because it dead-ends, the only path out was to retrace their steps, creating an inevitable backtrack.",
+                "text": "What differentiated the top players from everyone else came down to a single critical decision. We can divide the lawn into two main sections: left and right. Bones completed the left section first. Because it dead-ends, the only path out was to retrace their steps, creating an inevitable backtrack.",
                 "step": "sections"
               },
               {
@@ -173,16 +169,16 @@
                 "step": "right"
               },
               {
-                "text": "While those who were within two moves or <strong>perfectly optimal</strong> chose to mow the right side first so they could end their run on the left, having anticipated the dead-end trap.",
+                "text": "While those who were within two moves of optimal, including the <strong>18% who were perfect</strong>, chose to mow the right side first so they could end their run on the left, having anticipated the dead-end trap.",
                 "step": "left"
               },
               {
-                "text": "One of those was a player (actually) named <strong>Sarah.</strong> We got in touch, and learned that she finished on the left with intention. <blockquote>“I saw the dead end at the end and I was like, okay, that’s where I need to end as well, so don’t go that way first.”</blockquote>",
+                "text": "One of those was a player called <strong>smm</strong>, real name <strong>Sarah.</strong> We got in touch, and learned that she finished on the left with intention. <blockquote>“I saw the dead end at the end and I was like, okay, that’s where I need to end as well, so don’t go that way first.”</blockquote>",
                 "step": "sarah-path",
                 "replay": "true"
               },
               {
-                "text": "Sarah didn’t explicitly register the one-way corridor, but knew a dead-end meant the left section <em>had</em> to be reserved for the end to avoid a backtrack. The pause data backs her up. Her longest hesitation came a square <em>before</em> the fork, before continuing to clear the right side.",
+                "text": "Sarah knew a dead-end meant the left section <em>had</em> to be reserved for the end to avoid a backtrack. The pause data backs her up. Her longest hesitation came a square <em>before</em> the fork, before continuing to clear the right side.",
                 "step": "sarah-pause",
                 "note": "sarah’s pause heatmap"
               },
@@ -219,11 +215,11 @@
         },
         {
           "type": "text",
-          "value": "One caveat: we made the lawns bigger with different obstacle layouts at the same time, so we can’t say which mattered more. Performance actually was slightly better on the largest lawn than the previous two, which suggests that layout matters more than raw size."
+          "value": "One caveat: we made the lawns bigger with different obstacle layouts at the same time, so we can’t say which mattered more. Performance was actually slightly better on the largest lawn than the previous two, which suggests that layout matters more than raw size."
         },
         {
           "type": "text",
-          "value": "Our best guess is the structure of a lawn itself. Where the Traveling Salesman Problem scatters nodes randomly, a lawn has structure, which lets players fall back on two strategies: <strong>decomposition</strong> and <strong>compression</strong>."
+          "value": "Our best guess is the structure of a lawn itself. Where the Traveling Salesman Problem scatters nodes randomly, a lawn has structure, which let players fall back on two strategies: <strong>decomposition</strong> and <strong>compression</strong>."
         },
         {
           "type": "text",
@@ -259,7 +255,7 @@
         },
         {
           "type": "text",
-          "value": "It seemed obvious to us that players who thought longer would mow better. Below, each dot is a player who finished every lawn, plotted by speed (seconds spent per square, which normalizes time across lawn sizes) against how close to optimal they got. Pick any speed along the x-axis and you’ll find players’ optimality are spread out nearly the same as any other."
+          "value": "It seemed obvious to us that players who thought longer would mow better. Below, each dot is a player who finished every lawn, plotted by pace (seconds spent per square, which normalizes time across lawn sizes) against how close to optimal they got. Pick any pace percentile on the x-axis and the spread of results looks about the same as at any other."
         },
         {
           "type": "OptimalityVsTime",
@@ -271,7 +267,7 @@
         },
         {
           "type": "text",
-          "value": "We isolated just extending pause times (i.e., thinking) and the same trend held, but <em>where</em> they paused is a different story. Let’s take a look at level four as an example."
+          "value": "We isolated just extended pause times (i.e., thinking) and the same trend held, but <em>where</em> they paused is a different story. Let’s take a look at level four as an example."
         },
         {
           "type": "text",
@@ -287,7 +283,7 @@
         },
         {
           "type": "text",
-          "value": "The top players moved at about the same speed as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest. Below are two players who finish at the exact same time with different results."
+          "value": "The top players moved at about the same speed as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest. Below are two players who finished at the exact same time with different results."
         },
         {
           "type": "TwoMowers",
@@ -307,7 +303,7 @@
         },
         {
           "type": "text",
-          "value": "So it’s not about thinking more or thinking faster. It’s about <em>when</em> you think. That’s what a good heuristic does: it spends your attention on the decisions that matter and nothing on the ones that don’t."
+          "value": "So it’s not about thinking more or thinking faster. It’s about <em>when</em> thinking happens. That’s what a good heuristic does: it spends your attention on the decisions that matter and nothing on the ones that don’t."
         },
         {
           "type": "h2",
@@ -323,7 +319,7 @@
         },
         {
           "type": "h2",
-          "value": "Sandbox"
+          "value": "Explore"
         },
         {
           "type": "text",
@@ -339,19 +335,15 @@
         },
         {
           "type": "text",
-          "value": "<small>Tk everything</small>"
+          "value": "<small>Data is a snapshot of the live experiment as of July 31, 2026. There was a pause in the experiment after the second level to collect demographic information. Later levels were optional and presented as bonus rounds, so fewer people played them.</small>"
         },
         {
           "type": "text",
-          "value": "<small>first move pause histogram - filtered out over 1min</small>"
+          "value": "<small>The scatterplot chart from the Traveling Salesman study is approximated based on the image in the study since data weren’t provided.</small>"
         },
         {
           "type": "text",
-          "value": "<small>Later lawns were optional, so fewer people played them. Those who did scored about the same as everyone else</small>"
-        },
-        {
-          "type": "text",
-          "value": "<small>Study chart is estimated based on image</small>"
+          "value": "<small>You can explore the raw user data on your, available on our Github.</small>"
         }
       ]
     }

@@ -53,9 +53,26 @@ function cleanTests(testsRaw, usersLookup) {
 		if (!prev || d.created_at < prev.created_at) earliest.set(key, d);
 	});
 
-	const tests = Array.from(earliest.values());
+	// a level only counts for a user if they also have a valid row on every
+	// earlier level in LEVELS order — no skipping ahead. walk LEVELS in
+	// order, per level keeping only users who cleared every level before it.
+	let eligibleUsers = new Set([...new Set(eligible.map((d) => d.user_id))]);
+	const gated = [];
+	LEVELS.forEach((lvl) => {
+		const nextEligibleUsers = new Set();
+		eligibleUsers.forEach((user_id) => {
+			const row = earliest.get(`${lvl}|${user_id}`);
+			if (row) {
+				gated.push(row);
+				nextEligibleUsers.add(user_id);
+			}
+		});
+		eligibleUsers = nextEligibleUsers;
+	});
+
+	const tests = gated;
 	console.log(
-		`Cleaned tests: ${tests.length} kept, ${eligible.length - tests.length} duplicate (user, level) rows dropped`
+		`Cleaned tests: ${tests.length} kept, ${eligible.length - tests.length} duplicate/skipped-ahead (user, level) rows dropped`
 	);
 
 	// per-level counts + how many users have a row on every level
@@ -165,7 +182,7 @@ function writeFirstMovePauseHistogram(exampleTests) {
 	);
 
 	// convert ms -> seconds rounded to half seconds, then bin
-	const pauseSeconds = pauseFiltered.map((ms) => Math.round(ms / 500) / 2);
+	const pauseSeconds = firstMovePause.map((ms) => Math.round(ms / 500) / 2);
 	const pauseBinCounts = d3.rollup(
 		pauseSeconds,
 		(v) => v.length,

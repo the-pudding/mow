@@ -161,7 +161,7 @@
 		}
 		return [...totals].map(([key, value]) => {
 			const [x, y] = key.split(",").map(Number);
-			return { x, y, value: +value.toFixed(1) };
+			return { x, y, value };
 		});
 	}
 
@@ -297,6 +297,10 @@
 	let showHeatmap = $state(false);
 	let heatmapData = $state([]);
 	let heatmapTitle = $state("");
+	// dwell heatmaps show seconds and need a fixed decimal (1 → "1.0", not "1")
+	// to match neighboring cells like 0.4 / 2.3; count heatmaps use the
+	// HeatmapLayer default (plain integers) so this stays undefined for those.
+	let heatmapFormatValue = $state(undefined);
 
 	let showSection = $state(false);
 	let sectionRegions = $state([]);
@@ -402,6 +406,7 @@
 				// heatmapInterpolate = interpolateGr;
 				heatmapData = dwellHeatmap(bonesPath, PAUSE_INDEX - 1);
 				heatmapTitle = "Seconds paused per square";
+				heatmapFormatValue = format(".1f");
 			};
 		},
 
@@ -446,6 +451,7 @@
 			// heatmapInterpolate = interpolateGr;
 			heatmapData = finishRightData;
 			heatmapTitle = "Count of where sub-optimal players finished";
+			heatmapFormatValue = undefined;
 		},
 
 		// "heatmap of other finishing spots on the left side" (near-optimal players)
@@ -456,6 +462,7 @@
 			// heatmapInterpolate = interpolateGr;
 			heatmapData = finishLeftData;
 			heatmapTitle = "Count of where near-optimal players finished";
+			heatmapFormatValue = undefined;
 		},
 
 		// Sarah is introduced — replay her full near-optimal run on the real lawn at
@@ -479,6 +486,7 @@
 			showHeatmap = true;
 			heatmapData = dwellHeatmap(sarahPath);
 			heatmapTitle = "Seconds Sarah paused per square";
+			heatmapFormatValue = format(".1f");
 		},
 
 		// Close on Sarah's trace — the whole xray path rendered at once, no reveal
@@ -573,6 +581,7 @@
 								data={heatmapData}
 								interpolate={heatmapInterpolate}
 								title={heatmapTitle}
+								formatValue={heatmapFormatValue}
 							/>
 						</div>
 						<Overlay />

@@ -130,14 +130,14 @@
 	$effect(() => {
 		if (!regression || !fitPoints.length) return;
 		const { a, b, rSquared } = fitPoints;
-		// console.log(`[Scatter regression: ${regressionType}]`, {
-		// 	n: data.length,
-		// 	slope: a,
-		// 	intercept: b,
-		// 	rSquared,
-		// 	rho: Math.sign(a) * Math.sqrt(rSquared),
-		// 	points: fitPoints
-		// });
+		console.log(`[Scatter regression: ${regressionType}]`, {
+			n: data.length,
+			slope: a,
+			intercept: b,
+			rSquared,
+			rho: Math.sign(a) * Math.sqrt(rSquared),
+			points: fitPoints
+		});
 	});
 
 	// dots at the domain's min/max extend `radius` px past the plot's inner
