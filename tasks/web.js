@@ -931,7 +931,7 @@ function writeOptimalSolutions() {
 }
 
 function writeSanitized(testsRaw, usersLookup) {
-	const tests = testsRaw.map(({ user_id, level, result }) => ({
+	const tests = testsRaw.map(({ user_id, level, platform, result }) => ({
 		user_id,
 		level,
 		result,
@@ -939,14 +939,16 @@ function writeSanitized(testsRaw, usersLookup) {
 	}));
 	fs.writeFileSync("./tasks/sanitized-tests.csv", d3.csvFormat(tests));
 
-	const users = Object.entries(usersLookup).map(([user_id, { name }]) => ({
-		user_id,
-		age,
-		style,
-		gaming,
-		hand,
-		optimization
-	}));
+	const users = Object.entries(usersLookup).map(
+		([user_id, { age, style, gaming, hand, optimization }]) => ({
+			user_id,
+			age,
+			style,
+			gaming,
+			hand,
+			optimization
+		})
+	);
 	fs.writeFileSync("./tasks/sanitized-demographics.csv", d3.csvFormat(users));
 }
 
