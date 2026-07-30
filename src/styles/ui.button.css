@@ -10,11 +10,12 @@
 	border-radius: 0;
 	text-transform: uppercase;
 	font-size: var(--14px);
-	font-weight: bold;
 	letter-spacing: 0.05em;
 	line-height: 1;
 	font-family: var(--font-form);
 	transition: transform 0.25s ease, background 0.25s ease;
+	line-height: 1;
+	font-weight: 700;
 }
 
 .bits-button[data-button-root]:disabled {
@@ -54,8 +55,7 @@
 }
 
 .bits-button[data-button-root][data-variant="default"]:hover {
-	/* background: oklch(from var(--bg) calc(l + 0.1) c h); */
-	color: oklch(from var(--color-button-fg-primary) calc(l + 0.1) c h);
+	background: oklch(from var(--color-button-bg-primary) calc(l - 0.1) c h);
 }
 
 .bits-button[data-button-root][data-variant="outline"] {

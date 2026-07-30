@@ -52,6 +52,7 @@
 	--grid-width: min(80svw, 80svh);
 	--grid-max-width: 600px;
 	--media-max-width: 800px;
+	--end-max-width: 1000px;
 	--chart-max-width: 1200px;
 
 	--col-width: var(--grid-max-width);
@@ -187,6 +188,10 @@ p strong {
 	margin: 1rem auto;
 }
 
+small {
+	font-size: 70%;
+}
+
 @media screen and (min-width: 640px) {
 	main p, main li {
 		margin: 1.5rem auto;
@@ -196,6 +201,10 @@ p strong {
 	#post {
 		padding-top: 2rem;
 	}
+
+	small {
+	font-size: 80%;
+}
 }
 
 @media (min-width: 800px) {

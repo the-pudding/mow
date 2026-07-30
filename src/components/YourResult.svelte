@@ -105,13 +105,12 @@
 	.lawns {
 		display: flex;
 		justify-content: center;
-		flex-direction: column;
 	}
 
 	.g {
 		padding: 0 1rem;
 		padding-top: 1rem;
-		width: 100%;
+		width: 50%;
 	}
 
 	.inner span {
@@ -127,25 +126,7 @@
 		margin-top: 1rem;
 	}
 
-	.user {
-		/* color: var(--color-yellow-medium); */
-	}
-
-	.optimal {
-		/* color: var(--color-green-medium); */
-	}
-
-	@media (min-width: 640px) {
-		.lawns {
-			flex-direction: row;
-		}
-
-		.g {
-			width: 50%;
-		}
-	}
-
-	@media (min-width: 800px) {
+	@media (min-width: 600px) {
 		.inner {
 			margin: 4rem auto;
 		}

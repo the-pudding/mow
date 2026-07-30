@@ -4,6 +4,7 @@
 	background: var(--color-bg);
 	color: var(--color-fg);
 	overflow: hidden;
+	font-weight: 700;
 }
 
 .bits-togglegroup [data-toggle-group-item] {
@@ -22,6 +23,11 @@
 	background: transparent;
 	color: inherit;
 	padding: 0.5rem 0.75rem;
+	font-weight: 700;
+}
+
+.bits-togglegroup [data-toggle-group-item]:hover {
+	background: oklch(from var(--color-bg) calc(l + 0.2) c h);
 }
 
 .bits-togglegroup [data-toggle-group-item]:last-child {

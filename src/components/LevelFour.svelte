@@ -69,6 +69,7 @@
 					data={topData}
 					{maxValue}
 					{minValue}
+					showValues={false}
 					interpolate={interpolatePuYe}
 					title="Top 10% — seconds paused per square"
 					formatValue={formatSeconds}
@@ -86,6 +87,7 @@
 					data={bottomData}
 					{maxValue}
 					{minValue}
+					showValues={false}
 					interpolate={interpolatePuYe}
 					title="Bottom 10% — seconds paused per square"
 					formatValue={formatSeconds}
@@ -102,11 +104,16 @@
 		justify-content: center;
 		gap: 2rem;
 		margin: 2rem auto;
+		max-width: var(--end-max-width);
 	}
 
 	.stage {
-		width: 100%;
-		max-width: min(var(--grid-max-width), 40svh);
-		padding: 1rem;
+		width: calc(50% - 1rem);
+	}
+
+	@media (min-width: 600px) {
+		.c {
+			margin: 4rem auto;
+		}
 	}
 </style>

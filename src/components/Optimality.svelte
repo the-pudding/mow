@@ -1,6 +1,8 @@
 <script>
 	import { scaleBand, scaleLinear, min, max, format } from "d3";
 	import loadCsv from "$utils/loadCsv.js";
+	import useWindowDimensions from "$runes/useWindowDimensions.svelte.js";
+	let dimensions = new useWindowDimensions();
 
 	// Efficiency (optimal / actual) per level: a faint p10–p90 band with the
 	// median line drawn on top, one column per level. Fills its container;
@@ -19,6 +21,7 @@
 
 	let width = $state(0);
 	let raw = $state([]);
+	let mobile = $derived(dimensions.width < 480);
 
 	$effect(() => {
 		let alive = true;
@@ -114,13 +117,19 @@
 						class="tick"
 						x={cx + x.bandwidth() / 2}
 						y={innerH + 16}
-						text-anchor="middle">{level}</text
+						text-anchor={mobile ? "end" : "middle"}
+						transform={mobile
+							? `rotate(-45, ${cx + x.bandwidth() / 2}, ${innerH + 16})`
+							: undefined}>{level}</text
 					>
 					<text
 						class="tick count"
 						x={cx + x.bandwidth() / 2}
 						y={innerH + 32}
-						text-anchor="middle">({fmtN(d.n)})</text
+						text-anchor={mobile ? "end" : "middle"}
+						transform={mobile
+							? `rotate(-45, ${cx + x.bandwidth() / 2}, ${innerH + 32})`
+							: undefined}>({fmtN(d.n)})</text
 					>
 				{/each}
 
@@ -174,5 +183,15 @@
 	text.axis-label {
 		font-size: var(--12px);
 		text-transform: uppercase;
+	}
+
+	.tick.count {
+		display: none;
+	}
+
+	@media (min-width: 480px) {
+		.tick.count {
+			display: block;
+		}
 	}
 </style>

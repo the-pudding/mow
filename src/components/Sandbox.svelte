@@ -11,6 +11,11 @@
 	import loadCsv from "$utils/loadCsv.js";
 	import levels from "$data/levels.json";
 	import variables from "$data/variables.json";
+	import useWindowDimensions from "$runes/useWindowDimensions.svelte.js";
+	let dimensions = new useWindowDimensions();
+
+	let mobile = $derived(dimensions.width < 480);
+	let showValues = $derived(!mobile);
 
 	// Reader sandbox: pick any round, then either replay it yourself, look at how
 	// everyone else played it, or see a perfect run. Each aggregate view is a
@@ -217,6 +222,7 @@
 							interpolate={interpolatePuYe}
 							title={heatmap.title}
 							formatValue={heatmap.formatValue}
+							{showValues}
 						/>
 					</Grid>
 				{:else if loading}

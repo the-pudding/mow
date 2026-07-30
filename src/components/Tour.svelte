@@ -652,9 +652,11 @@
 	}
 
 	.step {
+		max-width: var(--text-width);
 		padding-top: 50svh;
 		padding-bottom: 50svh;
 		transition: opacity 0.25s ease-in-out;
+		margin: 0 auto;
 	}
 
 	.step:last-of-type {
@@ -663,7 +665,15 @@
 
 	.content {
 		background: var(--color-bg);
-		padding: 0.25rem 0.5rem;
+		padding: 1rem;
+	}
+
+	.content p:first-of-type {
+		margin-top: 0;
+	}
+
+	.content p:last-of-type {
+		margin-bottom: 0;
 	}
 
 	.step.active {
@@ -699,10 +709,10 @@
 
 	@media screen and (min-width: 1024px) {
 		.step {
-			max-width: var(--text-width);
 			padding-right: 1rem;
 			opacity: 0.5;
 			padding-top: 2rem;
+			margin: 0;
 		}
 
 		.step:first-of-type {

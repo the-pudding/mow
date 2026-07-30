@@ -3,8 +3,13 @@
 	import loadCsv from "$utils/loadCsv.js";
 	import variables from "$data/variables.json";
 	const src = "assets/data/percentile-optimality-time.csv";
+	import useWindowDimensions from "$runes/useWindowDimensions.svelte.js";
+	let dimensions = new useWindowDimensions();
 
 	let data = $state([]);
+	let mobile = $derived(dimensions.width < 480);
+	let radius = $derived(mobile ? 1 : 2);
+	let ratio = $derived(mobile ? 1 : 0.7);
 
 	$effect(() => {
 		let alive = true;
@@ -49,18 +54,22 @@
 			}}
 			y={{ value: "optimality", label: "optimality percentile" }}
 			format=".0%"
-			regression={true}
+			regression={false}
+			{radius}
+			{ratio}
 			customLabels={[
 				{
 					label: "10th percentile",
-					x: 0.1,
+					x: 0.05,
 					y: 0.125,
+					textAnchor: "start",
 					fill: variables.category["purple-light"]
 				},
 				{
 					label: "90th percentile",
-					x: 0.1,
+					x: 0.05,
 					y: 0.85,
+					textAnchor: "start",
 					fill: variables.category["yellow-light"]
 				}
 			]}

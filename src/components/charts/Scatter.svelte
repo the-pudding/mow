@@ -164,7 +164,7 @@
 		for (const d of data) {
 			const cx = xScale(getX(d));
 			const cy = yScale(getY(d));
-			ctx.globalAlpha = Math.min(1, getCount(d) * alpha);
+			ctx.globalAlpha = alpha;
 			ctx.fillStyle = d.fill || defaultFill;
 			ctx.beginPath();
 			if (d.shape === "square") {
@@ -275,7 +275,8 @@
 							class="tick dot-label custom-label"
 							x={xScale(d.x)}
 							y={yScale(d.y)}
-							text-anchor="middle"
+							dy={d.dy || 0}
+							text-anchor={d.textAnchor || "middle"}
 							style={d.fill ? `fill: ${d.fill};` : undefined}>{d.label}</text
 						>
 					{/each}

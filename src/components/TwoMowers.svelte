@@ -76,7 +76,7 @@
 				</Grid>
 			</div>
 			<div class="stage">
-				<div class="name">Cheesepuff ({otherOptimal}% optimal)</div>
+				<div class="name">Cheesepuff ({otherOptimal}%)</div>
 				<Grid size={level.size} obstacles={level.obstacles} started>
 					<GameLayer bind:this={otherLayer} replay={otherPath} />
 				</Grid>
@@ -90,13 +90,13 @@
 	.c {
 		display: flex;
 		justify-content: center;
-		margin: 2rem auto 0 auto;
+		margin: 2rem auto 1rem auto;
+		gap: 2rem;
+		max-width: var(--end-max-width);
 	}
 
 	.stage {
-		width: 100%;
-		max-width: min(var(--grid-max-width), 40svh);
-		padding: 1rem;
+		width: calc(50% - 1rem);
 	}
 
 	.name {
@@ -110,5 +110,15 @@
 	p.replay {
 		text-align: center;
 		margin: 0 auto 2rem auto;
+	}
+
+	@media (min-width: 600px) {
+		.c {
+			margin-top: 4rem;
+		}
+
+		p.replay {
+			margin-bottom: 4rem;
+		}
 	}
 </style>
