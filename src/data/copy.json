@@ -133,7 +133,7 @@
           "value": {
             "steps": [
               {
-                "text": "Let’s replay a mowing session, director’s-cut style, with some commentary along the way. For this walkthrough, we’ll use a perfectly average run from a player who called themselves <strong>Bones</strong>. It took them 54 moves–five more than optimal. We recorded the timestamp of each move, so every hesitation or direction change left a data footprint.",
+                "text": "Let’s replay a mowing session, director’s-cut style, with some commentary along the way. For this walkthrough, we’ll use a perfectly average run from a person who called themselves <strong>Bones</strong>. It took them 54 moves–five more than optimal. We recorded the timestamp of each move, so every hesitation or direction change left a data footprint.",
                 "step": "intro",
                 "replay": "true"
               },
@@ -147,7 +147,7 @@
                 "step": "fifth"
               },
               {
-                "text": "This is where players’ paths first diverged. Bones barely hesitated (0.7s) and decided to go down, like 20% of other players. This is a critical moment that we’ll come back to shortly.",
+                "text": "This is where paths first diverged. Bones barely hesitated (0.7s) and decided to go down, like 20% of other people. This is a critical moment that we’ll come back to shortly.",
                 "step": "diverge"
               },
               {
@@ -161,11 +161,11 @@
                 "replay": "true"
               },
               {
-                "text": "What differentiated the best players from everyone else came down to a single critical decision. We can divide the lawn into two main sections: left and right. Bones completed the left section first. Because it dead-ends, the only path out was to retrace their steps, creating an inevitable backtrack.",
+                "text": "What differentiated the best mowers from everyone else came down to a single critical decision. We can divide the lawn into two main sections: left and right. Bones completed the left section first. Because it dead-ends, the only path out was to retrace their steps, creating an inevitable backtrack.",
                 "step": "sections"
               },
               {
-                "text": "If we look at where each player ended, we can see this play out. Players three or more moves from optimal finished scattered across the lawn.",
+                "text": "If we look at where each person ended, we can see this play out. People three or more moves from optimal finished scattered across the lawn.",
                 "step": "right"
               },
               {
@@ -173,7 +173,7 @@
                 "step": "left"
               },
               {
-                "text": "One of those was a player whose real name was <strong>Sarah.</strong> We got in touch, and learned that she finished on the left with intention. <blockquote>“I saw the dead end at the end and I was like, okay, that’s where I need to end as well, so don’t go that way first.”</blockquote>",
+                "text": "One of those was a person whose real name was <strong>Sarah.</strong> We got in touch, and learned that she finished on the left with intention. <blockquote>“I saw the dead end at the end and I was like, okay, that’s where I need to end as well, so don’t go that way first.”</blockquote>",
                 "step": "sarah-path",
                 "replay": "true"
               },
@@ -183,7 +183,7 @@
                 "note": "sarah’s pause heatmap"
               },
               {
-                "text": "Sarah also did something that appears a bit unnatural. Instead of simply continuing straight a few times, she intuitively and preemptively turned in a <strong>snake-like pattern</strong>. This highlighted a key difference between real-life mowing and our simplified game, an approach best players exploit.",
+                "text": "Sarah also did something that appears a bit unnatural. Instead of simply continuing straight a few times, she intuitively and preemptively turned in a <strong>snake-like pattern</strong>. This highlighted a key difference between real-life mowing and our simplified game, an approach that strong mowers exploited. Sarah, an avid gamer, seemed to recognize this strategy immediately.",
                 "step": "sarah-snake"
               }
             ]
@@ -195,7 +195,7 @@
         },
         {
           "type": "text",
-          "value": "That was one lawn. We gave players five more, each bigger and more cluttered than the last, up to a 14x14 lawn with almost 200 squares to cover."
+          "value": "That was one lawn. We gave people five more, each bigger and more cluttered than the last, up to a 14x14 lawn with almost 200 squares to cover."
         },
         {
           "type": "SixLawns",
@@ -203,7 +203,7 @@
         },
         {
           "type": "text",
-          "value": "More than 24,000 people made it through two required levels, and over 7,000 people completed a few extra bonus ones. The green lines show the median optimality for each lawn. The light band represents how most players (80%) did."
+          "value": "More than 24,000 people made it through two required levels, and over 7,000 people completed a few extra bonus ones. The green lines show the median optimality for each lawn. The light band represents how most people (80%) did."
         },
         {
           "type": "Optimality",
@@ -219,11 +219,11 @@
         },
         {
           "type": "text",
-          "value": "Our best guess is the structure of a lawn itself. Where the Traveling Salesman Problem scatters nodes randomly, a lawn has structure, which lets players fall back on two strategies: <strong>decomposition</strong> and <strong>compression</strong>."
+          "value": "Our best guess is the structure of a lawn itself. Where the Traveling Salesman Problem scatters nodes randomly, a lawn has structure, which lets people fall back on two strategies: <strong>decomposition</strong> and <strong>compression</strong>."
         },
         {
           "type": "text",
-          "value": "Players were able to <strong>decompose</strong> the lawn into smaller, more manageable sections and solve them incrementally. Our interviewee Sarah described this perfectly."
+          "value": "People were able to <strong>decompose</strong> the lawn into smaller, more manageable sections and solve them incrementally. Our interviewee Sarah described this perfectly."
         },
         {
           "type": "text",
@@ -243,7 +243,7 @@
         },
         {
           "type": "text",
-          "value": "As players moved between rounds, they may have <strong>compressed</strong> what they learned into a mental model of the game, allowing them to identify patterns in more complex lawns and adapt their gameplay."
+          "value": "As people moved between rounds, they may have <strong>compressed</strong> what they learned into a mental model of the game, allowing them to identify patterns in more complex lawns and adapt their gameplay."
         },
         {
           "type": "h2",
@@ -251,7 +251,7 @@
         },
         {
           "type": "text",
-          "value": "It seemed obvious to us that players who thought longer would mow better. Below, each dot is a player who finished every lawn, plotted by pace (seconds spent per square, which normalizes time across lawn sizes) against how close to optimal they got. Pick any pace percentile on the x-axis and the spread of results looks about the same as at any other."
+          "value": "It seemed obvious to us that people who thought longer would mow better. Below, the 7,235 people who finished every lawn, plotted by pace (seconds spent per square, which normalizes time across lawn sizes) against how close to optimal they got. Pick any pace percentile on the x-axis and the spread of results looks about the same as at any other."
         },
         {
           "type": "OptimalityVsTime",
@@ -259,7 +259,7 @@
         },
         {
           "type": "text",
-          "value": "While there is a very small trend on the opposite ends for the top and worst players, if we told you how long someone took, you couldn’t guess how well they did. Technically speaking, time alone explains less than 5% of the variation in how people did (R<sup>2</sup> of 4.8%)."
+          "value": "While there is a very small trend on the opposite ends for the top and worst mowers, if we told you how long someone took, you couldn’t guess how well they did. Technically speaking, time alone explains less than 5% of the variation in how people did (R<sup>2</sup> of 4.8%)."
         },
         {
           "type": "text",
@@ -271,15 +271,15 @@
         },
         {
           "type": "text",
-          "value": "The best players (90th percentile) spent time thinking early as they traveled down the first column, then thought more at the juncture between the two rock clusters on the bottom left: go toward the cluttered middle section, or clear the open space to the right first. They were able to intuit that they should finish in the dead-end pocket at the top in order to minimize backtracking. As a result, they didn’t need to pause once they reached the home stretch."
+          "value": "The best mowers (90th percentile) spent time thinking early as they traveled down the first column, then thought more at the juncture between the two rock clusters on the bottom left: go toward the cluttered middle section, or clear the open space to the right first. They were able to intuit that they should finish in the dead-end pocket at the top in order to minimize backtracking. As a result, they didn’t need to pause once they reached the home stretch."
         },
         {
           "type": "text",
-          "value": "Meanwhile, the worst players (10th percentile) sped through the beginning and barely paused to think until a corner or edge forced them to, implying reacting, not planning. They only realized that the same pocket was a dead end once they were already in it, then had to stop, backtrack, and work out where to go from there."
+          "value": "Meanwhile, the worst mowers (10th percentile) sped through the beginning and barely paused to think until a corner or edge forced them to, implying reacting, not planning. They only realized that the same pocket was a dead end once they were already in it, then had to stop, backtrack, and work out where to go from there."
         },
         {
           "type": "text",
-          "value": "The best players moved at about the same speed as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest. Below are two players who finished at the exact same time with different results."
+          "value": "The best mowers moved at about the same speed as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest. Below are two people who finished at the exact same time with different results."
         },
         {
           "type": "TwoMowers",
@@ -287,7 +287,7 @@
         },
         {
           "type": "text",
-          "value": "We heard this in the interview too. Sarah, one of the best players, spent her attention unevenly on purpose. She had a theory about why."
+          "value": "We heard this in the interview too. Sarah, one of the best mowers, spent her attention unevenly on purpose. She had a theory about why."
         },
         {
           "type": "text",

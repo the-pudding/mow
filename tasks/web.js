@@ -998,7 +998,7 @@ function main() {
 	setupDirs();
 	const { usersLookup, testsRaw, exampleTests } = loadData();
 
-	logGamers(testsRaw, usersLookup);
+	// logGamers(testsRaw, usersLookup);
 	process.exit();
 	const exampleUniquePathsLengths = writeUserPaths(testsRaw, usersLookup);
 
