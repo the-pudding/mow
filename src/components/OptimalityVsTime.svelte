@@ -43,7 +43,7 @@
 			{data}
 			x={{
 				value: "time",
-				label: "speed percentile",
+				label: "pace percentile",
 				low: "← Faster",
 				high: "Slower →"
 			}}

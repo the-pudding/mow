@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Why some people mow a lawn better than others",
-    "description": "We analyzed over 20,000 players’ attempts to mow a lawn efficiently, a problem that’s surprisingly hard for computers.",
+    "description": "We analyzed over 100,000 attempts to mow a virtual lawn efficiently.",
     "byline": "By Russell Samora, Florina Sutanto, Arjun Kakkar, and Sushant Karki",
     "keywords": "mow, traveling, salesman, path, coverage, planning, roomba, vacuum"
   },
@@ -41,7 +41,7 @@
         },
         {
           "type": "text",
-          "value": "A few weeks ago, 22,403 people mowed the same lawn. This is what their paths looked like."
+          "value": "A few weeks ago, 24,394 people mowed the same lawn. This is what their paths looked like."
         },
         {
           "type": "Sample",
@@ -49,7 +49,7 @@
         },
         {
           "type": "text",
-          "value": "Many came close to the optimal path. 55% of people came within five moves of the best possible path, and <strong>18% did it perfectly.</strong>"
+          "value": "Many came close to the optimal path. 53% of people came within five moves of the best possible path, and <strong>17% did it perfectly.</strong>"
         },
         {
           "type": "Round2Moves",
@@ -59,7 +59,7 @@
         },
         {
           "type": "text",
-          "value": "Many different approaches, yet similar, pretty good outcomes. Only 49 squares need to be covered, but people found 10,607 different ways to do it. Despite all that variety, the median person still hit 91% efficiency (within 5 moves)."
+          "value": "Many different approaches, yet similar, pretty good outcomes. Only 49 squares need to be covered, but people found 11,879 different ways to do it. Despite all that variety, the median person still hit 91% efficiency (within 5 moves)."
         },
         {
           "type": "text",
@@ -147,7 +147,7 @@
                 "step": "fifth"
               },
               {
-                "text": "This is where players’ paths first diverged. Bones barely hesitated (0.7s) and decided to go down, like 21% of other players. This is a critical moment that we’ll come back to shortly.",
+                "text": "This is where players’ paths first diverged. Bones barely hesitated (0.7s) and decided to go down, like 20% of other players. This is a critical moment that we’ll come back to shortly.",
                 "step": "diverge"
               },
               {
@@ -169,21 +169,21 @@
                 "step": "right"
               },
               {
-                "text": "While those who were within two moves of optimal, including the <strong>18% who were perfect</strong>, chose to mow the right side first so they could end their run on the left, having anticipated the dead-end trap.",
+                "text": "While those who were within two moves of optimal, including the <strong>17% who were perfect</strong>, chose to mow the right side first so they could end their run on the left, having anticipated the dead-end trap.",
                 "step": "left"
               },
               {
-                "text": "One of those was a player called <strong>smm</strong>, real name <strong>Sarah.</strong> We got in touch, and learned that she finished on the left with intention. <blockquote>“I saw the dead end at the end and I was like, okay, that’s where I need to end as well, so don’t go that way first.”</blockquote>",
+                "text": "One of those was a player whose real name was <strong>Sarah.</strong> We got in touch, and learned that she finished on the left with intention. <blockquote>“I saw the dead end at the end and I was like, okay, that’s where I need to end as well, so don’t go that way first.”</blockquote>",
                 "step": "sarah-path",
                 "replay": "true"
               },
               {
-                "text": "Sarah knew a dead-end meant the left section <em>had</em> to be reserved for the end to avoid a backtrack. The pause data backs her up. Her longest hesitation came a square <em>before</em> the fork, before continuing to clear the right side.",
+                "text": "Sarah knew a dead end meant the left section <em>had</em> to be reserved for the end to avoid a backtrack. The pause data backed her up. Her longest hesitation came a square <em>before</em> the fork, before continuing to clear the right side.",
                 "step": "sarah-pause",
                 "note": "sarah’s pause heatmap"
               },
               {
-                "text": "Sarah also did something that appears a bit unnatural. Instead of simply continuing straight a few times, she intuitively and preemptively turned in a snake-like pattern. This highlighted a key difference between real-life mowing and our simplified game, an approach best players exploit.",
+                "text": "Sarah also did something that appears a bit unnatural. Instead of simply continuing straight a few times, she intuitively and preemptively turned in a <strong>snake-like pattern</strong>. This highlighted a key difference between real-life mowing and our simplified game, an approach best players exploit.",
                 "step": "sarah-snake"
               }
             ]
@@ -203,7 +203,7 @@
         },
         {
           "type": "text",
-          "value": "More than 22,000 people made it through two required levels, and over 7,000 people completed a few extra bonus ones. Here is the median optimality for each lawn. The light band represents how most players (80%) did."
+          "value": "More than 24,000 people made it through two required levels, and over 7,000 people completed a few extra bonus ones. The green lines show the median optimality for each lawn. The light band represents how most players (80%) did."
         },
         {
           "type": "Optimality",

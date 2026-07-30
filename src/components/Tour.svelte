@@ -120,6 +120,8 @@
 		{ x: 4, y: 6 }
 	];
 	const RIGHT_CELLS = [
+		{ x: 5, y: 0 },
+		{ x: 6, y: 0 },
 		{ x: 4, y: 1 },
 		{ x: 5, y: 1 },
 		{ x: 6, y: 1 },
@@ -171,7 +173,7 @@
 		for (const r of rows) {
 			if (!predicate(r)) continue;
 			const key = `${r.x},${r.y}`;
-			totals.set(key, (totals.get(key) ?? 0) + r.players);
+			totals.set(key, (totals.get(key) ?? 0) + r.count);
 		}
 		return [...totals].map(([key, value]) => {
 			const [x, y] = key.split(",").map(Number);
@@ -209,7 +211,7 @@
 				moves: +r.moves,
 				x: +r.x,
 				y: +r.y,
-				players: +r.players
+				count: +r.count
 			}));
 		} catch (err) {
 			console.warn("Could not load round2-last-move.csv", err);
