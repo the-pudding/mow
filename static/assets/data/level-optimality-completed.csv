@@ -1,7 +1,7 @@
-level,optimal,n,efficiency_p10,efficiency_median,efficiency_p90,excess_moves_p10,excess_moves_median,excess_moves_p90,excess_per_100_p10,excess_per_100_median,excess_per_100_p90
-tutorial,32,7232,0.9143,1,1,0,0,3,0,0,9.38
-round1,26,7232,0.8387,0.963,1,0,1,5,0,3.85,19.23
-round2,49,7232,0.7903,0.9074,1,0,5,13,0,10.2,26.53
-bonus1,87,7232,0.7838,0.8969,0.956,4,10,24,4.6,11.49,27.59
-bonus2,121,7232,0.7908,0.8897,0.968,4,15,32,3.31,12.4,26.45
-bonus3,177,7232,0.8157,0.9171,0.9568,8,16,40,4.52,9.04,22.6
+level,optimal,n,efficiency_p10,efficiency_median,efficiency_p90
+tutorial,32,7235,0.9143,1,1
+round1,26,7235,0.8387,0.963,1
+round2,49,7235,0.7903,0.9074,1
+bonus1,87,7235,0.7838,0.8969,0.956
+bonus2,121,7235,0.7908,0.8897,0.968
+bonus3,177,7235,0.8157,0.9171,0.9568

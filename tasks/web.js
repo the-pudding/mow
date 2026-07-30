@@ -1,15 +1,88 @@
 import fs from "fs";
 import * as d3 from "d3";
+import path from "path";
 
-const level = "round2";
-// mysterybear, cheesepuff, seamus
-const usersToWrite = ["tt3aprpgrp", "2a826e0mz7", "nkdu4xxevi", "cpt1csrzxq"];
+// sarah, cheesepuff, mysterybear, seamus
+const USERS_TO_WRITE = ["tt3aprpgrp", "nkdu4xxevi", "2a826e0mz7", "cpt1csrzxq"];
 
-// every playable round, oldest → newest. user paths get written per round.
+// every level in order
 const LEVELS = ["tutorial", "round1", "round2", "bonus1", "bonus2", "bonus3"];
+const EXAMPLE_LEVEL = LEVELS[2];
+const EXAMPLE2_LEVEL = LEVELS[4];
 
-// --- data loading -----------------------------------------------------------
+const COHORT_Q = 0.1;
 
+function setupDirs() {
+	if (!fs.existsSync("./static/assets/data"))
+		fs.mkdirSync("./static/assets/data", { recursive: true });
+}
+
+// one attempt per user per level: drop empty results and unknown users, then
+// resolve duplicate (user, level) rows to the earliest attempt. everything
+// downstream counts rows, so without this a user who replayed a level would be
+// counted twice there and the per-level totals wouldn't line up.
+function cleanTests(testsRaw, usersLookup) {
+	console.log(testsRaw.length, "raw tests");
+
+	// TODO - decide if we want to include folks who DIDNT play at least round2 or not
+	const eligible = testsRaw.filter((d) => LEVELS.includes(d.level));
+	// const eligible = e2.filter((d) => usersLookup[d.user_id]);
+
+	const earliest = new Map();
+	eligible.forEach((d) => {
+		const key = `${d.level}|${d.user_id}`;
+		const prev = earliest.get(key);
+		if (!prev || d.created_at < prev.created_at) earliest.set(key, d);
+	});
+
+	// a level only counts for a user if they also have a valid row on every
+	// earlier level in LEVELS order — no skipping ahead. walk LEVELS in
+	// order, per level keeping only users who cleared every level before it.
+	let eligibleUsers = new Set([...new Set(eligible.map((d) => d.user_id))]);
+
+	const gated = [];
+
+	LEVELS.forEach((lvl) => {
+		const nextEligibleUsers = new Set();
+		eligibleUsers.forEach((user_id) => {
+			const row = earliest.get(`${lvl}|${user_id}`);
+			if (row) {
+				gated.push(row);
+				nextEligibleUsers.add(user_id);
+			}
+		});
+		eligibleUsers = nextEligibleUsers;
+	});
+
+	// parse json once up front instead of every function
+	const tests = gated
+		.map((d) => ({
+			...d,
+			path: JSON.parse(d.result)
+		}))
+		.map((d) => ({
+			...d,
+			path: d.path,
+			pathKey: d.path.map(({ x, y }) => `${x},${y}`).join("|")
+		}))
+		.filter((d) => d.path.length > 1); // drop empty paths
+
+	console.log(
+		`Cleaned tests: ${tests.length} kept, ${eligible.length - tests.length} duplicate/skipped-ahead dropped`
+	);
+
+	// per-level counts + how many users have a row on every level
+	const byLevel = LEVELS.map((lvl) => ({
+		level: lvl,
+		users: tests.filter((d) => d.level === lvl).length
+	}));
+
+	console.table(byLevel);
+
+	return tests;
+}
+
+// data loading
 function loadData() {
 	const usersRaw = d3.csvParse(
 		fs.readFileSync("./tasks/mow_users_rows.csv", "utf-8")
@@ -24,123 +97,48 @@ function loadData() {
 		usersLookup[d.user_id] = d;
 	});
 
+	testsRaw.sort((a, b) => d3.descending(a.created_at, b.created_at));
+
 	const tests = cleanTests(testsRaw, usersLookup);
-
-	const exampleTests = tests
-		.filter((d) => d.level === level)
-		.filter((d) => d.result !== "[]")
-		.filter((d) => usersLookup[d.user_id]); // only keep users that are in the usersRaw
-
-	exampleTests.sort((a, b) => d3.descending(a.created_at, b.created_at));
+	const exampleTests = tests.filter((d) => d.level === EXAMPLE_LEVEL);
 
 	return { usersLookup, testsRaw: tests, exampleTests };
 }
 
-// one attempt per user per level: drop empty results and unknown users, then
-// resolve duplicate (user, level) rows to the earliest attempt. everything
-// downstream counts rows, so without this a user who replayed a level would be
-// counted twice there and the per-level totals wouldn't line up.
-function cleanTests(testsRaw, usersLookup) {
-	const eligible = testsRaw
-		.filter((d) => d.result !== "[]")
-		.filter((d) => usersLookup[d.user_id])
-		.filter((d) => LEVELS.includes(d.level));
+// per-step log / write functions
 
-	const earliest = new Map();
-	eligible.forEach((d) => {
-		const key = `${d.level}|${d.user_id}`;
-		const prev = earliest.get(key);
-		if (!prev || d.created_at < prev.created_at) earliest.set(key, d);
-	});
-
-	// a level only counts for a user if they also have a valid row on every
-	// earlier level in LEVELS order — no skipping ahead. walk LEVELS in
-	// order, per level keeping only users who cleared every level before it.
-	let eligibleUsers = new Set([...new Set(eligible.map((d) => d.user_id))]);
-	const gated = [];
-	LEVELS.forEach((lvl) => {
-		const nextEligibleUsers = new Set();
-		eligibleUsers.forEach((user_id) => {
-			const row = earliest.get(`${lvl}|${user_id}`);
-			if (row) {
-				gated.push(row);
-				nextEligibleUsers.add(user_id);
-			}
-		});
-		eligibleUsers = nextEligibleUsers;
-	});
-
-	const tests = gated;
-	console.log(
-		`Cleaned tests: ${tests.length} kept, ${eligible.length - tests.length} duplicate/skipped-ahead (user, level) rows dropped`
-	);
-
-	// per-level counts + how many users have a row on every level
-	const byLevel = LEVELS.map((lvl) => ({
-		level: lvl,
-		users: tests.filter((d) => d.level === lvl).length
-	}));
-	console.table(byLevel);
-
-	return tests;
-}
-
-function setupDirs() {
-	// per-round user path folders are created/cleared in writeUserPaths; just
-	// make sure the aggregate data folder exists here.
-	if (!fs.existsSync("./static/assets/data"))
-		fs.mkdirSync("./static/assets/data", { recursive: true });
-}
-
-// --- per-step log / write functions -----------------------------------------
-
-// write every user's path for every round, one csv per user under that round's
+// write every user path for every round, one csv per user under that round's
 // folder (assets/round2/<user_id>.csv, assets/round1/<user_id>.csv, ...).
-// returns the round2 unique-path-length lookup that the round2 stats still use.
+// returns the round unique-path-length lookup that the round stats still use.
 function writeUserPaths(testsRaw, usersLookup) {
-	const pathLengths = {};
+	const uniquePathsLength = {};
 
 	LEVELS.forEach((lvl) => {
 		const dir = `./static/assets/${lvl}`;
 		if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 		fs.readdirSync(dir).forEach((file) => fs.unlinkSync(`${dir}/${file}`));
 
-		const tests = testsRaw
-			.filter((d) => d.level === lvl)
-			.filter((d) => d.result !== "[]")
-			.filter((d) => usersLookup[d.user_id]);
-		tests.sort((a, b) => d3.descending(a.created_at, b.created_at));
+		const tests = testsRaw.filter((d) => d.level === lvl);
 
-		tests.forEach(({ user_id, result }) => {
-			const parsed = JSON.parse(result);
-			// write all of round2 (the "level"); other rounds only the featured users
-			if (lvl === level || usersToWrite.includes(user_id)) {
-				fs.writeFileSync(`${dir}/${user_id}.csv`, d3.csvFormat(parsed));
+		tests.forEach(({ user_id, path, pathKey }) => {
+			// write all of round2, other rounds only the featured hard-coded users
+			if (lvl === EXAMPLE_LEVEL || USERS_TO_WRITE.includes(user_id)) {
+				fs.writeFileSync(`${dir}/${user_id}.csv`, d3.csvFormat(path));
 			}
-			if (lvl === level) {
-				const key = parsed.map(({ x, y }) => `${x},${y}`).join("|");
-				pathLengths[key] = parsed.length;
-			}
+			if (lvl === EXAMPLE_LEVEL) uniquePathsLength[pathKey] = path.length;
 		});
 
 		console.log(`Wrote ${tests.length} paths to ${dir}`);
 	});
 
-	return pathLengths;
+	return uniquePathsLength;
 }
 
 // how many users we have, how many unique paths, and the path-length breakdown
 function logPathStats(exampleTests, pathLengths, minPathLength) {
-	console.log("Round 2");
+	console.log(`----- ${EXAMPLE_LEVEL} -----`);
 	console.log(`Users: ${exampleTests.length}`);
 	console.log(`Unique paths: ${Object.keys(pathLengths).length}`);
-
-	// how many paths are of length minPathLength
-	const minPathCount = Object.values(pathLengths).filter(
-		(length) => length === minPathLength
-	).length;
-	console.log(`Min path length: ${minPathLength}`);
-	console.log(`Min path count: ${minPathCount}`);
 
 	// table of number of paths by length, sorted
 	const pathLengthCounts = d3.rollup(
@@ -148,11 +146,12 @@ function logPathStats(exampleTests, pathLengths, minPathLength) {
 		(v) => v.length,
 		(d) => d
 	);
-	const pathLengthCountsSorted = Array.from(pathLengthCounts)
-		.sort((a, b) => a[0] - b[0])
-		.slice(0, 20);
-	console.log("Path length counts:");
-	console.table(pathLengthCountsSorted);
+
+	// const pathLengthCountsSorted = Array.from(pathLengthCounts)
+	// 	.sort((a, b) => a[0] - b[0])
+	// 	.slice(0, 5);
+
+	console.log("\n");
 }
 
 // how many people came within 0..5 moves of the shortest path
@@ -161,25 +160,16 @@ function logShortestProximity(allPathLengths, minPathLength, total) {
 		const count = allPathLengths.filter(
 			(length) => length - minPathLength <= within
 		).length;
-		const percent = (count / total).toFixed(4);
+		const percent = d3.format(".2%")(count / total);
 		console.log(`Within ${within} moves of shortest: ${count} (${percent})`);
 	});
 }
 
 // median pause before the first move, plus a binned histogram csv for it
 function writeFirstMovePauseHistogram(exampleTests) {
-	const firstMovePause = exampleTests
-		.map(({ result }) => JSON.parse(result))
-		.filter((parsed) => parsed.length > 1)
-		.map((parsed) => parsed[1].t - parsed[0].t);
+	const firstMovePause = exampleTests.map(({ path }) => path[1].t - path[0].t);
 	const medianFirstMovePause = d3.median(firstMovePause);
 	console.log(`Median pause time on first move: ${medianFirstMovePause}ms`);
-
-	// filter out pauses over 60 seconds
-	const pauseFiltered = firstMovePause.filter((ms) => ms <= 60000);
-	console.log(
-		`Filtered out ${firstMovePause.length - pauseFiltered.length} pauses over 60s`
-	);
 
 	// convert ms -> seconds rounded to half seconds, then bin
 	const pauseSeconds = firstMovePause.map((ms) => Math.round(ms / 500) / 2);
@@ -198,55 +188,51 @@ function writeFirstMovePauseHistogram(exampleTests) {
 		d3.csvFormat(pauseHistogram)
 	);
 	console.log(
-		`Wrote ${pauseHistogram.length} bins to ./static/assets/data/round2-first-move-pause-counts.csv`
+		`Wrote ${pauseHistogram.length} rows to ./static/assets/data/round2-first-move-pause-counts.csv`
 	);
 }
 
 // finishing spots: player count per (move-count, last square) — feeds the
 // left/right "where everyone ended up" heatmaps. Counts every attempt.
 function writeFinishingSpots(exampleTests) {
-	const round2Last = exampleTests.map(({ result }) => {
-		const path = JSON.parse(result);
+	const last = exampleTests.map(({ path }) => {
 		const last = path.at(-1);
 		return { moves: path.length, x: last.x, y: last.y };
 	});
 
 	const lastMove = d3
 		.rollups(
-			round2Last,
+			last,
 			(v) => v.length,
 			(d) => d.moves,
 			(d) => `${d.x},${d.y}`
 		)
 		.flatMap(([moves, squares]) =>
-			squares.map(([xy, players]) => {
+			squares.map(([xy, count]) => {
 				const [x, y] = xy.split(",").map(Number);
-				return { moves, x, y, players };
+				return { moves, x, y, count };
 			})
 		)
 		.sort(
 			(a, b) =>
-				d3.ascending(a.moves, b.moves) || d3.descending(a.players, b.players)
+				d3.ascending(a.moves, b.moves) || d3.descending(a.count, b.count)
 		);
 
 	fs.writeFileSync(
-		"./static/assets/data/round2-last-move.csv",
+		`./static/assets/data/${EXAMPLE_LEVEL}-last-move.csv`,
 		d3.csvFormat(lastMove)
 	);
 	console.log(
-		`Wrote ${lastMove.length} rows to ./static/assets/data/round2-last-move.csv`
+		`Wrote ${lastMove.length} rows to ./static/assets/data/${EXAMPLE_LEVEL}-last-move.csv`
 	);
 }
 
 // the first real choice: the opening is forced right along the top row to (4,0)
 // (obstacles block y=1 for x<4), so move 6 (index 5) is where players split —
 // right to (5,0) or down to (4,1). Feeds the fork viz branch counts.
-
 function writeForkCounts(exampleTests) {
 	const forkIndex = 5;
-	const paths = exampleTests
-		.map(({ result }) => JSON.parse(result))
-		.filter((p) => p.length > forkIndex);
+	const paths = exampleTests.map(({ path }) => path);
 
 	const moves = paths.map((p) => {
 		const from = p[forkIndex - 1];
@@ -272,16 +258,16 @@ function writeForkCounts(exampleTests) {
 			})
 		)
 		.sort((a, b) => d3.descending(a.count, b.count))
-		.slice(0, 2);
+		.slice(0, 2); // only care about the real choice not the backtrack oops
 
-	// log out the percent down/right
+	// write out the percent down/right
 	fs.writeFileSync(
-		`./static/assets/data/${level}-fork-counts.csv`,
+		`./static/assets/data/${EXAMPLE_LEVEL}-fork-counts.csv`,
 		d3.csvFormat(rows)
 	);
 
 	console.log(
-		`Wrote ${rows.length} rows to ./static/assets/data/${level}-fork-counts.csv`
+		`Wrote ${rows.length} rows to ./static/assets/data/${EXAMPLE_LEVEL}-fork-counts.csv`
 	);
 
 	const total = d3.sum(rows, (d) => d.count);
@@ -311,24 +297,21 @@ function logEfficiency(allPathLengths, minPathLength, testsRaw, usersLookup) {
 	);
 
 	// level -> user_id -> shortest path length across their attempts
-	const bestLen = new Map(levels.map((l) => [l, new Map()]));
-	testsRaw
-		.filter((d) => d.result !== "[]")
-		.filter((d) => usersLookup[d.user_id])
-		.filter((d) => bestLen.has(d.level))
-		.forEach((d) => {
-			const len = JSON.parse(d.result).length;
-			const m = bestLen.get(d.level);
-			if (!m.has(d.user_id) || len < m.get(d.user_id)) m.set(d.user_id, len);
-		});
+	const lenByLevelUser = new Map(levels.map((l) => [l, new Map()]));
+
+	testsRaw.forEach((d) => {
+		lenByLevelUser.get(d.level).set(d.user_id, d.path.length);
+	});
 
 	const completedAll = Object.keys(usersLookup).filter((u) =>
-		levels.every((l) => bestLen.get(l).has(u))
+		levels.every((l) => lenByLevelUser.get(l).has(u))
 	);
 	console.log(`Users completing all levels: ${completedAll.length}`);
 
 	const perLevel = levels.map((l) => {
-		const effs = completedAll.map((u) => optLen.get(l) / bestLen.get(l).get(u));
+		const effs = completedAll.map(
+			(u) => optLen.get(l) / lenByLevelUser.get(l).get(u)
+		);
 		return {
 			level: l,
 			optimal: optLen.get(l),
@@ -342,16 +325,10 @@ function logEfficiency(allPathLengths, minPathLength, testsRaw, usersLookup) {
 
 // stats for players who reached the final level (bonus3)
 function logAllLevels(testsRaw, usersLookup) {
-	const allTests = testsRaw
-		.filter((d) => d.level === "bonus3")
-		.filter((d) => d.result !== "[]")
-		.filter((d) => usersLookup[d.user_id]);
+	const allTests = testsRaw.filter((d) => d.level === LEVELS.at(-1));
 
 	const medianFirstMovePauseAllLevels = d3.median(
-		allTests
-			.map(({ result }) => JSON.parse(result))
-			.filter((parsed) => parsed.length > 1)
-			.map((parsed) => parsed[1].t - parsed[0].t)
+		allTests.map(({ path }) => path[1].t - path[0].t)
 	);
 	console.log(
 		`Median pause time on first move (all levels): ${medianFirstMovePauseAllLevels}ms`
@@ -360,17 +337,19 @@ function logAllLevels(testsRaw, usersLookup) {
 }
 
 // number of moves for level 2 with user name + id (named users only)
-function writeLevel2Moves(exampleTests, usersLookup) {
-	const level2Moves = exampleTests
-		.map(({ user_id, result }) => ({
+function writeExampleLevelMoves(exampleTests, usersLookup) {
+	const moves = exampleTests
+		.map(({ user_id, path }) => ({
 			user_id,
-			name: usersLookup[user_id].name,
-			moves: JSON.parse(result).length
+			name: usersLookup[user_id]?.name,
+			moves: path.length
 		}))
 		.filter(({ name }) => name);
 
-	fs.writeFileSync("./tasks/level2_moves.csv", d3.csvFormat(level2Moves));
-	console.log(`Wrote ${level2Moves.length} rows to ./tasks/level2_moves.csv`);
+	fs.writeFileSync(`./tasks/${EXAMPLE_LEVEL}_moves.csv`, d3.csvFormat(moves));
+	console.log(
+		`Wrote ${moves.length} rows to ./tasks/${EXAMPLE_LEVEL}_moves.csv`
+	);
 }
 
 // the set of users with a run on every level (tests are already one per user
@@ -395,8 +374,6 @@ function writeLevelTimes(tests) {
 	const rows = LEVELS.flatMap((lvl) =>
 		tests
 			.filter((d) => d.level === lvl)
-			.map((d) => ({ user_id: d.user_id, path: JSON.parse(d.result) }))
-			.filter(({ path }) => path.length > 1)
 			.map(({ user_id, path }) => {
 				const first_move_ms = path[1].t - path[0].t;
 				const total_ms = path.at(-1).t - path[0].t;
@@ -476,7 +453,7 @@ function writeLevelOptimality(tests) {
 			const actual = tests
 				.filter((d) => d.level === lvl)
 				.filter(keep)
-				.map((d) => JSON.parse(d.result).length);
+				.map((d) => d.path.length);
 
 			return {
 				level: lvl,
@@ -486,16 +463,6 @@ function writeLevelOptimality(tests) {
 					"efficiency",
 					actual.map((a) => optimal / a),
 					4
-				),
-				...band(
-					"excess_moves",
-					actual.map((a) => a - optimal),
-					1
-				),
-				...band(
-					"excess_per_100",
-					actual.map((a) => ((a - optimal) / optimal) * 100),
-					2
 				)
 			};
 		});
@@ -524,17 +491,14 @@ function writeLevelOptimality(tests) {
 function writeTimeOptimality(tests) {
 	const optLen = loadOptimalLengths();
 
-	const points = tests
-		.map((d) => ({ level: d.level, path: JSON.parse(d.result) }))
-		.filter(({ path }) => path.length > 1)
-		.map(({ level, path }) => {
-			const total_ms = path.at(-1).t - path[0].t;
-			return {
-				level,
-				time: Math.round(total_ms / 100) / 10,
-				optimality: Math.round((optLen.get(level) / path.length) * 1000) / 1000
-			};
-		});
+	const points = tests.map(({ level, path }) => {
+		const total_ms = path.at(-1).t - path[0].t;
+		return {
+			level,
+			time: Math.round(total_ms / 100) / 10,
+			optimality: Math.round((optLen.get(level) / path.length) * 1000) / 1000
+		};
+	});
 
 	const rows = d3
 		.rollups(
@@ -588,69 +552,6 @@ function percentileRanks(values) {
 	return ranks;
 }
 
-// every run as a (percentile_optimal, percentile_time) point, binned so
-// repeats collapse to a count — feeds a 0-100% x 0-100% scatter of how a
-// run's speed ranked against how efficient it was. percentiles are computed
-// within each level's own population (not pooled), then rounded to the
-// nearest 0.1%.
-function writePercentileOptimalityTime(tests) {
-	const optLen = loadOptimalLengths();
-
-	const points = tests
-		.map((d) => ({ level: d.level, path: JSON.parse(d.result) }))
-		.filter(({ path }) => path.length > 1)
-		.map(({ level, path }) => ({
-			level,
-			time: (path.at(-1).t - path[0].t) / 1000,
-			optimality: optLen.get(level) / path.length
-		}));
-
-	const rounded = LEVELS.flatMap((lvl) => {
-		const levelPoints = points.filter((d) => d.level === lvl);
-		const optimalPct = percentileRanks(levelPoints.map((d) => d.optimality));
-		const timePct = percentileRanks(levelPoints.map((d) => d.time));
-
-		return levelPoints.map((d, i) => ({
-			level: d.level,
-			percentile_optimal: Math.round(optimalPct[i] * 10) / 10,
-			percentile_time: Math.round(timePct[i] * 10) / 10
-		}));
-	});
-
-	const rows = d3
-		.rollups(
-			rounded,
-			(v) => v.length,
-			(d) => d.level,
-			(d) => d.percentile_optimal,
-			(d) => d.percentile_time
-		)
-		.flatMap(([lvl, byOpt]) =>
-			byOpt.flatMap(([percentile_optimal, byTime]) =>
-				byTime.map(([percentile_time, count]) => ({
-					level: lvl,
-					percentile_optimal,
-					percentile_time,
-					count
-				}))
-			)
-		)
-		.sort(
-			(a, b) =>
-				LEVELS.indexOf(a.level) - LEVELS.indexOf(b.level) ||
-				d3.ascending(a.percentile_optimal, b.percentile_optimal) ||
-				d3.ascending(a.percentile_time, b.percentile_time)
-		);
-
-	fs.writeFileSync(
-		"./static/assets/data/percentile-optimality-time.csv",
-		d3.csvFormat(rows)
-	);
-	console.log(
-		`Wrote ${rows.length} rows to ./static/assets/data/percentile-optimality-time.csv`
-	);
-}
-
 // fraction of `sorted` (ascending) at or below `v` — R's ecdf(), i.e. percentile
 // rank as "how many finished at or below me", not the tie-averaged rank
 // percentileRanks() above uses. Ties all land on the same (higher) percentile.
@@ -667,26 +568,23 @@ function ecdfPercent(sorted, v) {
 // independent axis, and normalizes across levels of different sizes the same
 // way the optimality ratio does. zero-duration rows are dropped before
 // averaging (skipped instant/auto-submitted attempts). a user only counts as
-// `completed_all` if they have a row for every non-tutorial level -
-// percentiles and the top/worst/quick/slow 10% tails are computed only
-// within that completed_all pool, so the round set is held fixed and
-// easy-round-only players can't skew it.
-const COHORT_Q = 0.1;
-function writeUserCohorts(tests) {
+// `completed_all` if they have a row for every non-tutorial level - only that
+// pool is written out, and each user's mean_opt/mean_pace is converted to an
+// ECDF percentile (opt_pct/pace_pct) within that same pool, so the round set
+// is held fixed and easy-round-only players can't skew it.
+function writePercentileOptimalityTime(tests) {
 	const optLen = loadOptimalLengths();
 	const nonTutorial = LEVELS.filter((lvl) => lvl !== "tutorial");
 
 	const perRun = tests
 		.filter((d) => nonTutorial.includes(d.level))
 		.map((d) => {
-			const path = JSON.parse(d.result);
-			if (path.length <= 1) return null;
 			const optimal = optLen.get(d.level);
-			const duration_s = (path.at(-1).t - path[0].t) / 1000;
+			const duration_s = (d.path.at(-1).t - d.path[0].t) / 1000;
 			return {
 				user_id: d.user_id,
 				level: d.level,
-				optimality: optimal / path.length,
+				optimality: optimal / d.path.length,
 				pace_s: duration_s / optimal,
 				duration_s
 			};
@@ -707,49 +605,23 @@ function writeUserCohorts(tests) {
 	// thresholds/percentiles taken only over the completed-all pool
 	const ca = userAgg.filter((d) => d.completed_all);
 	const optSorted = ca.map((d) => d.mean_opt).sort(d3.ascending);
-	const paceSorted = ca
-		.filter((d) => d.mean_pace !== undefined)
-		.map((d) => d.mean_pace)
-		.sort(d3.ascending);
+	const paceSorted = ca.map((d) => d.mean_pace).sort(d3.ascending);
 
-	const optHi = d3.quantile(optSorted, 1 - COHORT_Q);
-	const optLo = d3.quantile(optSorted, COHORT_Q);
-	const paceLo = d3.quantile(paceSorted, COHORT_Q);
-	const paceHi = d3.quantile(paceSorted, 1 - COHORT_Q);
-
-	// only the completed-all cohort ships — that's the fixed-round-set pool the
-	// percentiles/thresholds above were computed over in the first place.
 	const rows = ca.map((d) => {
 		const hasPace = d.mean_pace !== undefined;
 		return {
 			// user_id: d.user_id,
-			// mean_opt: +d.mean_opt.toFixed(4),
-			// mean_pace: hasPace ? +d.mean_pace.toFixed(3) : "",
 			opt_pct: +ecdfPercent(optSorted, d.mean_opt).toFixed(4),
 			pace_pct: hasPace ? +ecdfPercent(paceSorted, d.mean_pace).toFixed(4) : ""
-			// top_solver: d.mean_opt >= optHi,
-			// worst_solver: d.mean_opt <= optLo,
-			// quick_solver: hasPace && d.mean_pace <= paceLo,
-			// slow_solver: hasPace && d.mean_pace >= paceHi
 		};
 	});
 
-	fs.writeFileSync("./static/assets/data/user-cohorts.csv", d3.csvFormat(rows));
-	console.log(
-		`Wrote ${rows.length} rows to ./static/assets/data/user-cohorts.csv`
+	fs.writeFileSync(
+		"./static/assets/data/percentile-optimality-time.csv",
+		d3.csvFormat(rows)
 	);
-
-	const cohortCols = [
-		"top_solver",
-		"worst_solver",
-		"quick_solver",
-		"slow_solver"
-	];
-	console.log(`cohort sizes (of ${rows.length} completed_all users):`);
-	console.table(
-		Object.fromEntries(
-			cohortCols.map((c) => [c, rows.filter((r) => r[c]).length])
-		)
+	console.log(
+		`Wrote ${rows.length} rows to ./static/assets/data/percentile-optimality-time.csv`
 	);
 }
 
@@ -759,17 +631,17 @@ function writeMoveCounts(exampleTests) {
 		.rollups(
 			exampleTests,
 			(v) => v.length,
-			({ result }) => JSON.parse(result).length
+			({ path }) => path.length
 		)
 		.map(([moves, count]) => ({ moves, count }))
 		.sort((a, b) => d3.ascending(a.moves, b.moves));
 
 	fs.writeFileSync(
-		`./static/assets/data/${level}-move-counts.csv`,
+		`./static/assets/data/${EXAMPLE_LEVEL}-move-counts.csv`,
 		d3.csvFormat(rows)
 	);
 	console.log(
-		`Wrote ${rows.length} rows to ./static/assets/data/${level}-move-counts.csv`
+		`Wrote ${rows.length} rows to ./static/assets/data/${EXAMPLE_LEVEL}-move-counts.csv`
 	);
 }
 
@@ -778,10 +650,9 @@ function writeMoveCounts(exampleTests) {
 // and comes out identical on every run. one column of JSON: [{"x":0,"y":0},...]
 function writeSamplePaths(exampleTests, sampleSize = 100) {
 	const unique = new Map();
-	exampleTests.forEach(({ user_id, result }) => {
-		const path = JSON.parse(result).map(({ x, y }) => ({ x, y }));
-		const key = path.map(({ x, y }) => `${x},${y}`).join("|");
-		if (!unique.has(key)) unique.set(key, { user_id, path });
+	exampleTests.forEach(({ user_id, path, pathKey }) => {
+		const pathNoT = path.map(({ x, y }) => ({ x, y }));
+		if (!unique.has(pathKey)) unique.set(pathKey, { user_id, path });
 	});
 
 	const paths = Array.from(unique.values()).sort((a, b) =>
@@ -795,11 +666,11 @@ function writeSamplePaths(exampleTests, sampleSize = 100) {
 		.map(({ user_id, path }) => ({ user_id, path: JSON.stringify(path) }));
 
 	fs.writeFileSync(
-		`./static/assets/data/${level}-sample-paths.csv`,
+		`./static/assets/data/${EXAMPLE_LEVEL}-sample-paths.csv`,
 		d3.csvFormat(rows)
 	);
 	console.log(
-		`Wrote ${rows.length} of ${paths.length} unique paths to ./static/assets/data/${level}-sample-paths.csv`
+		`Wrote ${rows.length} of ${paths.length} unique paths to ./static/assets/data/${EXAMPLE_LEVEL}-sample-paths.csv`
 	);
 }
 
@@ -813,7 +684,7 @@ function writeOptimalSolutionCounts(exampleTests) {
 	// exact-path lookup: "x,y|x,y|..." -> solution_index (for this level only)
 	const solutionByPath = new Map();
 	optimalRaw
-		.filter((d) => d.level === level)
+		.filter((d) => d.level === EXAMPLE_LEVEL)
 		.forEach((d) => {
 			const key = JSON.parse(d.path_json)
 				.map(({ x, y }) => `${x},${y}`)
@@ -824,11 +695,8 @@ function writeOptimalSolutionCounts(exampleTests) {
 	const counts = new Map(
 		Array.from(solutionByPath.values(), (idx) => [idx, 0])
 	);
-	exampleTests.forEach(({ result }) => {
-		const key = JSON.parse(result)
-			.map(({ x, y }) => `${x},${y}`)
-			.join("|");
-		const idx = solutionByPath.get(key);
+	exampleTests.forEach(({ pathKey }) => {
+		const idx = solutionByPath.get(pathKey);
 		if (idx !== undefined) counts.set(idx, counts.get(idx) + 1);
 	});
 
@@ -838,15 +706,16 @@ function writeOptimalSolutionCounts(exampleTests) {
 	})).sort((a, b) => d3.ascending(a.solution_index, b.solution_index));
 
 	fs.writeFileSync(
-		"./static/assets/data/round2-optimal-solution-counts.csv",
+		`./static/assets/data/${EXAMPLE_LEVEL}-optimal-solution-counts.csv`,
 		d3.csvFormat(rows)
 	);
 	console.log(
-		`Wrote ${rows.length} rows to ./static/assets/data/round2-optimal-solution-counts.csv`
+		`Wrote ${rows.length} rows to ./static/assets/data/${EXAMPLE_LEVEL}-optimal-solution-counts.csv`
 	);
 	console.table(rows);
 }
 
+// TODO revisit or flag in methodlogy
 // aggregate pause heatmap: for every cell on `lvl`'s lawn, how long players
 // lingered there across all their runs. per-player dwell at a cell is summed
 // across revisits (same as the Tour's single-path dwellHeatmap), then the
@@ -860,10 +729,7 @@ const PAUSE_STEP_CAP_S = 60;
 function dwellRows(tests) {
 	const perCell = new Map(); // "x,y" -> seconds[], one entry per player who visited
 
-	tests.forEach(({ result }) => {
-		const path = JSON.parse(result);
-		if (path.length < 2) return;
-
+	tests.forEach(({ path }) => {
 		const dwell = new Map();
 		for (let i = 0; i < path.length - 1; i++) {
 			const dt = (path[i + 1].t - path[i].t) / 1000;
@@ -902,7 +768,7 @@ function writePauseHeatmap(testsRaw, lvl) {
 
 	const withEfficiency = tests.map((d) => ({
 		...d,
-		efficiency: optimal / JSON.parse(d.result).length
+		efficiency: optimal / d.path.length
 	}));
 	const effSorted = withEfficiency.map((d) => d.efficiency).sort(d3.ascending);
 	const topCutoff = d3.quantile(effSorted, 1 - COHORT_Q);
@@ -968,9 +834,7 @@ function pauseHeatmapRows(tests) {
 
 function endingHeatmapRows(tests) {
 	const counts = new Map();
-	tests.forEach(({ result }) => {
-		const path = JSON.parse(result);
-		if (!path.length) return;
+	tests.forEach(({ path }) => {
 		const { x, y } = path.at(-1);
 		const key = `${x},${y}`;
 		counts.set(key, (counts.get(key) ?? 0) + 1);
@@ -982,9 +846,9 @@ function endingHeatmapRows(tests) {
 // revisited it — this is "how many people got sent back here", not total steps
 function backtrackHeatmapRows(tests) {
 	const counts = new Map();
-	tests.forEach(({ result }) => {
+	tests.forEach(({ path }) => {
 		const visits = new Map();
-		JSON.parse(result).forEach(({ x, y }) => {
+		path.forEach(({ x, y }) => {
 			const key = `${x},${y}`;
 			visits.set(key, (visits.get(key) ?? 0) + 1);
 		});
@@ -1028,13 +892,12 @@ function writeLevelSummary(testsRaw, usersLookup, lvl) {
 	const tests = testsRaw.filter((d) => d.level === lvl);
 
 	const rows = tests.map((d) => {
-		const path = JSON.parse(d.result);
 		return {
 			user_id: d.user_id,
-			name: usersLookup[d.user_id].name,
-			optimality: +(optimal / path.length).toFixed(4),
-			first_move_t: path[1].t,
-			last_move_t: path.at(-1).t
+			name: usersLookup[d.user_id]?.name,
+			optimality: +(optimal / d.path.length).toFixed(4),
+			first_move_t: d.path.length > 1 ? d.path[1].t : null,
+			last_move_t: d.path.at(-1).t
 		};
 	});
 
@@ -1067,38 +930,41 @@ function writeOptimalSolutions() {
 	console.log(`Wrote ${optimalRaw.length} optimal solutions`);
 }
 
-// --- main --------------------------------------------------------------------
-
 function main() {
-	const { usersLookup, testsRaw, exampleTests } = loadData();
 	setupDirs();
+	const { usersLookup, testsRaw, exampleTests } = loadData();
 
-	const pathLengths = writeUserPaths(testsRaw, usersLookup);
-	const allPathLengths = exampleTests.map(
-		({ result }) => JSON.parse(result).length
+	const exampleUniquePathsLengths = writeUserPaths(testsRaw, usersLookup);
+
+	const exampleAllPathLengths = exampleTests.map(({ path }) => path.length);
+
+	const minPathLength = d3.min(exampleAllPathLengths);
+	logPathStats(exampleTests, exampleUniquePathsLengths, minPathLength);
+
+	logShortestProximity(
+		exampleAllPathLengths,
+		minPathLength,
+		exampleTests.length
 	);
-	const minPathLength = d3.min(Object.values(pathLengths));
 
-	logPathStats(exampleTests, pathLengths, minPathLength);
-	logShortestProximity(allPathLengths, minPathLength, exampleTests.length);
 	writeFirstMovePauseHistogram(exampleTests);
 	writeFinishingSpots(exampleTests);
 	writeForkCounts(exampleTests);
-	logEfficiency(allPathLengths, minPathLength, testsRaw, usersLookup);
+	logEfficiency(exampleAllPathLengths, minPathLength, testsRaw, usersLookup);
+
 	logAllLevels(testsRaw, usersLookup);
-	writeLevel2Moves(exampleTests, usersLookup);
+	writeExampleLevelMoves(exampleTests, usersLookup);
 	writeLevelTimes(testsRaw);
 	writeLevelOptimality(testsRaw);
 	writeTimeOptimality(testsRaw);
 	writePercentileOptimalityTime(testsRaw);
-	writeUserCohorts(testsRaw);
 	writeMoveCounts(exampleTests);
 	writeSamplePaths(exampleTests);
 	writeOptimalSolutionCounts(exampleTests);
 	writeOptimalSolutions();
-	writePauseHeatmap(testsRaw, "bonus2");
+	writePauseHeatmap(testsRaw, EXAMPLE2_LEVEL);
 	writeSandboxHeatmaps(testsRaw);
-	writeLevelSummary(testsRaw, usersLookup, "bonus2");
+	writeLevelSummary(testsRaw, usersLookup, EXAMPLE2_LEVEL);
 }
 
 main();

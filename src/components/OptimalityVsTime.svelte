@@ -2,10 +2,7 @@
 	import Scatter from "$components/charts/Scatter.svelte";
 	import loadCsv from "$utils/loadCsv.js";
 	import variables from "$data/variables.json";
-	// Loads user-cohorts.csv (one row per completed-all player, pace/optimality
-	// already expressed as percentile ranks) and hands it to the generic Scatter
-	// chart, which draws its own line of best fit via regression={true}.
-	const src = "assets/data/user-cohorts.csv";
+	const src = "assets/data/percentile-optimality-time.csv";
 
 	let data = $state([]);
 

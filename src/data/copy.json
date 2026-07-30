@@ -11,7 +11,7 @@
       "content": [
         {
           "type": "text",
-          "value": "Mowing a lawn. Vacuuming a room. Shoveling snow. You’ve probably done these tasks hundreds of times without thinking much about it. Some part of your brain works out a route that’s usually good enough to get the job done. People are actually pretty good at this, and better than you’d guess for a problem that is hard for computers. We wanted to see it for ourselves, so we built a lawn and asked people to mow it."
+          "value": "You’ve probably done something like mow a lawn or vacuum a rug hundreds of times without thinking much about it. Some part of your brain works out a route that’s usually good enough to get the job done. People are actually pretty good at this, and better than you’d guess for a problem that is hard for computers. We wanted to see it for ourselves, so we built a lawn and asked people to mow it."
         },
         {
           "type": "StoryGame",
@@ -106,7 +106,7 @@
         },
         {
           "type": "text",
-          "value": "A slight detour, if we may. It is worth noting that there are two main ways to tackle a problem like this. Simplifying things a bit, there are <strong>algorithms</strong> which guarantee the optimal path, and <strong>heuristics</strong> which use shortcuts to find a “good enough” path, fast."
+          "value": "A slight detour, if we may. There are two main ways to tackle a problem like this. Simplifying things a bit, there are <strong>algorithms</strong> which guarantee the optimal path, and <strong>heuristics</strong> which use shortcuts to find a “good enough” path, fast."
         },
         {
           "type": "text",
@@ -161,7 +161,7 @@
                 "replay": "true"
               },
               {
-                "text": "What differentiated the top players from everyone else came down to a single critical decision. We can divide the lawn into two main sections: left and right. Bones completed the left section first. Because it dead-ends, the only path out was to retrace their steps, creating an inevitable backtrack.",
+                "text": "What differentiated the best players from everyone else came down to a single critical decision. We can divide the lawn into two main sections: left and right. Bones completed the left section first. Because it dead-ends, the only path out was to retrace their steps, creating an inevitable backtrack.",
                 "step": "sections"
               },
               {
@@ -183,7 +183,7 @@
                 "note": "sarah’s pause heatmap"
               },
               {
-                "text": "Sarah also did something that appears a bit unnatural. Instead of simply continuing straight a few times, she intuitively and preemptively turned in a snake-like pattern. This highlighted a key difference between real-life mowing and our simplified game, an approach top players exploit.",
+                "text": "Sarah also did something that appears a bit unnatural. Instead of simply continuing straight a few times, she intuitively and preemptively turned in a snake-like pattern. This highlighted a key difference between real-life mowing and our simplified game, an approach best players exploit.",
                 "step": "sarah-snake"
               }
             ]
@@ -219,15 +219,11 @@
         },
         {
           "type": "text",
-          "value": "Our best guess is the structure of a lawn itself. Where the Traveling Salesman Problem scatters nodes randomly, a lawn has structure, which let players fall back on two strategies: <strong>decomposition</strong> and <strong>compression</strong>."
+          "value": "Our best guess is the structure of a lawn itself. Where the Traveling Salesman Problem scatters nodes randomly, a lawn has structure, which lets players fall back on two strategies: <strong>decomposition</strong> and <strong>compression</strong>."
         },
         {
           "type": "text",
-          "value": "Players were able to <strong>decompose</strong> the lawn into smaller, more manageable sections and solve them incrementally&mdash;clear this empty space first, then that corner, and finally the space between the rocks."
-        },
-        {
-          "type": "text",
-          "value": "Our interviewee Sarah described this perfectly."
+          "value": "Players were able to <strong>decompose</strong> the lawn into smaller, more manageable sections and solve them incrementally. Our interviewee Sarah described this perfectly."
         },
         {
           "type": "text",
@@ -270,20 +266,20 @@
           "value": "We isolated just extended pause times (i.e., thinking) and the same trend held, but <em>where</em> they paused is a different story. Let’s take a look at level four as an example."
         },
         {
-          "type": "text",
-          "value": "The top players (90th percentile) spent time thinking early as they traveled down the first column, then dedicated most of it at this one fork: go toward the cluttered middle section, or clear the open space to the right first. The worst players (10th percentile) sped through the beginning and barely paused to think until a corner or edge forced them to, implying reacting, not planning."
-        },
-        {
           "type": "LevelFour",
           "value": {}
         },
         {
           "type": "text",
-          "value": "The top players were able to anticipate where they should end in order to minimize backtracking at this little section at the top. They didn’t need to pause once they reached the home stretch. The worst players only realized they were trapped once they arrived and were forced to stop, backtrack, and work out where to go from there."
+          "value": "The best players (90th percentile) spent time thinking early as they traveled down the first column, then thought more at the juncture between the two rock clusters on the bottom left: go toward the cluttered middle section, or clear the open space to the right first. They were able to intuit that they should finish in the dead-end pocket at the top in order to minimize backtracking. As a result, they didn’t need to pause once they reached the home stretch."
         },
         {
           "type": "text",
-          "value": "The top players moved at about the same speed as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest. Below are two players who finished at the exact same time with different results."
+          "value": "Meanwhile, the worst players (10th percentile) sped through the beginning and barely paused to think until a corner or edge forced them to, implying reacting, not planning. They only realized that the same pocket was a dead end once they were already in it, then had to stop, backtrack, and work out where to go from there."
+        },
+        {
+          "type": "text",
+          "value": "The best players moved at about the same speed as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest. Below are two players who finished at the exact same time with different results."
         },
         {
           "type": "TwoMowers",
@@ -291,7 +287,7 @@
         },
         {
           "type": "text",
-          "value": "We heard this in the interview too. Sarah, one of the top players, spent her attention unevenly on purpose. She had a theory about why."
+          "value": "We heard this in the interview too. Sarah, one of the best players, spent her attention unevenly on purpose. She had a theory about why."
         },
         {
           "type": "text",
@@ -303,19 +299,11 @@
         },
         {
           "type": "text",
-          "value": "So it’s not about thinking more or thinking faster. It’s about <em>when</em> thinking happens. That’s what a good heuristic does: it spends your attention on the decisions that matter and nothing on the ones that don’t."
-        },
-        {
-          "type": "h2",
-          "value": "Why humans are good at this"
+          "value": "So it’s not about thinking more or faster, but <em>when</em> thinking happens. That’s what a good heuristic does: it spends your attention on the decisions that matter and nothing on the ones that don’t."
         },
         {
           "type": "text",
-          "value": "how this applies to your day to day, working memory, brain etc"
-        },
-        {
-          "type": "text",
-          "value": "practical applications"
+          "value": "Good luck not thinking about this the next time you mow a lawn!"
         },
         {
           "type": "h2",
