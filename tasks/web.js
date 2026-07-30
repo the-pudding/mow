@@ -930,6 +930,26 @@ function writeOptimalSolutions() {
 	console.log(`Wrote ${optimalRaw.length} optimal solutions`);
 }
 
+function writeSanitized(testsRaw, usersLookup) {
+	const tests = testsRaw.map(({ user_id, level, result }) => ({
+		user_id,
+		level,
+		result,
+		platform
+	}));
+	fs.writeFileSync("./tasks/sanitized-tests.csv", d3.csvFormat(tests));
+
+	const users = Object.entries(usersLookup).map(([user_id, { name }]) => ({
+		user_id,
+		age,
+		style,
+		gaming,
+		hand,
+		optimization
+	}));
+	fs.writeFileSync("./tasks/sanitized-demographics.csv", d3.csvFormat(users));
+}
+
 function main() {
 	setupDirs();
 	const { usersLookup, testsRaw, exampleTests } = loadData();
@@ -965,6 +985,8 @@ function main() {
 	writePauseHeatmap(testsRaw, EXAMPLE2_LEVEL);
 	writeSandboxHeatmaps(testsRaw);
 	writeLevelSummary(testsRaw, usersLookup, EXAMPLE2_LEVEL);
+
+	writeSanitized(testsRaw, usersLookup);
 }
 
 main();
