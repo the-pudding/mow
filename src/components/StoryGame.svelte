@@ -22,7 +22,12 @@
 	let skipped = $state(false);
 
 	let display = $derived(wasDoneOnLoad ? played : prompt);
-	let replayPath = $derived(session.storyGamePath ?? fetchedPath);
+
+	let replayPath = $derived(
+		session.storyGamePath?.length ? session.storyGamePath : fetchedPath
+	);
+	// hold everything back until we know whether they play or watch a replay
+	let ready = $derived(hydrated && (!wasDoneOnLoad || replayPath?.length > 0));
 
 	function onStart() {
 		session.startedLevels["round2"] = true;
@@ -40,8 +45,8 @@
 	}
 
 	function onComplete(path) {
+		// ran out of moves: don't count it as played, so a return visit replays
 		if (path == null) {
-			session.completedLevels["round2"] = 0;
 			onFinish();
 			return;
 		}
@@ -57,17 +62,9 @@
 	}
 
 	async function reveal(uiDelay = 0, noScroll) {
-		// game.active = false;
-		// if (complete)
-		// 	document
-		// 		.querySelectorAll("span.you")
-		// 		.forEach((el) => el.classList.add("visible"));
-		// else
-		// 	document
-		// 		.querySelectorAll("span.skip")
-		// 		.forEach((el) => el.classList.add("visible"));
-
-		document.getElementById("post").classList.add("visible");
+		const post = document.getElementById("post");
+		if (!post) return;
+		post.classList.add("visible");
 
 		if (noScroll) return;
 
@@ -87,13 +84,12 @@
 		if (raw) {
 			try {
 				const parsed = JSON.parse(raw);
-				// console.log(parsed);
 				Object.assign(session, parsed);
 			} catch (e) {
 				console.warn("Could not parse stored session", e);
 			}
 		}
-		wasDoneOnLoad = session.completedLevels["round2"] != null;
+		wasDoneOnLoad = session.completedLevels["round2"] > 0;
 		hydrated = true;
 	});
 
@@ -107,15 +103,20 @@
 		fetchAttempted = true;
 		try {
 			const rows = await loadCsv(`assets/round2/${session.userId}.csv`);
-			fetchedPath = rows.map((row) => ({
-				x: +row.x,
-				y: +row.y,
-				t: +row.t
-			}));
-			session.storyGamePath = fetchedPath;
-			reveal(0, true);
+			const path = rows
+				.map((row) => ({
+					x: +row.x,
+					y: +row.y,
+					t: Number.isFinite(+row.t) ? +row.t : 0
+				}))
+				.filter((d) => Number.isFinite(d.x) && Number.isFinite(d.y));
+			if (!path.length) throw new Error("empty or malformed path");
+			fetchedPath = path;
+			session.storyGamePath = path;
 		} catch (err) {
 			console.warn("Could not load stored path", err);
+			// no usable path: let them play it now
+			wasDoneOnLoad = false;
 		}
 	}
 
@@ -124,11 +125,20 @@
 			fetchAttempted ||
 			!hydrated ||
 			!wasDoneOnLoad ||
-			session.storyGamePath ||
-			!session.userId
+			session.storyGamePath?.length
 		)
 			return;
+		if (!session.userId) {
+			fetchAttempted = true;
+			wasDoneOnLoad = false;
+			return;
+		}
 		loadStoredPath();
+	});
+
+	// anyone who isn't playing needs the article unhidden
+	$effect(() => {
+		if (hydrated && wasDoneOnLoad && replayPath?.length) reveal(0, true);
 	});
 
 	$effect(() => {
@@ -137,21 +147,21 @@
 	});
 </script>
 
-<div class="c">
+<div class="c" class:ready>
 	<p>
 		<strong>{display}</strong>
 	</p>
-	{#if !wasDoneOnLoad}
+	{#if ready && !wasDoneOnLoad}
 		<p class="skip">
 			<small>
-				<Button variant="link" onclick={onSkip}>skip to results</Button>
+				<Button onclick={onSkip}>skip to results</Button>
 			</small>
 		</p>
 	{/if}
 </div>
 
 <div class="lawn" class:skipped>
-	{#if hydrated}
+	{#if ready}
 		{#if !wasDoneOnLoad}
 			<Game
 				size={level.size}
@@ -175,6 +185,19 @@
 <style>
 	.skipped {
 		visibility: hidden;
+	}
+
+	.c {
+		opacity: 0;
+	}
+
+	.c.ready {
+		opacity: 1;
+	}
+
+	.skip {
+		display: flex;
+		justify-content: center;
 	}
 
 	.lawn {

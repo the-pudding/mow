@@ -154,7 +154,7 @@ main h1, main h2, main h3, main .byline {
 
 main h2 {
 	font-family: var(--font-form);
-	margin: 4rem auto 2rem auto;
+	margin: 4rem auto 0 auto;
 }
 
 main p, main ul {
@@ -208,10 +208,6 @@ small {
 }
 
 @media (min-width: 800px) {
-	main h2 {
-		margin: 4rem auto;
-	}
-
 	main p, main li {
 		margin: 1.5rem auto;
 		font-size: var(--20px);

@@ -11,15 +11,13 @@
 
 	let { data } = $props();
 
-	// TODO remove
-	const dev = true;
-
-	if (browser && dev) {
-		localStorage.removeItem("pudding_mow_game");
-		// session.userId = "0a78toj0l4";
-		session.userId = "kqn1v9ezez";
-		session.completedLevels["round2"] = 1;
-	}
+	// const dev = false;
+	// if (browser && dev) {
+	// localStorage.removeItem("pudding_mow_game");
+	// session.userId = "kqn1v9ezez";
+	// session.userId = "xxx";
+	// session.completedLevels["round2"] = 1;
+	// }
 
 	const preloadFont = [
 		"assets/fonts/atlas/AtlasGrotesk-Bold-Web.woff2",

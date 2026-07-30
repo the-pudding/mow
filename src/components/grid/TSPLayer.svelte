@@ -198,7 +198,7 @@
 
 <style>
 	.c {
-		max-width: var(--col-width);
+		max-width: calc(var(--media-max-width) * 0.5);
 		margin: 2rem auto 3rem auto;
 	}
 

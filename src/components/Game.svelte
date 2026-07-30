@@ -138,7 +138,7 @@
 			{/if}
 			{#if controls && !startTime}
 				<div class="start">
-					<Button size="lg" onclick={onStart}>Start</Button>
+					<Button onclick={onStart}>Start</Button>
 				</div>
 			{/if}
 		</div>
