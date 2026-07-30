@@ -225,8 +225,6 @@
 							{showValues}
 						/>
 					</Grid>
-				{:else if loading}
-					<p class="note">Loading...</p>
 				{/if}
 			</div>
 		{/if}

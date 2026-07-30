@@ -63,7 +63,7 @@
 </script>
 
 {#if title}
-	<div class="heatmap-title">{@html title}</div>
+	<div class="heatmap-title"><strong>{@html title}</strong></div>
 {/if}
 <svg viewBox="0 0 {grid.size} {grid.size}">
 	{#each grid.cells as { x, y, obstacle }}
