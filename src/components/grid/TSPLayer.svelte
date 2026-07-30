@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from "svelte";
 	import { fade } from "svelte/transition";
+	import { MediaQuery } from "svelte/reactivity";
 	import { scaleLinear, interpolateHcl, shuffle } from "d3";
 	import Grid from "$components/Grid.svelte";
 	import variables from "$data/variables.json";
@@ -33,6 +34,13 @@
 		colorTo = variables.category["orange-dark"],
 		showOrder = true
 	} = $props();
+
+	// respect prefers-reduced-motion: each route appears whole instead of
+	// drawing in cell by cell. The reshuffle cycle still runs, just on `pause`
+	// alone since there's no draw-in time to wait out.
+	const reducedMotion = new MediaQuery("prefers-reduced-motion: reduce");
+	let step = $derived(reducedMotion.current ? 0 : stepTime);
+	let outTime = $derived(reducedMotion.current ? 0 : 150);
 
 	// same light-to-dark ramp as XrayLayer, walked across the route's cells
 	let colorScale = $derived(
@@ -100,7 +108,7 @@
 					advance();
 					loop();
 				},
-				flatPath.length * stepTime + pause
+				flatPath.length * step + pause
 			);
 		};
 		loop();
@@ -156,10 +164,10 @@
 							{@const next = flatPath[i + 1]}
 							<line
 								in:fade|global={{
-									delay: (i + 1) * stepTime,
+									delay: (i + 1) * step,
 									duration: 0
 								}}
-								out:fade|global={{ duration: 150 }}
+								out:fade|global={{ duration: outTime }}
 								x1={cell.x + 0.5}
 								y1={cell.y + 0.5}
 								x2={next.x + 0.5}
@@ -226,6 +234,12 @@
 
 	circle {
 		transition: fill 300ms ease;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		circle {
+			transition: none;
+		}
 	}
 
 	.tsp-legend {

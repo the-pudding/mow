@@ -3,6 +3,7 @@
 	import { scaleLinear, interpolateHcl } from "d3";
 	import { fade } from "svelte/transition";
 	import variables from "$data/variables.json";
+	import { MediaQuery } from "svelte/reactivity";
 
 	// Animated "xray" path overlay: draws each path segment as a colored line,
 	// fading them in one after another when animate() is called.
@@ -19,6 +20,9 @@
 	} = $props();
 
 	const grid = getContext("grid");
+
+	// respect prefers-reduced-motion: reveal the whole path instantly
+	const reducedMotion = new MediaQuery("prefers-reduced-motion: reduce");
 
 	// reveal delay (ms from start) for the point at index i
 	let delayFor = $derived((i) =>
@@ -66,9 +70,11 @@
 
 	// when shouldAnimate is false, render the whole path immediately (no reveal).
 	let show = $derived(animating || !shouldAnimate);
-	// transition params: staggered reveal while animating, instant otherwise.
+	// transition params: staggered reveal while animating, instant otherwise
+	// (or whenever reduced motion is preferred).
+	let instant = $derived(!shouldAnimate || reducedMotion.current);
 	let revealIn = $derived((delay) =>
-		shouldAnimate && animating ? { delay, duration: stepTime } : { duration: 0 }
+		animating && !instant ? { delay, duration: stepTime } : { duration: 0 }
 	);
 
 	export const animate = () => {
