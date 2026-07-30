@@ -119,7 +119,8 @@
 				{/each}
 
 				{#if yLabel}
-					<text class="tick y-label" x={-margin.left + 2} y={-12}>{yLabel}</text
+					<text class="tick y-label" x={-margin.left + 2} y={y(maxCount) - 16}
+						>{yLabel}</text
 					>
 				{/if}
 

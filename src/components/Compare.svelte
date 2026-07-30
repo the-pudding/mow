@@ -106,20 +106,20 @@
 
 <style>
 	.c {
-		margin: 4rem auto;
+		margin: 2rem auto;
 	}
 
 	.inner {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
 		gap: 0.5rem;
 		max-width: var(--chart-max-width);
 		margin: 0 auto;
 	}
 
 	.g {
-		padding: 0 8px;
 		width: 100%;
+		padding: 0 0.5rem;
 		/* these are static, so skip rendering the ones offscreen */
 		content-visibility: auto;
 		contain-intrinsic-size: auto 16rem;
@@ -130,5 +130,16 @@
 		text-align: center;
 		font-family: var(--font-form);
 		text-transform: uppercase;
+		font-size: var(--14px);
+	}
+
+	@media (min-width: 800px) {
+		.c {
+			margin: 4rem auto;
+		}
+
+		.inner {
+			grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+		}
 	}
 </style>

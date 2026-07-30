@@ -32,6 +32,7 @@
 			{data}
 			{label}
 			highlight={49}
+			ratio={1 / 2}
 			yLabel="Number of Players"
 			highlightLabel="optimal path"
 			highlightLabelAnchor="start"
@@ -42,6 +43,6 @@
 
 <style>
 	.c {
-		margin: 4rem auto;
+		margin: 2rem auto;
 	}
 </style>

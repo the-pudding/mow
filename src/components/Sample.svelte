@@ -83,7 +83,7 @@
 <style>
 	.c {
 		max-width: calc(var(--media-max-width) * 0.5);
-		margin: 4rem auto;
+		margin: 2rem auto;
 	}
 
 	.label {
@@ -91,5 +91,11 @@
 		text-align: center;
 		font-family: var(--font-form);
 		text-transform: uppercase;
+	}
+
+	@media (min-width: 800px) {
+		.c {
+			margin: 4rem auto;
+		}
 	}
 </style>

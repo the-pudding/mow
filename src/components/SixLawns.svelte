@@ -19,7 +19,7 @@
 <style>
 	.c {
 		max-width: var(--chart-max-width);
-		margin: 4rem auto;
+		margin: 2rem auto;
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: 2rem 1rem;
@@ -39,6 +39,12 @@
 	@media (max-width: 640px) {
 		.c {
 			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (min-width: 800px) {
+		.c {
+			margin: 4rem auto;
 		}
 	}
 </style>

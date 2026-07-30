@@ -120,7 +120,7 @@
 <style>
 	figure {
 		position: relative;
-		margin: 1rem auto;
+		margin: 0.5rem auto;
 		background: var(--color-green-medium);
 	}
 
@@ -217,12 +217,13 @@
 		opacity: 1;
 	}
 
-	.wireframe .obstacle {
-		/* background: var(--color-gray-500); */
-		/* border: 0.5px solid var(--color-bg); */
-	}
-
 	.wireframe .obstacle .fg {
 		display: none;
 	}
+
+	/* @media (min-width: 800px) {
+		figure {
+			margin: 1rem auto;
+		}
+	} */
 </style>

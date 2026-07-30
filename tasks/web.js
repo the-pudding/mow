@@ -952,10 +952,54 @@ function writeSanitized(testsRaw, usersLookup) {
 	fs.writeFileSync("./tasks/sanitized-demographics.csv", d3.csvFormat(users));
 }
 
+// mean optimality (optimal / actual, averaged across all levels) for users who
+// completed every level, split by gaming survey answer — "Regularly" vs
+// "Rarely or never" (the "Sometimes" / blank answers are excluded).
+function logGamers(testsRaw, usersLookup) {
+	const optLen = loadOptimalLengths();
+	const completedAll = getCompletedAll(testsRaw);
+
+	const byLevelUser = new Map(LEVELS.map((l) => [l, new Map()]));
+	testsRaw.forEach((d) =>
+		byLevelUser.get(d.level).set(d.user_id, d.path.length)
+	);
+
+	const meanOptByUser = new Map(
+		Array.from(completedAll).map((user_id) => {
+			const optimalities = LEVELS.map(
+				(l) => optLen.get(l) / byLevelUser.get(l).get(user_id)
+			);
+			return [user_id, d3.mean(optimalities)];
+		})
+	);
+
+	const GAMING_GROUPS = ["Regularly", "Rarely or never"];
+
+	const rows = GAMING_GROUPS.map((gaming) => {
+		const values = Array.from(meanOptByUser)
+			.filter(([user_id]) => usersLookup[user_id]?.gaming === gaming)
+			.map(([, v]) => v);
+
+		return {
+			gaming,
+			n: values.length,
+			mean_optimality: +d3.mean(values).toFixed(4),
+			median_optimality: +d3.median(values).toFixed(4)
+		};
+	});
+
+	console.log(
+		"Mean optimality by gaming frequency (users who completed all levels):"
+	);
+	console.table(rows);
+}
+
 function main() {
 	setupDirs();
 	const { usersLookup, testsRaw, exampleTests } = loadData();
 
+	logGamers(testsRaw, usersLookup);
+	process.exit();
 	const exampleUniquePathsLengths = writeUserPaths(testsRaw, usersLookup);
 
 	const exampleAllPathLengths = exampleTests.map(({ path }) => path.length);

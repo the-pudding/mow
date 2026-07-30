@@ -98,7 +98,7 @@
 
 <style>
 	.inner {
-		margin: 4rem auto;
+		margin: 2rem auto;
 		max-width: var(--media-max-width);
 	}
 
@@ -110,6 +110,7 @@
 
 	.g {
 		padding: 0 1rem;
+		padding-top: 1rem;
 		width: 100%;
 	}
 
@@ -141,6 +142,12 @@
 
 		.g {
 			width: 50%;
+		}
+	}
+
+	@media (min-width: 800px) {
+		.inner {
+			margin: 4rem auto;
 		}
 	}
 </style>

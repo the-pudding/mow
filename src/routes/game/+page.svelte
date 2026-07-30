@@ -2,20 +2,27 @@
 	import { browser } from "$app/environment";
 
 	import Meta from "$components/Meta.svelte";
-	import Intro from "$components/game/Intro.svelte";
+	// import Intro from "$components/game/Intro.svelte";
 	import Footer from "$components/Footer.svelte";
 	import FooterCC from "$components/Footer.CC.svelte";
-
-	import Round from "$components/game/Round.svelte";
-	import Interstitial from "$components/game/Interstitial.svelte";
-	import Bonus from "$components/game/Bonus.svelte";
-	import End from "$components/game/End.svelte";
-	import { session } from "$runes/misc.svelte.js";
+	// import Round from "$components/game/Round.svelte";
+	// import Interstitial from "$components/game/Interstitial.svelte";
+	// import Bonus from "$components/game/Bonus.svelte";
+	// import End from "$components/game/End.svelte";
+	// import { session } from "$runes/misc.svelte.js";
+	import copy from "$data/copy.json";
 	import "$utils/version.js";
 
+	// const preloadFont = [
+	// 	"https://pudding.cool/assets/fonts/inconsolata/inconsolata-v32-latin-regular.woff2",
+	// 	"https://pudding.cool/assets/fonts/inconsolata/inconsolata-v32-latin-700.woff2"
+	// ];
+
 	const preloadFont = [
-		"https://pudding.cool/assets/fonts/inconsolata/inconsolata-v32-latin-regular.woff2",
-		"https://pudding.cool/assets/fonts/inconsolata/inconsolata-v32-latin-700.woff2"
+		"assets/fonts/tiempos/TiemposTextWeb-Regular.woff2",
+		"../assets/fonts/atlas/AtlasGrotesk-Bold-Web.woff2",
+		"../assets/fonts/atlas/AtlasGrotesk-Regular-Web.woff2"
+		// "assets/fonts/tiempos/TiemposTextWeb-Bold.woff2"
 	];
 
 	const metaObj =
@@ -33,66 +40,76 @@
 					handle: "puddingviz"
 				};
 
-	const STORAGE_KEY = "pudding_mow_game";
+	const title = copy.meta.title;
+	const description = copy.meta.description;
+	const keywords = copy.meta.keywords;
+	// const STORAGE_KEY = "pudding_mow_game";
 
-	const title = "Lawn Mowing Experiment";
-	const description =
-		"Mow a series of lawns as efficiently as you can. We will publish the analysis in a few weeks.";
+	// const title = "Lawn Mowing Experiment";
+	// const description =
+	// 	"Mow a series of lawns as efficiently as you can. We will publish the analysis in a few weeks.";
 
-	let hydrated = $state(false);
+	// let hydrated = $state(false);
 
-	const dev = browser
-		? !window.location.hostname.includes("pudding.cool") &&
-			!window.location.hostname.includes("citizencodex.com")
-		: true;
+	// const dev = browser
+	// 	? !window.location.hostname.includes("pudding.cool") &&
+	// 		!window.location.hostname.includes("citizencodex.com")
+	// 	: true;
 
-	let instructions = $derived(
-		session.platform === "desktop" ? "arrow keys" : "on-screen keyboard"
-	);
+	// let instructions = $derived(
+	// 	session.platform === "desktop" ? "arrow keys" : "on-screen keyboard"
+	// );
 
-	let tutorialText = $derived(
-		`The goal: Mow every grassy green tile in as few moves as possible. Time doesn’t matter. You can’t cross obstacles. You can retrace your steps, but try to be efficient. Use the ${instructions} to move. <br><small><em>(This round doesn’t count, it’s just to get the hang of it.)</em></small>`
-	);
+	// let tutorialText = $derived(
+	// 	`The goal: Mow every grassy green tile in as few moves as possible. Time doesn’t matter. You can’t cross obstacles. You can retrace your steps, but try to be efficient. Use the ${instructions} to move. <br><small><em>(This round doesn’t count, it’s just to get the hang of it.)</em></small>`
+	// );
 
-	$effect(() => {
-		if (dev) console.log("dev mode: skipping hydration and persistence");
-	});
+	// $effect(() => {
+	// 	if (dev) console.log("dev mode: skipping hydration and persistence");
+	// });
 
-	$effect(() => {
-		if (!browser) return;
-		if (dev) {
-			localStorage.removeItem(STORAGE_KEY);
-		} else {
-			const raw = localStorage.getItem(STORAGE_KEY);
-			if (raw) {
-				try {
-					const parsed = JSON.parse(raw);
-					Object.assign(session, parsed);
-				} catch (e) {
-					console.warn("Could not parse stored session", e);
-				}
-			}
-		}
-		hydrated = true;
-	});
+	// $effect(() => {
+	// 	if (!browser) return;
+	// 	if (dev) {
+	// 		localStorage.removeItem(STORAGE_KEY);
+	// 	} else {
+	// 		const raw = localStorage.getItem(STORAGE_KEY);
+	// 		if (raw) {
+	// 			try {
+	// 				const parsed = JSON.parse(raw);
+	// 				Object.assign(session, parsed);
+	// 			} catch (e) {
+	// 				console.warn("Could not parse stored session", e);
+	// 			}
+	// 		}
+	// 	}
+	// 	hydrated = true;
+	// });
 
-	$effect(() => {
-		if (!hydrated) return;
-		if (dev) return;
-		const snapshot = $state.snapshot(session);
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
-	});
+	// $effect(() => {
+	// 	if (!hydrated) return;
+	// 	if (dev) return;
+	// 	const snapshot = $state.snapshot(session);
+	// 	localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+	// });
 
-	$effect(() => {
-		if (!hydrated) return;
-		session.phase;
-		if (session.phase !== "intro")
-			document.querySelector("main")?.scrollIntoView({ behavior: "instant" });
-	});
+	// $effect(() => {
+	// 	if (!hydrated) return;
+	// 	session.phase;
+	// 	if (session.phase !== "intro")
+	// 		document.querySelector("main")?.scrollIntoView({ behavior: "instant" });
+	// });
 </script>
 
-<Meta {title} {description} {preloadFont} {...metaObj} />
+<Meta {title} {description} {keywords} {preloadFont} {...metaObj} />
 
+<div class="c">
+	<p>
+		The experiment has ended. Read <a href="../" target="_self">the analysis.</a
+		>
+	</p>
+</div>
+<!-- 
 <div class="page">
 	{#if session.phase === "intro"}
 		<Intro />
@@ -138,7 +155,7 @@
 	{:else if session.phase === "end" || session.phase === "skip_end"}
 		<End />
 	{/if}
-</div>
+</div> -->
 
 <svelte:boundary onerror={(e) => console.error(e)}>
 	{#if import.meta.env.VITE_SITE == "citizencodex"}
@@ -149,8 +166,15 @@
 </svelte:boundary>
 
 <style>
-	.page {
+	/* .page {
 		margin-bottom: 4rem;
 		min-height: 80svh;
+	} */
+
+	.c {
+		height: 50svh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>

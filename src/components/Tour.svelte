@@ -619,23 +619,25 @@
 		{#each steps as { text, step, chart, replay }, i}
 			{@const active = stepIndex === i}
 			<div class="step" class:active data-step={i}>
-				<p>{@html text}</p>
-				{#if chart && histogramData.length}
-					<Histogram
-						data={histogramData}
-						label={histogramLabel}
-						yLabel="Number of Players"
-						highlight={3}
-						highlightLabel={"Median"}
-						highlightLabelAnchor="start"
-						higlightBaseline="bottom"
-					/>
-				{/if}
-				{#if replay}
-					<p class="replay">
-						<Button onclick={() => applyStep(step)}>Replay</Button>
-					</p>
-				{/if}
+				<div class="content">
+					<p>{@html text}</p>
+					{#if chart && histogramData.length}
+						<Histogram
+							data={histogramData}
+							label={histogramLabel}
+							yLabel="Number of Players"
+							highlight={3}
+							highlightLabel={"Median"}
+							highlightLabelAnchor="start"
+							higlightBaseline="bottom"
+						/>
+					{/if}
+					{#if replay}
+						<p class="replay">
+							<Button onclick={() => applyStep(step)}>Replay</Button>
+						</p>
+					{/if}
+				</div>
 			</div>
 		{/each}
 	</Scrolly>
@@ -650,15 +652,18 @@
 	}
 
 	.step {
-		height: 100svh;
-		padding-top: 2rem;
-		opacity: 0.5;
+		padding-top: 50svh;
+		padding-bottom: 50svh;
 		transition: opacity 0.25s ease-in-out;
 	}
 
-	.step:first-of-type {
-		/* padding-top: 0; */
-		margin-top: -100svh;
+	.step:last-of-type {
+		padding-bottom: 100svh;
+	}
+
+	.content {
+		background: var(--color-bg);
+		padding: 0.25rem 0.5rem;
 	}
 
 	.step.active {
@@ -692,15 +697,25 @@
 		margin-top: 1rem;
 	}
 
-	@media screen and (min-width: 640px) {
+	@media screen and (min-width: 1024px) {
 		.step {
 			max-width: var(--text-width);
 			padding-right: 1rem;
+			opacity: 0.5;
+			padding-top: 2rem;
+		}
+
+		.step:first-of-type {
+			margin-top: -100svh;
 		}
 
 		.vis {
 			margin-left: var(--text-width);
 			width: calc(100% - var(--text-width));
+		}
+
+		.content {
+			padding: 0;
 		}
 	}
 </style>

@@ -12,14 +12,17 @@
 				? variables.category["green-medium"]
 				: variables.category["orange-light"]
 	}));
+
+	let w = $state(1);
+	let ratio = $derived(w < 480 ? 1 : 0.5);
 </script>
 
-<div class="c">
+<div class="c" bind:offsetWidth={w}>
 	{#if data.length}
 		<Scatter
 			{data}
 			radius={5}
-			ratio={0.5}
+			{ratio}
 			x={{
 				value: "nodes",
 				label: "nodes"
