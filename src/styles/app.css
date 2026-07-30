@@ -1,6 +1,6 @@
 @import "variables.css";
 @import "normalize.css";
-/* @import "font.css"; */
+@import "font.css";
 @import "reset.css";
 @import "ui.css"; /* optional for bits UI components */
 
