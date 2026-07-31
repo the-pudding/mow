@@ -343,15 +343,11 @@
         },
         {
           "type": "text",
-          "value": "<small>This was an opt-in game shared with our readers, not a representative sample. We captured device type (touch vs. keyboard) and found no effect.</small>"
-        },
-        {
-          "type": "text",
           "value": "<small>We interviewed one participant, Sarah, over video after she gave permission to use her real name. Everyone else is referred to by the nickname they entered during the game.</small>"
         },
         {
           "type": "text",
-          "value": "<small>You can explore the raw user data on your, available on <a href=https://github.com/the-pudding/data/tree/master/mow target=_blank rel=noreferrer>our Github.</a></small>"
+          "value": "<small>You can explore the raw user data on <a href=https://github.com/the-pudding/data/tree/master/mow target=_blank rel=noreferrer>our Github.</a></small>"
         }
       ]
     }
