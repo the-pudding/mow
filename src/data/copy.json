@@ -169,21 +169,21 @@
                 "step": "right"
               },
               {
-                "text": "While those who were within two moves of optimal, including the <strong>17% who were perfect</strong>, chose to mow the right side first so they could end their run on the left, having anticipated the dead-end trap.",
+                "text": "While those within two moves of optimal, including the <strong>17% who were perfect</strong>, chose to mow the right side first so they could end their run on the left, having anticipated the dead-end trap.",
                 "step": "left"
               },
               {
-                "text": "One of those was a person whose real name was <strong>Sarah.</strong> We got in touch, and learned that she finished on the left with intention. <blockquote>“I saw the dead end at the end and I was like, okay, that’s where I need to end as well, so don’t go that way first.”</blockquote>",
+                "text": "One of those was a person whose real name was <strong>Sarah.</strong> We got in touch, and learned that she finished on the left intentionally. <blockquote>“I saw the dead end at the end and I was like, okay, that’s where I need to end as well, so don’t go that way first.”</blockquote>",
                 "step": "sarah-path",
                 "replay": "true"
               },
               {
-                "text": "Sarah knew a dead end meant the left section <em>had</em> to be reserved for the end to avoid a backtrack. The pause data backed her up. Her longest hesitation came a square <em>before</em> the fork, before continuing to clear the right side.",
+                "text": "Sarah knew a dead end meant the left section <em>had</em> to be reserved for the end to avoid backtracking. The pause data backed her up. Her longest hesitation came a square <em>before</em> the fork, before continuing to clear the right side.",
                 "step": "sarah-pause",
                 "note": "sarah’s pause heatmap"
               },
               {
-                "text": "Sarah also did something that appears a bit unnatural. Instead of simply continuing straight a few times, she intuitively and preemptively turned in a <strong>snake-like pattern</strong>. This highlighted a key difference between real-life mowing and our simplified game, an approach that strong mowers exploited. Sarah, an avid gamer, seemed to recognize this strategy immediately.",
+                "text": "Sarah also did something that appeared a bit unnatural. Instead of simply continuing straight a few times, she intuitively and preemptively turned in a <strong>snake-like pattern</strong>. This highlighted a key difference between real-life mowing and our simplified game, an approach that strong mowers exploited. Sarah, an avid gamer, seemed to recognize this strategy immediately.",
                 "step": "sarah-snake"
               }
             ]
@@ -223,7 +223,7 @@
         },
         {
           "type": "text",
-          "value": "People were able to <strong>decompose</strong> the lawn into smaller, more manageable sections and solve them incrementally. Our interviewee Sarah described this perfectly."
+          "value": "People <strong>decomposed</strong> the lawn into smaller, more manageable sections and solved them incrementally. Our interviewee Sarah described this perfectly."
         },
         {
           "type": "text",
@@ -295,7 +295,7 @@
         },
         {
           "type": "text",
-          "value": "She planned the tight, trap-prone sections carefully and let herself wing the open ones."
+          "value": "She planned the tight, trap-prone sections carefully and winged it on the open ones."
         },
         {
           "type": "text",
@@ -328,6 +328,26 @@
         {
           "type": "text",
           "value": "<small>The scatterplot chart from the Traveling Salesman study is approximated based on the image in the study since data weren’t provided.</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>Pace is seconds per <em>required</em> square, not per square someone actually mowed. If we divided by their real move count, a longer path would both hurt their optimality and inflate their move count, which would make the comparison circular.</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>To find optimal efficiency, we ran algorithms that solved each lawn exhaustively. The optimal solution included backtracks on some levels.</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>The 4.8% R<sup>2</sup> value comes from a linear fit of pace percentile against optimality percentile among people who finished every lawn.</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>This was an opt-in game shared with our readers, not a representative sample. We captured device type (touch vs. keyboard) and found no effect.</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>We interviewed one participant, Sarah, over video after she gave permission to use her real name. Everyone else is referred to by the nickname they entered during the game.</small>"
         },
         {
           "type": "text",

@@ -722,7 +722,7 @@ function writeOptimalSolutionCounts(exampleTests) {
 // per-cell mean/median is taken across every player who visited that cell.
 // steps over 60s are dropped as AFK, not a real pause (same cutoff
 // writeFirstMovePauseHistogram uses for the first-move pause).
-const PAUSE_STEP_CAP_S = 60;
+// const PAUSE_STEP_CAP_S = 60;
 
 // per-cell mean/median dwell seconds across `tests` (already filtered to the
 // cohort of interest); one seconds-value per player per cell they visited.
@@ -733,7 +733,7 @@ function dwellRows(tests) {
 		const dwell = new Map();
 		for (let i = 0; i < path.length - 1; i++) {
 			const dt = (path[i + 1].t - path[i].t) / 1000;
-			if (dt > PAUSE_STEP_CAP_S) continue;
+			// if (dt > PAUSE_STEP_CAP_S) continue;
 			const key = `${path[i].x},${path[i].y}`;
 			dwell.set(key, (dwell.get(key) ?? 0) + dt);
 		}
@@ -749,7 +749,7 @@ function dwellRows(tests) {
 			x,
 			y,
 			players: values.length,
-			mean_seconds: +d3.mean(values).toFixed(2),
+			// mean_seconds: +d3.mean(values).toFixed(2),
 			median_seconds: +d3.median(values).toFixed(2)
 		};
 	}).sort((a, b) => d3.ascending(a.y, b.y) || d3.ascending(a.x, b.x));
@@ -821,15 +821,13 @@ function heatmapRows(counts, total) {
 // median dwell per cell, reusing the same per-player dwell math (and 60s AFK
 // cutoff) as the cohort pause heatmaps
 function pauseHeatmapRows(tests) {
-	return dwellRows(tests).map(
-		({ x, y, players, median_seconds, mean_seconds }) => ({
-			x,
-			y,
-			value: median_seconds,
-			players,
-			mean_seconds
-		})
-	);
+	return dwellRows(tests).map(({ x, y, players, median_seconds }) => ({
+		x,
+		y,
+		value: median_seconds,
+		players
+		// mean_seconds
+	}));
 }
 
 function endingHeatmapRows(tests) {
