@@ -13,7 +13,7 @@
 	let {
 		path = [],
 		color = "user",
-		showBacktracks = false,
+		showBacktracks = true,
 		realtime = false,
 		shouldAnimate = true,
 		stepTime = 120
