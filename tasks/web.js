@@ -997,7 +997,7 @@ function main() {
 	const { usersLookup, testsRaw, exampleTests } = loadData();
 
 	// logGamers(testsRaw, usersLookup);
-	process.exit();
+
 	const exampleUniquePathsLengths = writeUserPaths(testsRaw, usersLookup);
 
 	const exampleAllPathLengths = exampleTests.map(({ path }) => path.length);

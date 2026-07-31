@@ -6,7 +6,7 @@
 		"style": "node tasks/style-dictionary.js",
 		"explore": "node tasks/explore.js",
 		"interview": "node tasks/interview.js",
-		"web": "node tasks/web.js",
+		"web": "node --max-old-space-size=8196 tasks/web.js",
 		"dev": "vite dev --host",
 		"build": "vite build",
 		"preview": "vite preview",
