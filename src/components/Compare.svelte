@@ -112,14 +112,14 @@
 	.inner {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
-		gap: 0.5rem;
+		gap: 1rem;
 		max-width: var(--chart-max-width);
 		margin: 0 auto;
 	}
 
 	.g {
 		width: 100%;
-		padding: 0 0.5rem;
+		padding: 0;
 		/* these are static, so skip rendering the ones offscreen */
 		content-visibility: auto;
 		contain-intrinsic-size: auto 16rem;

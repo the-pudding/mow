@@ -39,7 +39,7 @@
 <div class="c">
 	<h1>{@html copy.meta.title}</h1>
 	<div class="byline">
-		<p><small>{@html copy.meta.byline}</small></p>
+		<p>{@html copy.meta.byline}</p>
 		<img src="assets/images/mower.png" alt="person mowing lawn 8-bit art" />
 	</div>
 
@@ -64,6 +64,7 @@
 	.byline p {
 		text-align: center;
 		line-height: 1.2;
+		font-size: var(--14px);
 	}
 
 	.byline img {
@@ -72,5 +73,11 @@
 		width: 100%;
 		max-width: 4rem;
 		transform: scaleX(-1);
+	}
+
+	@media (min-width: 600px) {
+		.byline p {
+			font-size: var(--16px);
+		}
 	}
 </style>

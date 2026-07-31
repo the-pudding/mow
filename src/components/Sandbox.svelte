@@ -52,6 +52,10 @@
 		{ value: "backtrack", label: "Backtracks" }
 	];
 
+	let useVizItems = $derived(
+		mobile ? vizItems.filter((v) => v.value !== "backtrack") : vizItems
+	);
+
 	// title per heatmap type; `name` is the csv suffix. Values fall through to
 	// HeatmapLayer's default formatter (thousands get a comma) unless a
 	// formatValue is given — pause is seconds, so it gets a fixed decimal
@@ -170,7 +174,7 @@
 			items={levelItems}
 			placeholder="Choose a round"
 		/>
-		<ToggleGroup items={vizItems} bind:value={viz} required />
+		<ToggleGroup items={useVizItems} bind:value={viz} required />
 	</div>
 
 	{#if level}

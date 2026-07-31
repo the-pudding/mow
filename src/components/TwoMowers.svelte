@@ -91,12 +91,12 @@
 		display: flex;
 		justify-content: center;
 		margin: 2rem auto 1rem auto;
-		gap: 2rem;
+		gap: 1rem;
 		max-width: var(--end-max-width);
 	}
 
 	.stage {
-		width: calc(50% - 1rem);
+		width: calc(50% - 0.5rem);
 	}
 
 	.name {

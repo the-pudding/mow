@@ -102,18 +102,12 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
-		gap: 2rem;
-		margin: 2rem auto;
+		gap: 1rem;
+		margin: 4rem auto;
 		max-width: var(--end-max-width);
 	}
 
 	.stage {
-		width: calc(50% - 1rem);
-	}
-
-	@media (min-width: 600px) {
-		.c {
-			margin: 4rem auto;
-		}
+		width: calc(50% - 0.5rem);
 	}
 </style>

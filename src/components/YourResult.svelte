@@ -105,10 +105,10 @@
 	.lawns {
 		display: flex;
 		justify-content: center;
+		gap: 1rem;
 	}
 
 	.g {
-		padding: 0 1rem;
 		padding-top: 1rem;
 		width: 50%;
 	}
