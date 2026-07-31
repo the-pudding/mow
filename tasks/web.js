@@ -1020,7 +1020,7 @@ function main() {
 	writeExampleLevelMoves(exampleTests, usersLookup);
 	writeLevelTimes(testsRaw);
 	writeLevelOptimality(testsRaw);
-	writeTimeOptimality(testsRaw);
+	// writeTimeOptimality(testsRaw);
 	writePercentileOptimalityTime(testsRaw);
 	writeMoveCounts(exampleTests);
 	writeSamplePaths(exampleTests);
