@@ -5,6 +5,7 @@
 	import Button from "$components/ui/Button.svelte";
 	import { SvelteSet } from "svelte/reactivity";
 	import { classify } from "$utils/classifier.js";
+	import inView from "$actions/inView.js";
 	import { fade } from "svelte/transition";
 
 	// obstacles is an array of [{x,y}]
@@ -32,6 +33,8 @@
 	let flipCharacter = $state(true);
 	// without controls there is nothing to press, so the lawn shows right away
 	let started = $derived(!controls || startTime != null);
+	// the grid is on screen
+	let visible = $state(false);
 
 	function onStart() {
 		startTime = Date.now();
@@ -118,7 +121,14 @@
 	}
 </script>
 
-<div class="c" class:disable={!active} class:dim={showMessage}>
+<div
+	class="c"
+	class:disable={!active}
+	class:dim={showMessage}
+	use:inView
+	onenter={() => (visible = true)}
+	onexit={() => (visible = false)}
+>
 	<div class="inner">
 		{#if controls}
 			<div class="steps">
@@ -142,7 +152,10 @@
 				</div>
 			{/if}
 		</div>
-		{#if controls && active}<Keypad {onmove} {active}></Keypad>{/if}
+		{#if controls && active}<Keypad
+				{onmove}
+				enabled={started && visible}
+			></Keypad>{/if}
 	</div>
 </div>
 

@@ -3,21 +3,20 @@
 	import ArrowRight from "@lucide/svelte/icons/arrow-right";
 	import ArrowUp from "@lucide/svelte/icons/arrow-up";
 	import ArrowDown from "@lucide/svelte/icons/arrow-down";
-	let { onmove, active } = $props();
+	// enabled: the game has started and the grid is on screen
+	let { onmove, enabled = false } = $props();
 
 	function onKeydown(e) {
-		if (!active) return;
 		const keys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
 		if (!keys.includes(e.key)) return;
 		onmove(e.key);
-
-		// TODO only do this if game is being played
+		// only swallow arrow-key scrolling while we're actually driving
 		e.preventDefault();
 	}
 	let offsetWidth = $state(0);
 </script>
 
-<svelte:window onkeydown={onKeydown} />
+<svelte:window onkeydown={enabled ? onKeydown : undefined} />
 
 <div class="c" bind:offsetWidth style="--margin: {offsetWidth * -0.25}px;">
 	<div class="keypad">
