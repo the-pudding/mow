@@ -715,7 +715,6 @@ function writeOptimalSolutionCounts(exampleTests) {
 	console.table(rows);
 }
 
-// TODO revisit or flag in methodlogy
 // aggregate pause heatmap: for every cell on `lvl`'s lawn, how long players
 // lingered there across all their runs. per-player dwell at a cell is summed
 // across revisits (same as the Tour's single-path dwellHeatmap), then the

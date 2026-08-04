@@ -56,15 +56,11 @@
 		variables.category["yellow-light"]
 	);
 
-	// ---------------------------------------------------------------------------
-	// CONFIG — the featured run. TODO(you): confirm which level the tour lawn is
-	// and the player id whose path we replay.
-	// ---------------------------------------------------------------------------
 	const FADE_IN = 250;
 	const FADE_OUT = 0;
 	const BONES_ID = "yo7m5rr3nl";
 	const SARAH_ID = "tt3aprpgrp";
-	const TOUR_LEVEL = "round2"; // 8x8 lawn; matches Bones' path extent + obstacles
+	const TOUR_LEVEL = "round2";
 
 	let stepIndex = $state(0);
 
@@ -339,8 +335,7 @@
 
 	// ---------------------------------------------------------------------------
 	// STEP TRIGGERS — one per named `step` in copy.json. Each sets `variant`,
-	// flips on the layer(s) it needs, and supplies their data. Values marked TODO
-	// are placeholders for you to fill with the real aggregates.
+	// flips on the layer(s) it needs, and supplies their data.
 	// ---------------------------------------------------------------------------
 	const stepTriggers = {
 		// "Just the trace of the path (use xray, not realtime)"
