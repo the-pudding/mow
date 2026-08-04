@@ -4,7 +4,7 @@
 	import GameLayer from "$components/grid/GameLayer.svelte";
 	import Button from "$components/ui/Button.svelte";
 	import loadCsv from "$utils/loadCsv.js";
-	import inView from "$actions/inview.js";
+	import inView from "$actions/inView.js";
 	import levels from "$data/levels.json";
 
 	// Two players' bonus2 runs, each replayed with a mower sprite walking

@@ -3,7 +3,7 @@
 	import XrayLayer from "$components/grid/XrayLayer.svelte";
 	import Button from "$components/ui/Button.svelte";
 	import optimalRaw from "$data/optimal.csv";
-	import inView from "$actions/inview.js";
+	import inView from "$actions/inView.js";
 	import levels from "$data/levels.json";
 	import { session } from "$runes/misc.svelte.js";
 	import { tick } from "svelte";
