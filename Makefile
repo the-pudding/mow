@@ -26,3 +26,12 @@ aws-cache:
 	aws cloudfront create-invalidation --distribution-id E13X38CRR4E04D --paths '/2026/06/mow*'	
 
 pudding: aws-sync aws-cache
+
+aws-sync-lite:
+	aws s3 sync build s3://pudding.cool/2026/06/mow --delete --exclude 'assets/*' --cache-control 'max-age=31536000'
+
+pudding-lite: aws-sync-lite aws-cache
+
+production-lite:
+	npm run build
+	make pudding-lite
