@@ -2,7 +2,7 @@
   "meta": {
     "title": "Why some people mow a lawn better than others",
     "description": "We analyzed 132,003 attempts to mow a virtual lawn efficiently.",
-    "byline": "By Russell Samora, Florina Sutanto, Arjun Kakkar, and Sushant Karki",
+    "byline": "By <a href=https://pudding.cool/author/russell-samora rel=noreferrer target=_blank>Russell Samora</a>, <a href=https://pudding.cool/author/florina-sutanto/ rel=noreferrer target=blank>Florina Sutanto</a>, <a href=https://pudding.cool/author/arjun-kakkar/ rel=noreferrer target=blank>Arjun Kakkar</a>, and <a href=https://pudding.cool/author/sushant-karki rel=noreferrer target=blank>Sushant Karki</a>",
     "keywords": "mow, traveling, salesman, path, coverage, planning, roomba, vacuum"
   },
   "body": [
