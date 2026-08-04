@@ -1,15 +1,15 @@
 @import "variables.css";
 @import "normalize.css";
-/* @import "font.css"; */
+@import "font.css";
 @import "reset.css";
 @import "ui.css"; /* optional for bits UI components */
 
 /* colors defined in variables.css */
 :root {
 	/* font */
-	--font-sans: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
-	--font-serif: Iowan Old Style, Times New Roman, Times, serif;
-	--font-mono: Inconsolata, Menlo, Consolas, Monaco, monospace;
+	--font-sans: "Atlas Grotesk", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+	--font-serif: "Tiempos Text", Iowan Old Style, Times New Roman, Times, serif;
+	--font-mono: Menlo, Consolas, Monaco, monospace;
 
 	/* z-index */
 	--z-bottom: -1;
@@ -19,28 +19,29 @@
 	--z-modal: 1000;
 
 	/* presets (used in reset.css) */
-	--font-body: var(--font-mono);
-	--font-form: var(--font-mono);
+	--font-body: var(--font-serif);
+	--font-form: var(--font-sans);
+
 
 	--radius-xs: 0.125rem;
 	--radius-sm: 0.25rem;
 	--radius-md: 0.5rem;
 	--radius-lg: 1rem;
 	
-	--color-bg: var(--color-green-light);
-	--color-fg: var(--color-grey-900);
+	--color-bg: var(--color-gray-900);
+	--color-fg: var(--color-gray-50);
 	--color-fg-alt: var(--color-green-darker);
 	--color-primary: var(--color-black);
-	--color-link: var(--color-black);
-	--color-link-hover: var(--color-black);
+	--color-link: var(--color-fg);
+	--color-link-hover: var(--color-white);
 	--color-focus: var(--color-green-light);
 	--color-mark: var(--color-yellow);
-	--color-selection: var(--color-grey-300);
+	--color-selection: var(--color-gray-300);
 	--color-border: var(--color-fg);
-	--color-button-fg-primary: var(--color-green-light);
-	--color-button-bg-primary: var(--color-grey-900);
+	--color-button-fg-primary: var(--color-gray-900);
+	--color-button-bg-primary: var(--color-gray-50);
 	--color-button-fg-secondary: var(--color-white);
-	--color-button-bg-secondary: var(--color-grey-700);
+	--color-button-bg-secondary: var(--color-gray-700);
 	--color-input-bg: var(--color-white);
 	--color-input-fg: var(--color-fg);
 	--color-placeholder: var(--color-fg);
@@ -51,6 +52,10 @@
 	--grid-width: min(80svw, 80svh);
 	--grid-max-width: 600px;
 	--media-max-width: 800px;
+	--end-max-width: 1000px;
+	--chart-max-width: 1200px;
+
+	--col-width: var(--grid-max-width);
 }
 
 /* dark theme */
@@ -79,14 +84,10 @@
   touch-action: manipulation;
 }
 
-h1 {
-	font-size: var(--36px, 36px);
-	font-weight: 700;
-}
 
 h2 {
 	font-size: var(--24px, 24px);
-	line-height: 1.2;
+	line-height: 1.4;
 	font-weight: 700;
 }
 
@@ -113,27 +114,27 @@ svg {
 	height: auto;
 }
 
-body {
-	/* min-height: 101svh; */
-}
-
 #post {
 	display: none;
-	padding-top: 32px;
+	margin-top: 1rem;
 }
 
 #post.visible {
 	display: block;
 }
 
-#intro > *:not(figure), #post > *:not(figure) {
+/* #intro > *:not(figure), #post > *:not(figure) {
 	margin: 16px auto;
 	max-width: var(--grid-max-width);
+} */
+
+#post figure:not(.figure-grid) {
+	margin: 2rem auto;
+	max-width: var(--media-max-width);
 }
 
-#post figure {
-	margin: 32px auto;
-	max-width: var(--media-max-width);
+#post .figure-media {
+	margin: 2rem auto;
 }
 
 span.you, span.skip {
@@ -144,6 +145,71 @@ span.you.visible, span.skip.visible {
 	display: inline;
 }
 
-main p:first-of-type {
-	margin-top: 0;
+main h1, main h2, main h3, main .byline {
+	max-width: var(--col-width);
+	margin: 1rem auto;
+	text-align: center;
+	font-family: var(--font-form);
+}
+
+main h2 {
+	font-family: var(--font-form);
+	margin: 4rem auto 0 auto;
+}
+
+main p, main ul {
+	max-width: var(--col-width);
+	margin: 1rem auto;
+	line-height: 1.625;
+	font-size: var(--16px);
+}
+
+main li {
+	line-height: 1.625;
+	font-size: var(--16px);
+}
+
+
+p.big {
+	font-size: clamp(var(--20px, 20px), 5vw, var(--36px, 36px));
+	line-height: 1.2;
+}
+
+mark {
+	box-shadow: -4px 0px 0px var(--color-mark), 4pxm 0px 0px var(--color-mark);
+	box-decoration-break: clone;
+}
+
+p strong {
+	color: var(--color-mark);
+}
+
+.tour blockquote {
+	margin: 1rem auto;
+}
+
+small {
+	font-size: 70%;
+}
+
+@media screen and (min-width: 640px) {
+	main p, main li {
+		margin: 1.5rem auto;
+		font-size: var(--18px);
+	}
+
+	#post {
+		padding-top: 2rem;
+	}
+
+	small {
+	font-size: 80%;
+}
+}
+
+@media (min-width: 800px) {
+	main p, main li {
+		margin: 1.5rem auto;
+		font-size: var(--20px);
+	}
 }

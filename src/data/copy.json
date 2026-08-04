@@ -1,7 +1,9 @@
 {
   "meta": {
-    "title": "Lawn Mowing Experiment",
-    "description": "Mow a series of lawns as efficiently as you can. We will publish the analysis in a few weeks."
+    "title": "Why some people mow a lawn better than others",
+    "description": "We analyzed 132,003 attempts to mow a virtual lawn efficiently.",
+    "byline": "By Russell Samora, Florina Sutanto, Arjun Kakkar, and Sushant Karki",
+    "keywords": "mow, traveling, salesman, path, coverage, planning, roomba, vacuum"
   },
   "body": [
     {
@@ -9,203 +11,106 @@
       "content": [
         {
           "type": "text",
-          "value": "This is a story about how our minds work. But first, let’s start with a game: <strong>how efficiently can you mow this lawn?</strong>"
+          "value": "You’ve probably done something like mow a lawn or vacuum a rug hundreds of times without thinking much about it. Some part of your brain works out a route that’s usually good enough to get the job done. People are actually pretty good at this, and better than you’d guess for a problem that is hard for computers. We wanted to see it for ourselves, so we built a lawn and asked people to mow it."
+        },
+        {
+          "type": "StoryGame",
+          "value": {
+            "prompt": "Give it a try. How efficiently can you mow this lawn?",
+            "played": "A little while ago, you mowed this lawn. Here’s a replay."
+          }
         }
       ]
-    },
-    {
-      "section": "Hero"
     },
     {
       "section": "post",
       "content": [
         {
-          "type": "text",
-          "value": "So far, <strong class=field>X</strong> other people have mowed this lawn. <span class=you>Your technique was better than <strong class=percent-vs-field>X%</strong> of them. <strong class=custom-field></strong></span>"
+          "type": "YourResult",
+          "value": {
+            "level": "round2",
+            "b1": "You mowed this lawn in",
+            "a1": "moves.",
+            "b2": "The most efficient path is just",
+            "a2": "moves.",
+            "b3": "You were",
+            "a3": "efficient.",
+            "skip": "You skipped the game, so here is just the optimal path. Is this what you would’ve done?",
+            "strip": "If we strip away the grass, mowing is really just a path of connected squares."
+          }
         },
         {
           "type": "text",
-          "value": "If we strip away the grass, mowing is really just a path of connected nodes. <span class=you>You were <strong class=percent-vs-optimal>X%</strong> less efficient than the optimal path, which looks like this:</span><span class=skip>The optimal path looks like this (TODO):</span>"
+          "value": "A few weeks ago, 30,954 people mowed the same lawn. This is what their paths looked like."
         },
         {
-          "type": "Result",
+          "type": "Sample",
           "value": {}
         },
         {
           "type": "text",
-          "value": "Finding the best path through the nodes is a classic computer science problem. No, don’t leave! I promise this won’t get too wonky. All you need to know is that there are two main ways to tackle a problem like this:"
+          "value": "Many came close to the optimal path. 52% of people came within five moves of the best possible path, and <strong>16% did it perfectly.</strong>"
         },
         {
-          "type": "ul",
+          "type": "Round2Moves",
           "value": {
-            "li": [
-              "<strong>algorithms</strong> which calculate the optimal path and",
-              "<strong>heuristics</strong> which are simple strategies to complete the path"
-            ]
+            "label": "moves"
           }
         },
         {
           "type": "text",
-          "value": "Humans tend to operate like heuristics, and based on your path, you mow most like a __."
+          "value": "Many different approaches, yet similar, pretty good outcomes. Only 49 squares need to be covered, but people found 14,589 different ways to do it. Despite all that variety, the median person still hit 91% efficiency (within 5 moves)."
         },
         {
           "type": "text",
-          "value": "<mark>Reader’s path vs their matching heuristic</mark>"
+          "value": "For this small lawn, there are 12 different perfect solutions and people found them all."
         },
         {
-          "type": "text",
-          "value": "This isn’t a perfect label though, we used some fancy calculations to find the closest match. You can read more about it in the <a href=#>method section</a>. Your detailed heuristic classification breakdown looks like this:"
-        },
-        {
-          "type": "text",
-          "value": "<mark>small bar chart of similarity scores across all heuristics</mark>"
-        },
-        {
-          "type": "text",
-          "value": "There are many strategies for a problem like mowing the lawn, which is technically known as <strong>Coverage Path Planning</strong>. Here are some common techniques:"
-        },
-        {
-          "type": "text",
-          "value": "<mark>small multiple grid of all heuristics</mark>"
-        },
-        {
-          "type": "text",
-          "value": "On an open grid with few obstacles, most of these techniques (and those performed by other readers) performed almost identically."
-        },
-        {
-          "type": "text",
-          "value": "<mark>bar chart/table of their efficiency scores and how many users fell into each.</mark>"
-        },
-        {
-          "type": "text",
-          "value": "The differences only start to become apparent when things get more complicated. On a small, simple grid your approach doesn’t matter much. But what happens when the grid gets bigger?"
-        },
-        {
-          "type": "text",
-          "value": "Is mowing not your thing? Pick something more familiar to prime your mind."
-        },
-        {
-          "type": "text",
-          "value": "<mark>reader plays a larger grid, 14x14</mark>"
-        },
-        {
-          "type": "text",
-          "value": "<mark>[their new path animated and its scoring</mark>"
-        },
-        {
-          "type": "text",
-          "value": "On the small grid you were a __. On the big grid you shifted to a __."
-        },
-        {
-          "type": "text",
-          "value": "Or"
-        },
-        {
-          "type": "text",
-          "value": "You stuck with the __ technique, even as complexity grew. That’s [common/common] like % of others."
-        },
-        {
-          "type": "text",
-          "value": "Why does this matter? When different obstacles appear, some strategies hold up better than others."
-        },
-        {
-          "type": "text",
-          "value": "<mark>slope chart of small vs. large for each heuristic</mark>"
-        },
-        {
-          "type": "text",
-          "value": "Here is how everyone performed across both grids."
-        },
-        {
-          "type": "text",
-          "value": "<mark>[slope chart again with internet and you</mark>"
-        },
-        {
-          "type": "text",
-          "value": "This is why heuristics exist. When problems get complex enough that finding the perfect answer is impractical, we fall back on good-enough strategies. So do computers."
-        },
-        {
-          "type": "text",
-          "value": "The Coverage Path Planning is related to one of the most famous problems in computer science: The Traveling Salesman Problem."
-        },
-        {
-          "type": "video",
+          "type": "Compare",
           "value": {
-            "src": "assets/videos/tsp.mp4",
-            "preload": "true",
-            "autoplay": "true",
-            "muted": "true",
-            "loop": "true",
-            "figcaption": "From <a href=https://www.youtube.com/watch?v=BAejnwN4Ccw target=_blank rel=noreferrer>The Coding Train</a> with Daniel Shiffman"
+            "level": "round2",
+            "count": "12"
           }
         },
         {
           "type": "text",
-          "value": "The premise is simple: a salesman must visit a set of cities exactly once and return to their starting point, all while taking the shortest possible route. We see this all the time in the real world. From a pizza delivery driver planning their stops to a trick-or-treater maximizing their candy haul, finding the most efficient routes would be solving a version of this problem."
+          "value": "But what were you actually solving?"
         },
         {
           "type": "text",
-          "value": "I wanted to create this mowing experiment after I <a href=https://docs.lib.purdue.edu/jps/vol1/iss1/4/ target=_blank rel=noreferrer>read a study</a> that found humans come impressively close to computer-calculated optimal solutions to this problem with fewer stops, and even do pretty good &mdash; just 11% less efficient than optimal &mdash; for 70+ stops. But as the stops increase, humans’ ability decreases."
+          "value": "Finding the best path through the squares is a classic computer science problem. No, don’t leave! We promise this won’t get too wonky."
         },
         {
-          "type": "img",
-          "value": {
-            "src": "assets/images/study.png",
-            "alt": "A chart depicting how people perform on the Traveling Salesman Problem compared to the optimal path, which shows that people perform near-ideal at fewer nodes, with a slow increasing deviation as more nodes are added",
-            "figcaption": "Chart of findings from <a href=https://docs.lib.purdue.edu/jps/vol1/iss1/4/ target=_blank rel=noreferrer>this study</a>"
-          }
+          "type": "h2",
+          "value": "Path planning problems"
         },
         {
           "type": "text",
-          "value": "We’re not just good at literally connecting the dots. Our human brains are wired to go on autopilot and zip through common-sense problems like these using heuristics."
+          "value": "Solving the lawn mowing problem is formally called Coverage Path Planning, and is related to one of the most famous path planning problems in computer science: <a href=https://en.wikipedia.org/wiki/Travelling_salesman_problem target=_blank rel=noreferrer>The Traveling Salesman Problem.</a>"
         },
         {
           "type": "text",
-          "value": "Instead of calculating for optimal strategy all the time, which is easy work for a computer but certainly cognitively overwhelming for us, we draw from experience, memory, and learned patterns to form mental shortcuts. These shortcuts&mdash;like knowing to minimize overlapping when you’re mowing a lawn as quickly as possible&mdash;allow us to make quick judgments without burning through too much mental resources. This trades accuracy for speed, but since the results are usually good enough, it’s a tradeoff that’s often worth making"
+          "value": "The premise is simple: a salesman must visit a set of cities exactly once and return to their starting point, all while taking the shortest possible route. A pizza delivery driver planning their stops or a trick-or-treater maximizing their candy haul is solving a version of this problem."
+        },
+        {
+          "type": "TSPLayer",
+          "value": {}
         },
         {
           "type": "text",
-          "value": "Why are we so good at this? Evolutionary adaptation that allows for quick judgment and decision-making when dealing with limited time, information, and cognitive resources."
+          "value": "We wanted to create this mowing experiment after we <a href=https://docs.lib.purdue.edu/jps/vol1/iss1/4/ target=_blank rel=noreferrer>read a study</a> that found humans come impressively close to computer-calculated optimal solutions to this problem with fewer stops, and even do pretty good &mdash; just 11% less efficient than optimal &mdash; for 70+ stops. We recreated their chart below. As the stops increase, humans’ ability decreases. Would results be similar for mowing a lawn?"
+        },
+        {
+          "type": "Study",
+          "value": {}
         },
         {
           "type": "text",
-          "value": "perceptual shortcuts"
+          "value": "A slight detour, if we may. There are two main ways to tackle a problem like this. Simplifying things a bit, there are <strong>algorithms</strong> which guarantee the optimal path, and <strong>heuristics</strong> which use shortcuts to find a “good enough” path, fast."
         },
         {
           "type": "text",
-          "value": "chunking"
-        },
-        {
-          "type": "text",
-          "value": "bounded rationality"
-        },
-        {
-          "type": "text",
-          "value": "<mark>can we classify the chunking on the reader’s path? or just do contrived example</mark>"
-        },
-        {
-          "type": "text",
-          "value": "But the brain has its limits. The bigger the lawn, the more data we have to process, and the heavier the cognitive load becomes"
-        },
-        {
-          "type": "text",
-          "value": "We start breaking down the grid into smaller chunks that we navigate more manageably…"
-        },
-        {
-          "type": "text",
-          "value": "Heuristics become weaker – cannot evaluate holistically"
-        },
-        {
-          "type": "text",
-          "value": "chunking"
-        },
-        {
-          "type": "text",
-          "value": "TSP scaling example"
-        },
-        {
-          "type": "text",
-          "value": "For example, brute force calculations for a salesperson visiting just 10 cities requires testing 3.6 million possible routes, and that number explodes exponentially as more cities are added."
+          "value": "Why do people need heuristics? If a salesperson had to visit just 10 cities and every possible route has to be checked, we’d surprisingly need to test 3.6 million of them. That number explodes exponentially as more cities are added."
         },
         {
           "type": "text",
@@ -217,51 +122,232 @@
         },
         {
           "type": "text",
-          "value": "working memory limits"
+          "value": "When problems are small, the approach doesn’t matter much, almost everything works. But as complexity grows, optimal becomes impossible and heuristics become necessary. This is true for both humans <em>and</em> computers. People both fall back on good-enough strategies when perfect is impractical."
+        },
+        {
+          "type": "h2",
+          "value": "A guided tour"
+        },
+        {
+          "type": "Tour",
+          "value": {
+            "steps": [
+              {
+                "text": "Let’s replay a mowing session, director’s-cut style, with some commentary along the way. For this walkthrough, we’ll use a perfectly average run from a person who called themselves <strong>Bones</strong>. It took them 54 moves–five more than optimal. We recorded the timestamp of each move, so every hesitation or direction change left a data footprint.",
+                "step": "intro",
+                "replay": "true"
+              },
+              {
+                "text": "We’ll rewind to the start and walk through it. Before Bones even made a move, they paused for <strong>2.9 seconds.</strong> They were perfectly average here as well. Upon seeing the lawn revealed, they naturally paused to survey the lawn and, perhaps, made a plan.",
+                "chart": "histogram",
+                "step": "rewind"
+              },
+              {
+                "text": "Off went Bones! There was nothing to decide in the opening stretch until the fifth square. Continue <strong>right,</strong> or go <strong>down</strong>?",
+                "step": "fifth"
+              },
+              {
+                "text": "This is where paths first diverged. Bones barely hesitated (0.7s) and decided to go down, like 20% of other people. This is a critical moment that we’ll come back to shortly.",
+                "step": "diverge"
+              },
+              {
+                "text": "Bones plodded along the outside edge until they reached the bottom. Their first notable pause (2.4s) came when they realized they hit a dead end and had to retrace their steps.",
+                "step": "pause",
+                "replay": "true"
+              },
+              {
+                "text": "After realizing their mistake, Bones turned around and re-mowed their first square to finish this section. To get to the other open section they had to backtrack through two more squares. Then it was mostly smooth sailing as they worked around the edges, then filled in the remaining squares in the middle.",
+                "step": "remaining",
+                "replay": "true"
+              },
+              {
+                "text": "What differentiated the best mowers from everyone else came down to a single critical decision. We can divide the lawn into two main sections: left and right. Bones completed the left section first. Because it dead-ends, the only path out was to retrace their steps, creating an inevitable backtrack.",
+                "step": "sections"
+              },
+              {
+                "text": "If we look at where each person ended, we can see this play out. People three or more moves from optimal finished scattered across the lawn.",
+                "step": "right"
+              },
+              {
+                "text": "While those within two moves of optimal, including the <strong>17% who were perfect</strong>, chose to mow the right side first so they could end their run on the left, having anticipated the dead-end trap.",
+                "step": "left"
+              },
+              {
+                "text": "One of those was a person whose real name was <strong>Sarah.</strong> We got in touch, and learned that she finished on the left intentionally. <blockquote>“I saw the dead end at the end and I was like, okay, that’s where I need to end as well, so don’t go that way first.”</blockquote>",
+                "step": "sarah-path",
+                "replay": "true"
+              },
+              {
+                "text": "Sarah knew a dead end meant the left section <em>had</em> to be reserved for the end to avoid backtracking. The pause data backed her up. Her longest hesitation came a square <em>before</em> the fork, before continuing to clear the right side.",
+                "step": "sarah-pause",
+                "note": "sarah’s pause heatmap"
+              },
+              {
+                "text": "Sarah also did something that appeared a bit unnatural. Instead of simply continuing straight a few times, she intuitively and preemptively turned in a <strong>snake-like pattern</strong>. This highlighted a key difference between real-life mowing and our simplified game, an approach that strong mowers exploited. Sarah, an avid gamer, seemed to recognize this strategy immediately.",
+                "step": "sarah-snake"
+              }
+            ]
+          }
+        },
+        {
+          "type": "h2",
+          "value": "Six lawns"
         },
         {
           "type": "text",
-          "value": "<mark>visual - grids of bigger scales and how we would have to section them off?</mark>"
+          "value": "That was one lawn. We built five levels, each bigger and more cluttered than the last, up to a 14x14 lawn with almost 200 squares to cover."
+        },
+        {
+          "type": "SixLawns",
+          "value": {}
         },
         {
           "type": "text",
-          "value": "Even algorithms struggle. Here's how each heuristic performed across 100 random layouts.”"
+          "value": "30,954 people made it through two required levels, and 8,912 people completed a few extra bonus ones. The green lines show the median optimality for each lawn. The light band represents how most people (80%) did."
+        },
+        {
+          "type": "Optimality",
+          "value": {}
         },
         {
           "type": "text",
-          "value": "<mark>3x3 grid heatmap, small/medium/large grid X low, medium, high density of obstacles?</mark>"
+          "value": "We expected a decline. The Traveling Salesman Problem research suggests that people do worse as the problem grows. But optimality held around 90% whether the lawn took 26 moves or 177."
         },
         {
           "type": "text",
-          "value": "<mark>visual - here are a few 3 examples of grids, show the best/worst perform side by side?</mark>"
+          "value": "One caveat: we made the lawns bigger with different obstacle layouts at the same time, so we can’t say which mattered more. Performance was actually slightly better on the largest lawn than the previous two, which suggests that layout matters more than raw size."
         },
         {
           "type": "text",
-          "value": "Deeper on cognitive science of spatial reasoning limits. Working memory, chunking, bounded rationality, etc."
+          "value": "Our best guess is the structure of a lawn itself. Where the Traveling Salesman Problem scatters nodes randomly, a lawn has structure, which lets people fall back on two strategies: <strong>decomposition</strong> and <strong>compression</strong>."
         },
         {
           "type": "text",
-          "value": "So what does all this say about how your mind works?"
+          "value": "People <strong>decomposed</strong> the lawn into smaller, more manageable sections and solved them incrementally. Our interviewee Sarah described this perfectly."
         },
         {
           "type": "text",
-          "value": "<mark>one liner synopsis - highlight how they are similar or different from the global results and heuristics</mark>"
+          "value": "<blockquote>“I take it piece by piece...I try to leave everything behind me finished.”</blockquote>"
         },
         {
           "type": "text",
-          "value": "<mark>x/y scatter of their efficiency on small vs large (their dot vs all readers), color by heuristic?</mark>"
+          "value": "On the biggest lawn, she was explicit about why: holding the whole thing in her head wasn’t an option."
         },
         {
           "type": "text",
-          "value": "tk"
+          "value": "<blockquote> “I’m not going to be able to plan all of this out...just even trying to remember all of it would be way too challenging.”</blockquote>"
         },
         {
           "type": "text",
-          "value": "Let readers replay against various layouts or grid sizes."
+          "value": "So she chunked things up. She cleared a section and moved on to the next. Textbook decomposition."
         },
         {
           "type": "text",
-          "value": "<mark>The 100-layout challenge from the heuristic benchmarks could live here as a “beat the algorithm” mode.</mark>"
+          "value": "As people moved between rounds, they may have <strong>compressed</strong> what they learned into a mental model of the game, allowing them to identify patterns in more complex lawns and adapt their gameplay."
+        },
+        {
+          "type": "h2",
+          "value": "When you think"
+        },
+        {
+          "type": "text",
+          "value": "It seemed obvious to us that people who thought longer would mow better. Below, the 7,235 people who finished every lawn, plotted by pace (seconds spent per square, which normalizes time across lawn sizes) against how close to optimal they got. Pick any pace percentile on the x-axis and the spread of results looks about the same as at any other."
+        },
+        {
+          "type": "OptimalityVsTime",
+          "value": {}
+        },
+        {
+          "type": "text",
+          "value": "While there is a very small trend on the opposite ends for the top and worst mowers, if we told you how long someone took, you couldn’t guess how well they did. Technically speaking, time alone explains less than 5% of the variation in how people did (R<sup>2</sup> of 4.9%)."
+        },
+        {
+          "type": "text",
+          "value": "We isolated just extended pause times (i.e., thinking) and the same trend held, but <em>where</em> they paused is a different story. Let’s take a look at level four as an example."
+        },
+        {
+          "type": "LevelFour",
+          "value": {}
+        },
+        {
+          "type": "text",
+          "value": "The best mowers (90th percentile) spent time thinking early as they traveled down the first column, then thought more at the juncture between the two rock clusters on the bottom left: go toward the cluttered middle section, or clear the open space to the right first. They were able to intuit that they should finish in the dead-end pocket at the top in order to minimize backtracking. As a result, they didn’t need to pause once they reached the home stretch."
+        },
+        {
+          "type": "text",
+          "value": "Meanwhile, the worst mowers (10th percentile) sped through the beginning and barely paused to think until a corner or edge forced them to, implying reacting, not planning. They only realized that the same pocket was a dead end once they were already in it, then had to stop, backtrack, and work out where to go from there."
+        },
+        {
+          "type": "text",
+          "value": "The best mowers moved at about the same speed as everyone else, but they revisited far fewer squares. They spent their time at the forks and cruised through the rest. Below are two people who finished at the exact same time with different results."
+        },
+        {
+          "type": "TwoMowers",
+          "value": {}
+        },
+        {
+          "type": "text",
+          "value": "We heard this in the interview too. Sarah, one of the best mowers, spent her attention unevenly on purpose. She had a theory about why."
+        },
+        {
+          "type": "text",
+          "value": "<blockquote>“The bigger spaces have more cognitive load for you to figure out what the best path is. Whereas the smaller spaces...there are fewer decisions to make.”</blockquote>"
+        },
+        {
+          "type": "text",
+          "value": "She planned the tight, trap-prone sections carefully and winged it on the open ones."
+        },
+        {
+          "type": "text",
+          "value": "So it’s not about thinking more or faster, but <em>when</em> thinking happens. That’s what a good heuristic does: it spends your attention on the decisions that matter and nothing on the ones that don’t."
+        },
+        {
+          "type": "text",
+          "value": "Good luck not thinking about this the next time you mow a lawn!"
+        },
+        {
+          "type": "h2",
+          "value": "Explore"
+        },
+        {
+          "type": "text",
+          "value": "Below is a little playground. Pick a lawn and mow it, or explore where people paused, backtracked, and finished."
+        },
+        {
+          "type": "Sandbox",
+          "value": {}
+        },
+        {
+          "type": "h2",
+          "value": "Data and Methods"
+        },
+        {
+          "type": "text",
+          "value": "<small>Data is a snapshot of the live experiment as of July 31, 2026. There was a pause in the experiment after the second level to collect demographic information. Later levels were optional and presented as bonus rounds, so fewer people played them.</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>The scatterplot chart from the Traveling Salesman study is approximated based on the image in the study since data weren’t provided.</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>Pace is seconds per <em>required</em> square, not per square someone actually mowed. If we divided by their real move count, a longer path would both hurt their optimality and inflate their move count, which would make the comparison circular.</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>To find optimal efficiency, we ran algorithms that solved each lawn exhaustively. The optimal solution included backtracks on some levels.</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>The 4.8% R<sup>2</sup> value comes from a linear fit of pace percentile against optimality percentile among people who finished every lawn.</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>We interviewed one participant, Sarah, over video after she gave permission to use her real name. Everyone else is referred to by the nickname they entered during the game.</small>"
+        },
+        {
+          "type": "text",
+          "value": "<small>You can explore the raw user data on <a href=https://github.com/the-pudding/data/tree/master/mow target=_blank rel=noreferrer>our Github.</a></small>"
         }
       ]
     }

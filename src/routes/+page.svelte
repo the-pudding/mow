@@ -6,16 +6,27 @@
 	import Footer from "$components/Footer.svelte";
 	import FooterCC from "$components/Footer.CC.svelte";
 	import copy from "$data/copy.json";
+	import { session } from "$runes/misc.svelte.js";
 	import "$utils/version.js";
 
 	let { data } = $props();
 
+	// const dev = false;
+	// if (browser && dev) {
+	// localStorage.removeItem("pudding_mow_game");
+	// session.userId = "kqn1v9ezez";
+	// session.userId = "xxx";
+	// session.completedLevels["round2"] = 1;
+	// }
+
 	const preloadFont = [
-		"https://pudding.cool/assets/fonts/inconsolata/inconsolata-v32-latin-regular.woff2",
-		"https://pudding.cool/assets/fonts/inconsolata/inconsolata-v32-latin-700.woff2"
+		"assets/fonts/atlas/AtlasGrotesk-Bold-Web.woff2",
+		"assets/fonts/atlas/AtlasGrotesk-Regular-Web.woff2",
+		"assets/fonts/tiempos/TiemposTextWeb-Regular.woff2",
+		"assets/fonts/tiempos/TiemposTextWeb-Bold.woff2"
 	];
 
-	const { title, description, keywords } = copy;
+	const { title, description, keywords } = copy.meta;
 
 	const metaObj =
 		import.meta.env.VITE_SITE == "citizencodex"
@@ -36,14 +47,7 @@
 
 <Meta {title} {description} {preloadFont} {keywords} {...metaObj} />
 
-<!-- <Index /> -->
-
-<div class="coming-soon">
-	<p>
-		Nothing to see here, yet...<br />The full story drops in a few weeks.
-		<br />Until then, <a href="game">play the experiment here!</a>
-	</p>
-</div>
+<Index />
 
 <svelte:boundary onerror={(e) => console.error(e)}>
 	{#if import.meta.env.VITE_SITE == "citizencodex"}
@@ -54,21 +58,4 @@
 </svelte:boundary>
 
 <style>
-	.coming-soon {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		height: 80svh;
-		padding: 1rem;
-		text-align: center;
-		position: relative;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: var(--z-middle);
-	}
-
-	.coming-soon a {
-		text-decoration: underline;
-	}
 </style>

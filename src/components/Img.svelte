@@ -2,7 +2,7 @@
 	let { src, alt, figcaption } = $props();
 </script>
 
-<figure>
+<figure class="figure-media">
 	<img {src} {alt} />
 
 	{#if figcaption}
@@ -15,7 +15,6 @@
 <style>
 	figure {
 		position: relative;
-		margin: 32px auto;
 	}
 
 	figcaption {

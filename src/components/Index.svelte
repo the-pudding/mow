@@ -1,54 +1,81 @@
 <script>
 	import { getContext } from "svelte";
-	import Hero from "$components/Hero.svelte";
-	import Img from "$components/Img.svelte";
-	import Result from "$components/Result.svelte";
+	import StoryGame from "$components/StoryGame.svelte";
 	import CMS from "$components/helpers/CMS.svelte";
-	import Footer from "$components/Footer.svelte";
-	import FooterCC from "$components/Footer.CC.svelte";
+	import YourResult from "$components/YourResult.svelte";
+	import Compare from "$components/Compare.svelte";
+	import Tour from "$components/Tour.svelte";
+	import Round2Moves from "$components/Round2Moves.svelte";
+	import Sample from "$components/Sample.svelte";
+	import SixLawns from "$components/SixLawns.svelte";
+	import Optimality from "$components/Optimality.svelte";
+	import OptimalityVsTime from "$components/OptimalityVsTime.svelte";
+	import TSPLayer from "$components/grid/TSPLayer.svelte";
+	import Study from "$components/Study.svelte";
+	import LevelFour from "$components/LevelFour.svelte";
+	import TwoMowers from "$components/TwoMowers.svelte";
+	import Sandbox from "$components/Sandbox.svelte";
 
 	const copy = getContext("copy");
 	const { body } = copy;
-	const components = { Hero, Video, Result, Img };
+	const components = {
+		StoryGame,
+		YourResult,
+		Tour,
+		Compare,
+		Round2Moves,
+		Sample,
+		SixLawns,
+		Optimality,
+		OptimalityVsTime,
+		TSPLayer,
+		Study,
+		LevelFour,
+		TwoMowers,
+		Sandbox
+	};
 </script>
 
-<div class="byline">
-	<p>{@html copy.byline}</p>
-</div>
-
 <div class="c">
+	<h1>{@html copy.meta.title}</h1>
+	<div class="byline">
+		<p>{@html copy.meta.byline}</p>
+		<img src="assets/images/mower.png" alt="person mowing lawn 8-bit art" />
+	</div>
+
 	<CMS {body} {components}></CMS>
 </div>
 
-<svelte:boundary onerror={(e) => console.error(e)}>
-	{#if import.meta.env.VITE_SITE == "citizencodex"}
-		<FooterCC />
-	{:else}
-		<Footer recirc={true} />
-	{/if}
-</svelte:boundary>
-
 <style>
+	.c {
+		padding: 0 1rem;
+	}
+
+	h1 {
+		font-size: clamp(var(--32px, 32px), 10vw, var(--48px, 48px));
+		font-weight: 700;
+		line-height: 1.2;
+	}
+
 	.byline {
-		position: absolute;
-		top: 0;
-		right: 0;
-		padding: 8px;
-		display: none;
+		margin-bottom: 5rem;
 	}
 
 	.byline p {
-		margin: 0;
-		max-width: 10em;
-		text-align: right;
+		text-align: center;
+		line-height: 1.2;
 		font-size: var(--14px);
 	}
 
-	.c {
-		padding: 0 16px;
+	.byline img {
+		display: block;
+		margin: 0 auto;
+		width: 100%;
+		max-width: 4rem;
+		transform: scaleX(-1);
 	}
 
-	@media (min-width: 960px) {
+	@media (min-width: 600px) {
 		.byline p {
 			font-size: var(--16px);
 		}

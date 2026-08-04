@@ -5,3 +5,5 @@ node_modules
 build
 functions
 .env
+tasks/**/*.csv
+explore

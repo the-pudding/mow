@@ -1,9 +1,11 @@
 <script>
 	import Grid from "$components/Grid.svelte";
+	import GameLayer from "$components/grid/GameLayer.svelte";
 	import Keypad from "$components/Keypad.svelte";
 	import Button from "$components/ui/Button.svelte";
 	import { SvelteSet } from "svelte/reactivity";
 	import { classify } from "$utils/classifier.js";
+	import inView from "$actions/inView.js";
 	import { fade } from "svelte/transition";
 
 	// obstacles is an array of [{x,y}]
@@ -12,7 +14,11 @@
 		size = 10,
 		classifier = false,
 		onComplete,
-		onStart: onStartProp
+		onStart: onStartProp,
+		// display-only mode: no keypad, no start button, no move counter
+		controls = true,
+		showCharacter = true,
+		fill = false
 	} = $props();
 
 	// const predictionMoves = 15;
@@ -25,12 +31,18 @@
 	let visited = new SvelteSet(["0,0"]);
 	let revisited = new SvelteSet();
 	let flipCharacter = $state(true);
-	let started = $derived(startTime != null);
+	// without controls there is nothing to press, so the lawn shows right away
+	let started = $derived(!controls || startTime != null);
+	// the grid is on screen
+	let visible = $state(false);
 
 	function onStart() {
 		startTime = Date.now();
 		onStartProp?.();
 	}
+
+	// nothing can move without controls, so don't mow the starting cell
+	let displayPath = $derived(controls ? path : []);
 
 	let visitedCount = $derived(visited.size);
 	let completed = $derived(visitedCount === targetCount);
@@ -109,45 +121,41 @@
 	}
 </script>
 
-<div class="c" class:disable={!active} class:dim={showMessage}>
+<div
+	class="c"
+	class:disable={!active}
+	class:dim={showMessage}
+	use:inView
+	onenter={() => (visible = true)}
+	onexit={() => (visible = false)}
+>
 	<div class="inner">
-		<div class="steps">
-			<span>move: {path.length}</span>
-			<!-- {#if classifier}
-				<span>
-					{#if path.length > predictionMoves}
-						predicted: {classification.label}
-					{:else}
-						make at least {predictionMoves} moves to get a prediction
-					{/if}
-				</span>
-			{/if} -->
-		</div>
+		{#if controls}
+			<div class="steps">
+				<span>move: {path.length}</span>
+			</div>
+		{/if}
 		<div class="g">
 			<div class="grid">
-				<Grid
-					{size}
-					{path}
-					{revisited}
-					perspective={false}
-					{obstacles}
-					game={true}
-					{flipCharacter}
-					{started}
-				></Grid>
+				<Grid {size} {obstacles} {started} {fill}>
+					<GameLayer path={displayPath} {flipCharacter} {showCharacter} />
+				</Grid>
 			</div>
 			{#if showMessage}
 				<p class="message" transition:fade={{ duration: 100 }}>
 					<strong>{message}</strong>
 				</p>
 			{/if}
-			{#if !startTime}
+			{#if controls && !startTime}
 				<div class="start">
-					<Button size="lg" onclick={onStart}>Start</Button>
+					<Button onclick={onStart}>Start</Button>
 				</div>
 			{/if}
 		</div>
-		{#if active}<Keypad {onmove} {active}></Keypad>{/if}
+		{#if controls && active}<Keypad
+				{onmove}
+				enabled={started && visible}
+			></Keypad>{/if}
 	</div>
 </div>
 
@@ -195,6 +203,8 @@
 		margin: 2rem auto 0 auto;
 		max-width: var(--grid-max-width);
 		text-align: center;
-		font-size: var(--14px);
+		font-size: var(--12px);
+		font-family: var(--font-form);
+		text-transform: uppercase;
 	}
 </style>

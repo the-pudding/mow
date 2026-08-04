@@ -1,25 +1,34 @@
 {
 	"category": {
-		"blue": {
-			"value": "#4477AA"
+		"green-light": {
+			"value": "#83d372"
 		},
-		"red": {
-			"value": "#EE6677"
+		"green-medium": {
+			"value": "#3e8948"
 		},
-		"green": {
-			"value": "#228833"
+		"green-dark": {
+			"value": "#2d704f"
 		},
-		"yellow": {
-			"value": "#CCBB44"
+		"orange-light": {
+			"value": "#feae34"
 		},
-		"cyan": {
-			"value": "#66CCEE"
+		"orange-dark": {
+			"value": "#a64706"
 		},
-		"purple": {
-			"value": "#AA3377"
+		"yellow-dark": {
+			"value": "#8f5701"
 		},
-		"gray": {
-			"value": "#BBBBBB"
+		"yellow-light": {
+			"value": "#fee761"
+		},
+		"purple-dark": {
+			"value": "#8c4c92"
+		},
+		"purple-light": {
+			"value": "#c292c6"
+		},
+		"pink-light": {
+			"value": "#f6757a"
 		}
 	}
 }

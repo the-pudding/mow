@@ -1,18 +1,20 @@
 /* SELECT */
 [data-select-trigger] {
-	--min-width: 12rem;
+	--min-width: 8rem;
 	display: inline-flex;
 	align-items: center;
 	justify-content: space-between;
 	border: 1px solid var(--color-border);
-	border-radius: var(--radius-md);
 	padding: 0.5rem;
 	background: var(--color-bg);
 	color: var(--color-fg);
 	font-family: var(--font-form);
-	font-size: inherit;
+	font-size: var(--12px);
 	cursor: pointer;
 	width: var(--min-width);
+	text-transform: uppercase;
+	font-weight: 700;
+	line-height: 1;
 }
 
 [data-select-trigger]:hover {
@@ -38,11 +40,10 @@
 }
 
 [data-select-content] {
-	--min-width: 12rem;
+	--min-width: 8rem;
 	z-index: var(--z-overlay);
 	background: var(--color-bg);
 	border: 1px solid var(--color-border);
-	border-radius: var(--radius-md);
 	width: var(--min-width);
 	overflow: hidden;
 	padding: 0.5rem;
@@ -58,10 +59,14 @@
 	position: relative;
 	user-select: none;
 	outline: none;
+	font-size: var(--12px);
+	text-transform: uppercase;
+	font-weight: 700;
 }
 
 [data-select-item][data-highlighted] {
-	background: var(--color-selection);
+	background: var(--color-fg);
+	color: var(--color-bg);
 }
 
 [data-select-item][data-selected] [data-select-item-indicator] {

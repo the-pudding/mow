@@ -1,24 +1,21 @@
 <script>
-	import { browser } from "$app/environment";
-	import { scaleLinear, interpolateRgb, interpolateHcl, max } from "d3";
-	import { draw, fade } from "svelte/transition";
-	import levels from "$data/levels.json";
+	import { setContext } from "svelte";
 	import obstacleSpriteData from "$data/obstacles.json";
 	import grassSpriteData from "$data/grass.json";
 
+	// Foundation for all grid visualizations: owns size → cell geometry, the
+	// grass/wireframe surface + gridlines, and responsive sizing. Provides a
+	// reactive "grid" context that layer components (children) build on top of.
 	// obstacles is an array of [{x,y}]
+	// fill: opt out of the shared cell scale and take the full container width
 	let {
 		size,
-		path = [],
 		obstacles = [],
-		game = false,
-		color,
-		revisited,
-		flipCharacter,
-		started
+		started,
+		variant = "grass",
+		fill = false,
+		children
 	} = $props();
-
-	const MAX_GRID_SIZE = max(levels, (l) => l.size) || 10;
 
 	const obstacleFrames = Object.values(obstacleSpriteData.frames);
 	const numObstacleFrames = obstacleFrames.length;
@@ -29,143 +26,101 @@
 	const numGrassFrames = Object.keys(grassSpriteData.frames).length;
 	const grassVariants = grassTags.long.to - grassTags.long.from + 1;
 
-	const colorScale = $state({
-		user: scaleLinear()
-			.interpolate(interpolateHcl)
-			.range(["#eb6d72", "#9e2835"]),
-		solution: scaleLinear()
-			.interpolate(interpolateHcl)
-			.range(["#4ca658", "#265c42"])
-	});
+	// set of "x,y" keys the active layer marks as visited (drives cell dimming)
+	let visitedSet = $state(new Set());
 
 	let defaultCells = $derived(
 		Array(size ** 2)
 			.fill()
-			.map((_, i) => ({
-				pos: { x: i % size, y: Math.floor(i / size) },
-				visited: false
-			}))
-			.map((c) => ({
-				...c,
-				obstacle: obstacles.some(({ x, y }) => x === c.pos.x && y === c.pos.y),
-				spriteFrame: Math.floor(Math.random() * numObstacleFrames),
-				grassVariant: Math.floor(Math.random() * grassVariants)
-			}))
+			.map((_, i) => {
+				const x = i % size;
+				const y = Math.floor(i / size);
+				return {
+					x,
+					y,
+					obstacle: obstacles.some((o) => o.x === x && o.y === y),
+					spriteFrame: Math.floor(Math.random() * numObstacleFrames),
+					grassVariant: Math.floor(Math.random() * grassVariants)
+				};
+			})
 	);
 
-	let cells = $derived.by(() => {
-		const visitedSet = new Set(path.map(({ x, y }) => `${x},${y}`));
-		const all = defaultCells.map((c) => ({
+	let cells = $derived(
+		defaultCells.map((c) => ({
 			...c,
-			visited: visitedSet.has(`${c.pos.x},${c.pos.y}`),
-			revisited: revisited?.has(`${c.pos.x},${c.pos.y}`) ?? false
-		}));
-		return all;
-	});
+			visited: visitedSet.has(`${c.x},${c.y}`)
+		}))
+	);
 
-	let latest = $derived(path[path.length - 1] || { x: 0, y: 0 });
-	let offsetWidth = $state(0);
 	let visualGridSize = $derived(Math.max(size, 8));
-	let figureWidth = $derived(Math.round((size / visualGridSize) * offsetWidth));
-	let nodes = $derived(!game);
-	let animating = $state(false);
+	// sized in CSS rather than measured, so grids can be skipped when offscreen
+	// let widthPercent = $derived((size / visualGridSize) * 100);
+	let widthPercent = 100;
 
-	let pathD = $derived.by(() => {
-		const str = path.map(({ x, y }, i) => {
-			const x1 = x + 0.5;
-			const y1 = y + 0.5;
-			const x2 = (path[i + 1] ? path[i + 1].x : x) + 0.5;
-			const y2 = (path[i + 1] ? path[i + 1].y : y) + 0.5;
-			return `M ${x1} ${y1} L ${x2} ${y2}`;
-		});
-
-		return str.join("");
+	setContext("grid", {
+		get size() {
+			return size;
+		},
+		get cells() {
+			return cells;
+		},
+		get obstacles() {
+			return obstacles;
+		},
+		// grid-unit cell center for a shared viewBox="0 0 size size"
+		center: (x, y) => ({ cx: x + 0.5, cy: y + 0.5 }),
+		// visited write-back so the active layer can drive cell dimming
+		get visited() {
+			return visitedSet;
+		},
+		setVisited: (s) => {
+			visitedSet = s;
+		}
 	});
-
-	export const animate = () => {
-		animating = true;
-	};
 </script>
 
-<div class="measure" bind:offsetWidth aria-hidden="true"></div>
 <figure
-	style="--size: {size}; width: {figureWidth}px; --grass-bg-size: {numGrassFrames *
+	style="--size: {size}; width: {widthPercent}%; --grass-bg-size: {numGrassFrames *
 		100}% 100%; --obstacle-bg-size: {numObstacleFrames * 100}% 100%;"
-	class:nodes
+	class="figure-grid"
+	class:wireframe={variant === "wireframe"}
 	class:started
 >
 	<div class="inner">
-		{#if !game && path.length > 1}
-			<svg viewbox="0 0 10 10">
-				{#if animating}
-					{#each path as { x, y }, i (i)}
-						{@const x1 = x + 0.5}
-						{@const y1 = y + 0.5}
-						{@const x2 = (path[i + 1] ? path[i + 1].x : x) + 0.5}
-						{@const y2 = (path[i + 1] ? path[i + 1].y : y) + 0.5}
-						<path
-							transition:fade|global={{ delay: 500 + i * 50, duration: 50 }}
-							class="line"
-							d={`M ${x1} ${y1} L ${x2} ${y2}`}
-							style:stroke={colorScale[color](i / path.length)}
-						></path>
-					{/each}
-				{/if}
-			</svg>
-		{/if}
-
 		<div class="grid">
-			{#each cells as { obstacle, visited, revisited, pos, spriteFrame, grassVariant }}
-				{@const x = pos[0]}
-				{@const y = pos[1]}
-				{@const active = x === latest.x && y === latest.y}
-				{@const grassFrame =
-					visited || revisited
-						? grassTags.short.from + grassVariant
-						: grassTags.long.from + grassVariant}
+			{#each cells as { obstacle, visited, x, y, spriteFrame, grassVariant }}
+				{@const grassFrame = visited
+					? grassTags.short.from + grassVariant
+					: grassTags.long.from + grassVariant}
 				<div
 					class="cell"
 					class:obstacle
 					class:visited
-					class:revisited
-					class:active
 					data-x={x}
 					data-y={y}
 					style={`--grass-x: ${(grassFrame / (numGrassFrames - 1)) * 100}%${obstacle ? `; --sprite-x: ${(spriteFrame / (numObstacleFrames - 1)) * 100}%` : ""}`}
 				>
-					<div class="fg"></div>
+					{#if obstacle}<div class="fg"></div>{/if}
 				</div>
 			{/each}
 		</div>
 
-		<div class="grid gridlines" aria-hidden="true">
-			{#each cells as { pos }}
-				<div class="cell"></div>
-			{/each}
-		</div>
-
-		{#if game}
-			<div class="grid mower">
-				<div
-					class="character"
-					style="--x: {latest.x}; --y: {latest.y};"
-					class:flip={flipCharacter}
-				></div>
+		{#if variant !== "wireframe"}
+			<div class="grid gridlines" aria-hidden="true">
+				{#each cells as _cell}
+					<div class="cell"></div>
+				{/each}
 			</div>
 		{/if}
+
+		{@render children?.()}
 	</div>
 </figure>
 
 <style>
-	.measure {
-		width: 100%;
-		height: 0;
-		visibility: hidden;
-	}
-
 	figure {
 		position: relative;
-		margin: 1rem auto;
+		margin: 0.5rem auto;
 		background: var(--color-green-medium);
 	}
 
@@ -184,24 +139,23 @@
 		display: grid;
 		grid-template-columns: repeat(var(--size), 1fr);
 		grid-template-rows: repeat(var(--size), 1fr);
-		transition: all 0.5s ease-in-out;
+		transition:
+			grid-template-columns 0.5s ease-in-out,
+			grid-template-rows 0.5s ease-in-out;
+		/* one filter surface for the whole board instead of one per cell */
+		filter: brightness(1.1);
 	}
 
-	.grid.mower,
 	.grid.gridlines {
 		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
-	}
-
-	.grid.gridlines {
 		pointer-events: none;
 	}
 
 	.grid.gridlines .cell {
-		/* border: 0.5px solid rgba(0, 0, 0, 0.15); */
 		box-shadow: inset 0 0 2px 2px rgba(0, 0, 0, 0.1);
 		background: none;
 	}
@@ -211,8 +165,6 @@
 		background-image: url("/assets/images/grass.png");
 		background-size: var(--grass-bg-size);
 		background-position: var(--grass-x, 0%) 0%;
-		/* lighten */
-		filter: brightness(1.1);
 	}
 
 	.cell.obstacle {
@@ -222,6 +174,12 @@
 		background-position:
 			var(--sprite-x) 0%,
 			var(--grass-x) 0%;
+	}
+
+	.wireframe .cell.obstacle {
+		background-image: url("/assets/images/obstacles.png");
+		background-size: var(--obstacle-bg-size);
+		background-position: var(--sprite-x) 0%;
 	}
 
 	.cell.visited {
@@ -240,75 +198,32 @@
 		transform: translateY(-10%);
 	}
 
-	.character {
-		position: absolute;
-		left: calc(var(--x) / var(--size) * 100%);
-		top: calc(var(--y) / var(--size) * 100%);
-		width: calc(100% / var(--size));
-		height: calc(100% / var(--size));
-		transition:
-			left 0.1s,
-			top 0.1s;
-		background-image: url("/assets/images/mower.png");
-		background-size: cover;
-		background-repeat: no-repeat;
+	/* wireframe variant (xray / heatmap / branch) */
+	.wireframe {
+		background: transparent;
 	}
 
-	.character.flip {
-		transform: scaleX(-1);
+	.wireframe .grid {
+		border: 0.5px solid var(--color-gray-700);
+		filter: none;
 	}
 
-	/* nodes mode */
-	.nodes .grid {
-		border: 0.5px solid var(--color-gray-500);
-	}
-
-	.nodes .cell {
-		border: 0.5px solid var(--color-gray-100);
+	.wireframe .cell {
+		border: 0.5px solid var(--color-gray-700);
 		background: none;
 	}
 
-	.nodes .fg {
-		background: none;
-		width: 20%;
-		height: 20%;
-		border-radius: 50%;
-		border: 1px solid var(--color-gray-500);
-		background: var(--color-bg);
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
+	.wireframe .cell.visited {
+		opacity: 1;
 	}
 
-	.nodes .obstacle {
-		background: var(--color-gray-500);
-		border: 0.5px solid var(--color-bg);
-	}
-
-	.nodes .obstacle .fg {
+	.wireframe .obstacle .fg {
 		display: none;
 	}
 
-	svg {
-		display: block;
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		top: 0;
-		left: 0;
-	}
-
-	path.line {
-		stroke-width: 0.4;
-		stroke-linecap: round;
-		fill: none;
-		stroke: var(--path-start);
-	}
-
-	/* path.arrow {
-		stroke-width: 0.1;
-		fill: none;
-		stroke: var(--path-start);
+	/* @media (min-width: 800px) {
+		figure {
+			margin: 1rem auto;
+		}
 	} */
 </style>

@@ -15,9 +15,9 @@ staging:
 	npm run build
 	make github
 
-production:
-	npm run build
-	make pudding
+# production:
+# 	npm run build
+# 	make pudding
 
 aws-sync:
 	aws s3 sync build s3://pudding.cool/2026/06/mow --delete --cache-control 'max-age=31536000'

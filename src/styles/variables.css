@@ -3,13 +3,16 @@
  */
 
 :root {
-  --category-blue: #4477AA;
-  --category-red: #EE6677;
-  --category-green: #228833;
-  --category-yellow: #CCBB44;
-  --category-cyan: #66CCEE;
-  --category-purple: #AA3377;
-  --category-gray: #BBBBBB;
+  --category-green-light: #83d372;
+  --category-green-medium: #3e8948;
+  --category-green-dark: #2d704f;
+  --category-orange-light: #feae34;
+  --category-orange-dark: #a64706;
+  --category-yellow-dark: #8f5701;
+  --category-yellow-light: #fee761;
+  --category-purple-dark: #8c4c92;
+  --category-purple-light: #c292c6;
+  --category-pink-light: #f6757a;
   --color-black: oklch(0 0 0);
   --color-white: oklch(100% 0 0);
   --color-gray-50: oklch(98.5% 0 0);

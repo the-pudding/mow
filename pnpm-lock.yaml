@@ -41,6 +41,9 @@ importers:
       d3:
         specifier: ^7.9.0
         version: 7.9.0
+      d3-regression:
+        specifier: ^2.2.0
+        version: 2.2.0
       lodash.debounce:
         specifier: ^4.0.8
         version: 4.0.8
@@ -1098,6 +1101,10 @@ packages:
 
   d3-random@3.0.1:
     resolution: {integrity: sha512-FXMe9GfxTxqd5D6jFsQ+DJ8BJS4E/fT5mqqdjovykEB2oFbTMDVdg1MGFxfQW+FBOGoB++k8swBrgwSHT1cUXQ==}
+    engines: {node: '>=12'}
+
+  d3-regression@2.2.0:
+    resolution: {integrity: sha512-WmwACqG8yAha93Z/QAuAqR8WlqpYD1E30uGZQ4eeEL0lS+HSJ9q+s4bbcVzopmCaM+N6y+F0EBhs2nLyNJyuNg==}
     engines: {node: '>=12'}
 
   d3-scale-chromatic@3.1.0:
@@ -2639,6 +2646,8 @@ snapshots:
   d3-quadtree@3.0.1: {}
 
   d3-random@3.0.1: {}
+
+  d3-regression@2.2.0: {}
 
   d3-scale-chromatic@3.1.0:
     dependencies:

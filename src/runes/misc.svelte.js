@@ -17,6 +17,7 @@ export const session = $state({
 	startedLevels: {},
 	completedLevels: {},
 	levelEfficiencies: {},
+	storyGamePath: null,
 	scoreSubmitted: false
 });
 
@@ -32,6 +33,7 @@ export function resetSession() {
 	session.name = null;
 	session.startedLevels = {};
 	session.completedLevels = {};
+	session.storyGamePath = null;
 	session.scoreSubmitted = false;
 	freshStartedLevels.clear();
 }
